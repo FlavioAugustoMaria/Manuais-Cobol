@@ -1,0 +1,11 @@
+ Carros de relatórios:     
+                                                     
+ '1' = Pula uma página
+
+ '0' = Imprime 1 linha em branco
+
+ '+' = Imprime de novo na mesma linha
+
+ '-' = Imprime 2 linhas em branco
+
+ ' ' = Imprime normalmente

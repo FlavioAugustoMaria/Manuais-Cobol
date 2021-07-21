@@ -1,0 +1,64 @@
+________________________________________
+De: Jose Rafael de Souza Neto [mailto:josersn@primeinformatica.com.br] 
+Enviada em: quarta-feira, 23 de março de 2011 14:49
+Para: wellingtonnb@primeinformatica.com.br
+Assunto: ACHEI !!!!!
+
+Segue.
+
+RESTART - DICAS PARA O CURSOR
+
+CONSIDERANDO COM:
+
+    ORDER BY CP1
+
+AND (CP1 >= REST-CP1)
+
+----------------------------------------------------------------------------
+CONSIDERANDO COM:
+
+    ORDER BY CP1, CP2
+
+AND ((CP1 > REST-CP1)
+
+ OR  (CP1 = REST-CP1  AND  CP2 >= REST-CP2))
+
+----------------------------------------------------------------------------
+CONSIDERANDO COM:
+
+    ORDER BY CP1, CP2 E CP3
+
+AND ((CP1 > REST-CP1)
+
+  OR (CP1 = REST-CP1  AND  CP2 > REST-CP2)
+
+  OR (CP1 = REST-CP1  AND  CP2 = REST-CP2  AND  CP3 >= REST-CP3))
+
+----------------------------------------------------------------------------
+CONSIDERANDO COM:
+
+    ORDER BY CP1, CP2, CP3 E CP4
+
+AND ((CP1 > REST-CP1)
+
+  OR (CP1 = REST-CP1  AND  CP2 > REST-CP2)
+
+  OR (CP1 = REST-CP1  AND  CP2 = REST-CP2  AND  CP3 > REST-CP3)
+
+  OR (CP1 = REST-CP1  AND  CP2 = REST-CP2  AND  CP3 = REST-CP3
+
+                                           AND  CP4 >= REST-CP4))
+
+
+
+
+Jose Rafael de Souza Neto
+Engenharia de Software
+??55-11-3037.3760
+
+PRiME IT Services - Business Solutions
+www.primeinformatica.com.br
+
+Esta mensagem pode conter informação confidencial e/ou privilegiada destinada exclusivamente ao seu destinatário ou pessoa autorizada. As informações são protegidas por sigilo profissional. O uso não autorizado de tais informações é proibido e está sujeito às penalidades cabíveis.
+This message may contain confidential and/or privileged information intended exclusively to the addressee or authorized to receive it. The information are protected by professional privilege. Unauthorized use of such information is prohibited and subject to aplicable penalties.
+

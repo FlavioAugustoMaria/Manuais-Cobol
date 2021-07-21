@@ -1,0 +1,18 @@
+Programa para gravar "display" em tabela DB2.
+utilizado para rastrear processamento de programa que nao seja possivel debugar.
+
+programa: SPBC9099
+tabela:   LOG_BLOCO_ERRO - SPBCB012
+
+
+no programa SPBC9545 tem exemplo de chamada.
+AD.PRI.L864348.MARCORF(SPBC9545)
+
+
+CREATE TABLE DB2PRD.LOG_BLOCO_ERRO (                
+       CNRO_UNIC_BACEN      CHAR(23) NOT NULL,      
+       HINCL_REG            TIMESTAMP NOT NULL,     
+       RCONTD_BLOCO_MSGEM   VARCHAR(32650) NOT NULL,
+       PRIMARY KEY (CNRO_UNIC_BACEN, HINCL_REG)     
+)                                                   
+       IN SPBCD000.SPBCS012                         

@@ -1,0 +1,28 @@
+PROMOVER PROGRAMAS BRADESCO
+
+AMBIENTE TU (Teste Unitário)
+site: 		AL2
+nickname:	TEST01AV - TU Consultorias
+
+site: 		AL2
+nickname:	HOM@AL2 - TU Bradesco (não aparece em todos os centros de custo. Sempre que tiver, promover nessa opção também)
+
+--------------------------------------
+
+AMBIENTE TI (Teste Integrado)
+
+------
+Alphaville:
+site: 		CA1
+nickname:	CA1PI
+
+------
+Matriz:
+site: 		CM1
+nickname:	CM1PI
+
+--------------------------------------
+
+AMBIENTE TH (Teste Homologação)
+site: 		AL4B
+nickname:	MZ104MX

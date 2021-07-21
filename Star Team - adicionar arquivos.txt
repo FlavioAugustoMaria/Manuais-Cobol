@@ -1,0 +1,24 @@
+star team
+
+botão abrir projeto.
+escolher projeto desejado (PFCP)
+botao proximo
+selecionar ramo (rtn) do projeto/fase específica
+finalizar
+
+botao direito na pasta raiz (PFCP) e 'Criar Pastas de Trabalho'
+
+botao direito na tela branca (parte de cima) e checkout todos
+ok
+sim
+pasta 5 - estruturais
+FRWK - pasta de fluxos
+GMSG - pasta de mensagens
+botao direito - abrir pasta local
+colar documento
+
+quando documento for novo:
+botão direito no documento - adicionar arquivos 
+
+quando documento já existir e for alterado:
+botão direito no documento - Check In.

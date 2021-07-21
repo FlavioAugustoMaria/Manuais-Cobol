@@ -1,0 +1,87 @@
+Passos para cadastrar programas e mapas no CICS.
+
+
+- Cadastrar tela:
+CEDA DEF MAP(MAPPR26) GROUP(BRADESCO)
+
+- Cadastrar programa:
+CEDA DEF PROG(CDPS1D31) L(C) GROUP(BRADESCO)
+
+- Cadastrar transação:
+CEDA DEF TRANS(PR26) PROG(CDPS1D34) GROUP(BRADESCO)
+
+
+
+- Instalar a tela:
+CEDA INSTALL MAP(MAPPR26) GROUP(BRADESCO)
+
+- Instalar o programa:
+CEDA INSTALL PROG(CDPS1D34) GROUP(BRADESCO)
+
+- Instalar a transação:
+CEDA INSTALL TRANS(PR26) GROUP(BRADESCO)
+
+
+
+- New copy do programa: 
+CEMT SET PROG(CDPS1D34) NEW
+
+- New copy do mapa:
+CEMT SET PROG(MAPPR26) NEW
+
+
+ 
+- Excluir a tela:
+CEDA DEL PROG(MAPPR26) GROUP(BRADESCO)
+
+- Excluir o programa:
+CEDA DEL PROG(FVCO0080) GROUP(BRADESCO)
+
+- Excluir a transação:
+CEDA DEL TRANS(PR26) GROUP (BRADESCO)
+
+
+- Fazer Logoff:
+CESF LOGOFF
+
+
+
+Para cadastrar uma transação para poder executar um programa no CICS com DEBUG proceder da seguinte maneira:
+
+Para criar uma nova transação, No CICS, entrar em CADP e pressionar PF5 (Create), e preencher a tela como mostrado a seguir:
+
+******* INICIO TELA *******
+
+CADP      -    CICS Application Debugging Profile Manager   -     CICS         
+                                                                                
+Create Compiled Debugging Profile ==> SWPPP794  for PRIME31                    
+                                                                               
+                                                                               
+CICS Resources To Debug (use * to specify generic values e.g. *, A*, AB*, etc.)
+Transaction      ==> SPBA                             Applid   ==> CICS        
+Program          ==> SWPPP794                         Userid   ==> *           
+Compile Unit     ==> *                                Termid   ==> *           
+                                                       Netname  ==> *           
+                                                                                
+Debug Tool Language Environment Options                                        
+Test Level       ==> All                                     (All,Error,None)  
+Command File     ==>                                                           
+Prompt Level     ==> PROMPT                                                    
+Preference File  ==>                                                           
+                                                                                
+Other Language Environment Options                                             
+==>                                                                            
+==>                                                                            
+==>                                                                            
+==>                                                                            
+                                                                               
+Enter=Create PF1=Help 2=Save options as defaults 3=Exit 10=Replace 12=Return   
+                               Termid   ==> *           
+                                                      Netname  ==> *           
+
+******* FIM TELA *******
+
+
+
+
+ 

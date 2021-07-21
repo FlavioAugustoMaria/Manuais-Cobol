@@ -1,0 +1,10 @@
+Tabela de Mensagens Nova Arquitetura (TI Melhorias)
+(Marcos Souza Santos)
+
+
+SELECT NEVNTO_MSGEM_NEGOC, WTEXTO_MSGEM
+  FROM DB2PRD.TTEXTO_FORTC_MSGEM
+ WHERE CSIST = 'PSCT'
+
+AND  WTEXTO_MSGEM LIKE (%ENCNTR%)
+

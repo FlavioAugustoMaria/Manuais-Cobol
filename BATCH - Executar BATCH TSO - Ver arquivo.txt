@@ -1,0 +1,30 @@
+EXECUTAR BATCH NO BRADESCO.
+
+Logar no TS04,
+entrar na opcao "001 - ISPF/PDF", "2 - EDIT",
+abrir um jcl de execucaO:
+
+Project . . . AD    
+Group . . . . C87   
+Type  . . . . FAB01 
+Member  . . . JCLFLA
+
+alterar os parametros conforme necessario para a execucao do programa desejado,
+submeter o job,
+os displays poderao ser vistos na opcao "138 - SDSF", "ST - STATUS OF JOBS"
+do TS48.
+
+
+
+para ver arquivo com layout de algum book, no TS48:
+161 INSYNC 
+2   EDIT
+em "DATASET NAME   ===>" informar o endereço do arquivo
+ex: 'AD.PRI.L748443.CMRAX300.SORTOUT'
+
+
+em "OTHER DATASET  ===>" informar o endereço do book a ser utilizado como layout do arquivo.
+ex: 'AD.CHGM.STAGE.RATI.#000005.CPY(RATIWM6A)'
+
+
+

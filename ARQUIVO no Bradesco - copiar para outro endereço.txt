@@ -1,0 +1,25 @@
+COPIAR ARQUIVO PARA OUTRO ENDEREÇO (NOME) NO BRADESCO.
+
+No TS48: 
+ opção 161 INSYNC;
+ opção 6  EXTRACT       Record extract;
+
+em 'INPUT DATA FILE' informar o nome do arquivo existente que deseja copiar para outro endereço.
+
+ex: 
+INPUT  DATA FILE  ===> 'AD.C87.PITD.PITDV01'
+
+
+em 'OUTPUT DATA FILE' informar o nome do arquivo para onde deseja copiar os dados do arquivo ja existente.
+
+ex:
+OUTPUT DATA FILE  ===> 'AD.C87.PITD.PITDV01'
+
+OBS. se o arquivo de saída ainda nao estiver criado, primeiramente este processo vai criar o arquivo, depois deve-se executar o processo novamente para que os dados sejam copiados.
+
+informar as configurações do arquivo e pressionar enter até o arquivo ser criado/copiado. 
+
+
+
+
+

@@ -1,0 +1,9 @@
+  LIB  DESCRIPTION                      
+
+_ CPY Copy books
+_ TSP source Stored procedure          
+_ CPB BMS Map Output DSECT (COPY) - Área/Book gerado na compilação de tela CICS.
+_ SRC Fontes em Geral Bradesco - Programas
+_ TXA Docs de Publicacao de Componentes - Fluxos online CICS
+_ MPS BMS Map Source - Código fonte de Tela CICS
+_ MFS Fonte de Telas MFS - Código fonte de Tela IMS

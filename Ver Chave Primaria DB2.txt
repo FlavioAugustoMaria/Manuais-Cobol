@@ -1,0 +1,10 @@
+VER CHAVE PRIMARIA DE TABELAS DB2.
+
+no Hexavision, 
+opcao:
+Principal - Mainframe - Dresscode - Tabelas DB2.
+Digitar o nome fisico da tabela em "Nome: ", ex: TCOMPS_NUMRC_EIXO
+
+Enter.
+
+irá carregar a tabela. clicar sobre o nome dela.

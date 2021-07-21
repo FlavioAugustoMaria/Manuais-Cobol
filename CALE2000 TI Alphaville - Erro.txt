@@ -1,0 +1,26 @@
+Erro CALE2000 TI Alphaville
+
+06/07/2021
+[10:15] Julio Cesar Oliveira
+    Pessoal consegui encontrar aqui, para conhecimento o CALE2000 está apenas no TI da matriz, se for rodar no TI de Alphaville está apresentando esse erro.
+
+ERRO APRESENTADO:
+**********************************************
+*
+* AREAS PASSADAS PELO CHAMADOR DO FRWK2999
+*
+* FRWKGHEA-TIPO-ERRO = DB
+* FRWKGHEA-NOME-PROGRAMA = GPAR2910
+* FRWKGHEA-IDEN-PARAGRAFO = 5110-00-OBTER-CODIGO-ESTRUTURA
+* FRWKGHEA-TAM-DADOS = 00222
+*
+* FRWKGDB2-NOME-TABELA = TESTRT_PARM
+* FRWKGDB2-COMANDO-DB2 = SELECT
+* FRWKGDB2-STORED-PROC =
+* FRWKGDB2-LOCAL = LOC-007
+* FRWKGDB2-SQLCODE = -525
+* FRWKGDB2-SQLSTATE =
+* FRWKGDB2-SQLCA = SQLCA h...3 .4.DB205.BRADCOLL.GPAR2910.1AD4BF67
+ERT .... .... 51015
+GLOG9901.SOLICITACAO DE GRAVACAO DE ERRO PARA LOG-LOGICO: 000000002
+***************************************

@@ -1,0 +1,29 @@
+Antes da configuração no MFE, copie os arquivos USERCICS.TSO e USERIMS.TSO para a pasta C:\mfuser\sysproc.
+
+Após, para emissão de display no CICS deve ser feito os seguintes procedimentos para cada estação:
+
+1) No programa chamador emitir DISPLAY. (SEM UPON CONSOLE) 
+
+2) Verifique o USER ID definido no menu do MFE - Options > User Id.      Alterar para o seu usuário.  Exemplo: "BRAD0595".   
+
+3) Na pasta Catalog do MFE clique com o botão direito do mouse e opção ALLOCATE e informe:
+
+ - DS Name: <userid>.CICS.SYSOUT (substitua o "<Userid>" pelo código existente conforme acima)
+
+ - DSORG: PS
+
+ - RECMF: LSEQ 
+
+ - LRECL: 132 
+
+4) Feche/abra o projeto do MFE, execute o programa CICS que contenha o comando DISPLAY e visualize as mensagens no arquivo criado acima.
+
+O arquivo só poderá ser visualizado após o termino da execução do programa.
+
+Obs.: Caso modifique o User Id na opção Options > User Id, altere o nome do arquivo com o novo Userid.
+
+Este procedimento deve ser feito uma única vez por estação/projeto.
+
+ 
+
+Este arquivo conterá as evidências de teste(DISPLAYS).

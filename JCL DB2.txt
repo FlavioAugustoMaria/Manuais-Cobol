@@ -1,0 +1,45 @@
+//DC48RM01 JOB 'YMKC,4253,BN,PRIME000',MSGCLASS=Z,CLASS=E
+
+/*JOBPARM  SYSAFF=AL2C                                   
+
+//JOBLIB   DD DSN=AV.BIBGERTT,DISP=SHR                   
+
+//         DD DSN=AV.BIBGERAL,DISP=SHR                   
+
+//         DD DSN=BI.BIBGERAL,DISP=SHR                   
+
+//         DD DSN=ID.BIBGERAL,DISP=SHR                   
+
+//         DD DSN=SA.RDG2.SREST.AL2.DCALOAD,DISP=SHR     
+
+//         DD DSN=DB2A2.R2.DSNLOAD,DISP=SHR              
+
+//         DD DSN=SYS1.CEE.SCEERUN,DISP=SHR              
+
+//         DD DSN=SYS1.COBLIB,DISP=SHR                   
+
+//*                                                      
+
+//OUT1     OUTPUT JESDS=ALL,DEST=ANYLOCAL,CLASS=T        
+
+//*                                                      
+
+//STEP01   EXEC PGM=SBIKC115
+
+//KCVKBIBC DD DSN=AD.TEMP.YMKC.KCVKBIBC,DISP=SHR         
+
+//KCVKSETR DD DSN=AD.TEMP.ROSE.KCVKSETR,DISP=SHR         
+
+//CADALERT DD DSN=AD.TEMP.GIPS2206.CADALERT,              
+//       DISP=(OLD,CATLG,KEEP),                           
+//       DCB=(LRECL=83,RECFM=FB), 
+//       SPACE=(TRK,(150,50),RLSE)
+
+
+//*                                                      
+
+//SYSOUT   DD SYSOUT=*   
+
+//SYSUDUMP DD SYSOUT=Y   
+
+//SYSDUMP  DD SYSOUT=*

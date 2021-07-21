@@ -1,0 +1,46 @@
+====================================================================================================
+
+***                                       COMPILACAO                                             ***
+
+====================================================================================================
+
+ 
+
+ 
+
+- BIND
+
+L/A = Transação ou programa Batch que chamam módulos com DB2.
+
+K   = Módulo que possui DB2.
+
+X/A = Transação ou programa que possui DB2 e não chama ninguém com DB2.
+
+N   = Não possui e não chama ninguém com DB2.
+
+ 
+
+- TRN
+
+Y = Quando for uma transação IMS ou programa batch que não possua DB2, porém chama alguém que possui.
+
+N = Quando for uma transação IMS ou programa batch que acessa DB2, e chama alguém que possui.
+
+ 
+
+OBS: Quando for um programa batch sem DB2 e sem modulo, TRN=N.
+
+     Quando for um menu IMS sem DB2 e sem modulo, TRN=N.
+
+ 
+
+- LISTA DBRM
+
+Y = Quando tem .cal
+
+ 
+
+- BIBMODOB 
+
+Y = Quando o módulo é chamado on-line.
+    Para módulo de impressão IMS.

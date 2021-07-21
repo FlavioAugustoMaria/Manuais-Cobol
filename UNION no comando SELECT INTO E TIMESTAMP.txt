@@ -1,0 +1,23 @@
+UNION no comando SELECT INTO E TIMESTAMP
+
+Enviado por: Marcio Custin em 08/02/2021 no grupo DEV - BRADESCO
+
+
+ DB2 z/OS Versão 11 – Incompatibilidades
+Utilização dos operadores UNION e UNION ALL no comando SELECT INTO E TIMESTAMP  Atualmente, estamos na versão 11 do DB2 utilizando o pré-compilador da versão 10 em nossos programas.
+Migraremos para a versão 11 do pré-compilador e precisamos efetuar as seguintes correções de comandos SQL conforme abaixo: 
+utilização dos operadores UNION e UNION ALL no comando SELECT INTO 
+O DB2 z/OS versão 11 não permite mais o uso do SELECT INTO concomitante ao uso de UNION, UNION ALL, INTERSECT, INTERSECT ALL, EXCEPT e EXCEPT ALL.
+ 
+Trocar pela estrutura: 
+DECLARE CURSOR …OPEN … FETCH … CLOSE Usar FETCH FIRST 1 ROW ONLY 
+ A partir de hoje (08/02/2021), o HEXA fará apontamento do item acima com severidade
+ALTA para os programas que fazem uso desta estrutura. Desta forma, todos os programas apontados deverão ser alterados obrigatoriamente. Caso contrário, o programa não poderá ser promovido para outros ambientes. Obs: o uso de SELECT (SEM INTO)
+ com UNION continua válido. 
+
+TIMESTAMP 
+O DB2 z/OS versão 11 não permite mais o formato TIMESTAMP com separadores diferentes da forma abaixo: AAAA-MM-DD-hh.mm.ss.nnnnnn
+(fração de segundo, nnnnnn, varia de 0 a 12) Este formato deverá ser usado em literais, variáveis host e acessos dinâmicos (QMF, SPUFI, HPU, plataforma OPEN que acessa Mainframe). Qualquer formatação diferente retornará
+SQLCODE  -180 Para abrir a planilha de programas incompatíveis 
+Clique aqui.  Em caso de dúvidas, entre em contato com equipe 492 no e-mail: 4253/492 - DBA <4253492@bradesco.com.br> colocando
+ no assunto: DB2 z/OS Versão 11 – Incompatibilidades – (nome da rotina).

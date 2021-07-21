@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML xmlns="http://www.w3.org/TR/REC-html40" xmlns:o = 
+"urn:schemas-microsoft-com:office:office" xmlns:w = 
+"urn:schemas-microsoft-com:office:word" xmlns:ns0 = 
+"urn:schemas-microsoft-com:office:smarttags"><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16481" name=GENERATOR>
+<STYLE>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EstiloDeEmail17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:70.85pt 3.0cm 70.85pt 3.0cm;}
+div.Section1
+	{page:Section1;}
+-->
+</STYLE>
+</HEAD>
+<BODY lang=PT-BR vLink=purple link=blue><B>De:</B> Carla Flach 
+Zanetti<BR><B>Enviado em:</B> terça-feira, 18 de março de 2008 
+15:39<BR><B>Para:</B> Fabrica Pato Branco<BR><B>Cc:</B> Fabrica de Testes Pato 
+Branco<BR><B>Assunto:</B> Teste de SQLWARN0 em funções de coluna<BR>
+<DIV class=Section1>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">Pessoal,<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Seguem aqui algumas informações sobre o uso da cláusula SQLWARN0 nos acessos DB2 
+que efetuam função de coluna (MAX, SUM, MIN):<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Se o campo selecionado admitir nulo, podem ocorrer as seguintes 
+situações:<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">1 - Não encontra o registro e possui 
+a variável de nulidade definida no acesso<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">&nbsp;&nbsp;&nbsp;&nbsp; Retorna: 
+<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">SQLCODE 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+= ZEROS<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">SQLWARN0 &nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+= BRANCOS<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">VARIÁVEL DE NULIDADE 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = -1<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">2 - Não encontra o registro e não 
+possui a variável de nulidade definida no acesso:<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">&nbsp;&nbsp;&nbsp;&nbsp; Retorna: 
+<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">SQLCODE 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+= -305<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">SQLWARN0 &nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+= BRANCOS<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">VARIÁVEL DE NULIDADE 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = não foi definida no 
+acesso<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">3 - Encontra o registro, possui 
+variável de nulidade definida no acesso e a coluna da tabela está 
+nula:<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">&nbsp;&nbsp;&nbsp;&nbsp; Retorna: 
+<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">SQLCODE 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+= ZEROS<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">SQLWARN0 &nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+= <B><FONT color=red><SPAN 
+style="FONT-WEIGHT: bold; COLOR: red">W</SPAN></FONT></B><o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">VARIÁVEL DE NULIDADE 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = -1<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">4 - Encontra o registro, não possui 
+variável de nulidade definida no acesso e a coluna da tabela não está 
+nula:<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">&nbsp;&nbsp;&nbsp;&nbsp; Retorna: 
+<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">SQLCODE 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+= ZEROS<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">SQLWARN0 &nbsp;&nbsp;&nbsp; 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+= BRANCOS<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">VARIÁVEL DE NULIDADE 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = não foi definida no 
+acesso<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">Desta forma, conclui-se que <B><SPAN 
+style="FONT-WEIGHT: bold">SEMPRE QUE SE EXECUTAR UMA FUNÇÃO DE COLUNA NUM CAMPO 
+QUE POSSA VIR <FONT color=red><SPAN style="COLOR: red">NULO</SPAN></FONT>, <FONT 
+color=red><SPAN style="COLOR: red">NÃO TESTAR SQLWARN0</SPAN></FONT> 
+!!!</SPAN></B><o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal style="TEXT-INDENT: 35.4pt"><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">Att,<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p>&nbsp;</o:p></SPAN></FONT></P>
+<P class=MsoNormal><EM><B><I><FONT face="Times New Roman" size=3><SPAN 
+style="FONT-WEIGHT: bold; FONT-SIZE: 12pt; FONT-STYLE: normal"><ns0:PersonName 
+w:endInsDate="2008-03-18T15:16:00Z" w:endInsAuthor="CpMBraxis" 
+w:insDate="2008-03-18T15:16:00Z" w:insAuthor="CpMBraxis"><FONT color=black><SPAN 
+style="COLOR: black">Carla Flach 
+Zanetti</SPAN></FONT></ns0:PersonName></SPAN></FONT></I></B></EM><EM><B><I><FONT 
+face=Arial color=black size=2><SPAN 
+style="FONT-WEIGHT: bold; FONT-SIZE: 10pt; COLOR: black; FONT-STYLE: normal; FONT-FAMILY: Arial"><o:p></o:p></SPAN></FONT></I></B></EM></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">Outsourcing Aplicações – Filial Pato 
+Branco</SPAN></FONT><o:p></o:p></P>
+<P class=MsoNormal><FONT face="Times New Roman" size=3><SPAN 
+style="FONT-SIZE: 12pt">&nbsp;</SPAN></FONT><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><STRONG><B><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">CPM 
+Braxis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+</SPAN></FONT></B></STRONG><FONT face=Arial><SPAN 
+style="FONT-FAMILY: Arial"><o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">Tel: 
+55&nbsp;46&nbsp;3225&nbsp;1227&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial">Fax: 
+55&nbsp;46&nbsp;3225&nbsp;1227&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face=Arial color=purple size=3><SPAN 
+style="FONT-SIZE: 12pt; COLOR: purple; FONT-FAMILY: Arial"><A 
+title="blocked::http://www.cpmbraxis.com/&#10;http://www.cpmbraxis.com/" 
+href="blocked::http://www.cpmbraxis.com/"><FONT size=2><SPAN 
+style="FONT-SIZE: 10pt"><SPAN 
+title=blocked::http://www.cpmbraxis.com/>www.cpmbraxis.com</SPAN></SPAN></FONT></A>&nbsp;</SPAN></FONT><FONT 
+face=Arial><SPAN 
+style="FONT-FAMILY: Arial">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><STRONG><B><FONT face=Arial color=black size=2><SPAN 
+style="FONT-SIZE: 10pt; COLOR: black; FONT-FAMILY: Arial">Novo e-mail: 
+</SPAN></FONT></B></STRONG><FONT face=Arial size=2><SPAN 
+style="FONT-SIZE: 10pt; FONT-FAMILY: Arial"><A 
+title="mailto:carla.flach@cpmbraxis.com&#10;mailto:giovanni.martarello@cpmbraxis.com" 
+href="mailto:carla.flach@cpmbraxis.com"><SPAN 
+title=mailto:carla.flach@cpmbraxis.com>carla.flach@cpmbraxis.com</SPAN></A></SPAN></FONT><FONT 
+face=Arial><SPAN style="FONT-FAMILY: Arial"><o:p></o:p></SPAN></FONT></P>
+<P class=MsoNormal><FONT face="Times New Roman" size=3><SPAN 
+style="FONT-SIZE: 12pt"><o:p>&nbsp;</o:p></SPAN></FONT></P></DIV></BODY></HTML>

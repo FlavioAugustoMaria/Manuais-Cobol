@@ -1,0 +1,16 @@
+comando para derrubar usuario do Mid Frame quando ficar preso.
+
+Logar no ROSCOE e digitar o seguinte comando:
+CON CMD C U=PRIME31
+
+
+	OU
+
+Logar no TSO, opcao M - More,
+opcao 5 SDSF - Spool Search and Display Facility,
+DA - Active users,
+digitar na linha de comando:
+PREFIX *, OWNER 'CHAVE'
+
+
+

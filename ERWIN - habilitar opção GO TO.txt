@@ -1,0 +1,6 @@
+ERWIN 
+HABILITAR OPCAO "GO TO" para encontrar a tabela no modelo.
+
+com a opção 'Logical' habilitada,
+ir na opcao "Subject Areas", clicar com o direito em "Main Subject Area" e habilitar a opcao "Switch to".
+depois disso a opcao "GO TO" vai estar habilitada.

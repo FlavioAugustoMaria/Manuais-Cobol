@@ -1,0 +1,108 @@
+YY03 Tutorial.
+
+para executar o programa com debug.
+
+- compilar o programa com TRACEMASTER = YES e promover.
+- No bradesco, entrar no ACCTER, opção '2 AOR00M04' ou '6 AOR01M04'.
+- Pause/Break, digitar XXT0 (X X T ZERO), configurar a tela 'TraceMaster/CICS - Update User Profile'
+  conforme abaixo:
+
+***========>>INICIO
+                     TraceMaster/CICS - Update User Profile                     
+
+Command ===>                                                                   
+
+                                                                                
+
+Enter fully qualified dataset names, without quotes                            
+
+                                                                                
+
+   Macro Library . . . SA.RDG2.TM.AL2C.XTMACLIB
+
+   Symbol Library. . . AV.CHGM.DMASTER.BSL.TMST.ONL
+
+   AA Server Name. . .              (Enter a / for a server list)               
+
+   Scheme Name . . . .              (Enter a / for a scheme list)               
+
+   Scheme Description.                                                          
+
+                                                                                
+
+Display format requested on file and TSQ utilities                             
+
+   Display Format. . . C    (D or Blank=Dump; C=Character)                      
+
+                                                                                
+
+Session Options                                                                
+
+   Screen Size . . . . 2    (2=24x80; 3=32x80; 4=43x80; 5=27x132)               
+
+   Use M4Explorer. . . N    (Y or N)                                            
+
+   Symbols search. . .      (L-Library, S-Scheme or blank)                      
+
+   Sessions to Save. . 03   (Save programs and symbols for 0 to 15 sessions)    
+
+                                                                                
+
+Permitted Remote System Ids                                                    
+
+   Enter 5 Ids and/or patterns. .                                               
+
+                                                                               
+
+PF1=Help PF3=Exit PF8=Keys
+
+***========>>FIM
+
+
+
+SE APARECER TELA COM MENSAGEM 'TERMINAL NOT FOUND' DIGITAR 'K' OU 'L'
+
+- OPCAO 1-SETUP
+- INFORMAR NOME DO PROGRAMA PARA INCLUIR BREAK-POINT - ENTER.
+- QUANDO PROTEGER O NOME DO PROGRAMA SELECIONA-LO COM 'S'.
+
+- SHIT + F2 NA LINHA ONDE DESEJA INCLUIR O BREAK-POINT.
+- SHIT + F3 NA LINHA ONDE DESEJA EXCLUIR O BREAK-POINT.
+
+APÓS ISSO, PF3 PF3 ATE QUE A TELA FIQUE PRETA, OU PAUSE-BREAK.
+DIGITAR NA TELA YY03, LOGAR, 
+ESCOLHER OPCAO C-FLUXO (COM COORDENADOR) OU F-FUNCIONAL (PARA TESTAR SEM O COORDENADOR).
+
+INFORMAR FLUXO DE EXECUCAO (DEVE ESTAR NA DESCRICAO) EX: "CBPRIAA4".
+CANAL DE ACESSO: SEMPRE 050.
+
+- PF5 - Debug.
+- GO TO + 'NUMERO DA LINHA' QUANDO DESEJAR QUE A EXECUCAO VA PARA OUTRO LUGAR.
+- PF6 - no campo para alterar o valor do mesmo.
+- PF2 - Expande book.
+- PF3 - Volta execução.
+- PF10 - Zoom.
+
+
+******************************************************************************************
+
+YY06 - Ambiente TI
+
+Deve ser utilizado em um desses AOR:
+4 AOR00M50
+8 AOR01M50
+11 AOR02M50
+
+Macro Library . . . SA.RDG2.TM.AL2E.XTMACLIB
+
+Symbols Library . . AV.CHGM.DMASTER.BSL.TMST.ONL
+
+Display Format. . . C    (D or Blank=Dump; C=Character)   
+
+Screen Size . . . . 2    (2=24x80; 3=32x80; 4=43x80; 5=27x13
+
+   Use M4Explorer. . . N    (Y or N)                   
+
+  Profile Save Prompt Y    (Y=Prompt to save, N=Discard without
+
+o resto em branco

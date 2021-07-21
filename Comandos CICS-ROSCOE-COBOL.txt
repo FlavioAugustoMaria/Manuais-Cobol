@@ -1,0 +1,1103 @@
+=======================
+COMANDOS BASICOS ROSCOE
+=======================
+A L + = (attach library) mostra diretório depois " E " no arquivo que quer
+
+U *   = salva arquivo da tela (update)
+s 'nomearquivo' = (save) salvar como
+f 'nomearquivo' = (fetch) depois " A " 
+n = (NEXT) PROCURA PROXIMO
+Edit .palavra.novapalavra. = substituí todos 'palavra' por 'novapalavra'
+incl .nome. = lista todas as linhas com opção 'nome' 
+L +  =  
+r 1 1  = re-numerar as linhas
+
+POINT L 104 = vai para linha
+delatar o primeiro 0 da coluna = posiciona a tele / ou csr no scrl
+
+A L P13.PRIME13+ = abre o programa o library de outro ;
+" c l r " Copy library replace dpois salva com o nome na sua library " s Nome "
+
+Pg Down = Ctr+Z só antes de dar o enter
+
+sta cmd = ver todos comandos dados
++ = ultimo comando dado 
+
+A l pr.+ escolhe um arquivo para servir de modelo e coloque al (allocate) 
+na frente do arquivo.
+coloque o novo nome do data set e o tamanho no LRECL. 
+
+pur prime05c 3881 = apaga os status da lista de jobs. coloque & e repita 
+os comandos p/ vários.
+
+D J = apaga o job da lista
+D J N = sai do job sem apagar da lista
+
+D B = limpa Da
+
+send 'teste' key=prime05 = envia mensagem!!!
+
+> = chega uma coluna p/ direita 
+>2 = Duas colunas p/ direita
+< = coluna para esquerda
+
+NC = comenta linha em cobol
+NNC = Comenta bloco d linhas em cobol
+
+Nj = comenta linha em JCL
+
+F12 = coloca varias linhas
+ 
+M O = junta as linhas
+
+Ts = divide a linha
+
+SET MODE X = Manter letra caixa baixa
+
+Cria mais uma Library para trabalhar com "NOME" escolhido = CREATE AWS NOME
+Muda de Library criada = SEL AWX NEXT
+
+=======================================
+COMANDOS DE CONSOLE NO ROSCOE MIDFRAME
+=======================================	
+
+Para acessar a console, você deverá digitar sempre CON CMD.......... 
+Digitando apenas este comando, você verá as ultimas mensagens recebidas pela 
+console master. 
+Outros comandos:
+
+--------------------
+CON CMD $CJ9999,P  (onde 9999 é o numero do job) - Para cancelar job rodando.
+
+CON CMD 02cancel (para responder á hipotética mensagem = 
+- 13.23.08 JOB01820  IEF244I M01J00X IEFBR14 - UNABLE TO ALLOCATE 1 UNIT(S)   
+-         AT LEAST 1 OFFLINE UNIT(S) NEEDED.                                  
+  13.23.08 JOB01820  IEF877E M01J00X NEEDS 1 UNIT(S)                     U    
+  FOR IEFBR14 L3CWCR0S                                                        
+  FOR VOLUME PR39X7                                                           
+  OFFLINE, NOT ACCESSIBLE                                                     
+  0300-031F 0321-03BF 0A93-0AEF                                               
+  :                                                                           
+  13.23.08 JOB01820  IEF878I END OF IEF877E FOR M01J00X IEFBR14 L3CWCR0S      
+ *13.23.08 JOB01820 *02 IEF238D M01J00X - REPLY DEVICE NAME OR 'CANCEL'.      
+- 13.23.30 STC01791  +DFHFC0208I CICS                                    U    
+-  LSR pool 1 is being built dynamically by CICS because all of the           
+
+CON CMD S CICSA - Para startar o cics
+
+CON CMD F CICSA,CEMT P SHUT - Para parar o cics de forma normal 
+(espera as tasks terminarem)
+
+CON CMD F CICSA,CEMT P SHUT, IMM - Para parar o cics de forma abrupta 
+(interrompe todas as tasks)
+
+CON CMD C CICSA - Cancela o CICS(somente se os 2 comandos acima nao funcionarem)
+
+CON CMD -DB8G START DB2 - Para startar o DB2
+
+CON CMD -DB8G STOP DB2 - Para parar o DB2
+
+M01.INA 701 - Para dar um force no terminal 701 (este não precisa CON CMD)
+
+CON CMD C U=PRIME17 - Para dar um force no TSO user PRIME17
+
+========================
+ACESSAR DATASET MIDFRAME
+========================
+
+a d pr.+ = mostra todos
+a d pr.geral.coblib(bibc*) = mostra programas começados por bibc
+a d pr.geral.loadlib(prime05) = mostra programa compilado prime05
+c d r depois de enter " a " = Copy dataset replace
+exp dsn=pr.prime05.testepgm = carregando dados para a area alocada
+
+=============
+COMANDOS CICS
+=============
+
+con cmd s cicsa = starta o Cics 
+con cmd c cicsa = cancela o cics
+= exclusivamente para emergencia!!!!!
+=====================================================
+
+CESF LOGOFF = logoff do cics
+
+CEDA DEF PROG(nometela) L(a) GROUP(nomegrupo) = Cadastra tela
+CEDA DEF PROG(nomeprograma) L(c) GROUP(nomegrupo) = Cadastra programa
+     Toda vez que criar tem de instalar o grupo para dpois conseguir visualizar 
+     o programa carregado.
+
+CEMT SET PROG(nomeprograma ou nometela) NEW = executa o newcopy atualiza 
+              programa ou tela
+CEDA DEF TRANS(codigo da transação) PROG(nomeprograma) GROUP(nomegrupo)
+CEDA DEF FILE(nomearquivo) GROUP(nomegrupo) = Cadastra arquivo
+CEDA INSTALL GROUP(nomegrupo)
+CEDA DEL PROG(nometela ou nomeprograma) GROUP(nomegrugo) = exclui tela ou prog.
+CEDA DEL TRANS(nometransação) GROUP (nomegrupo) = exclui transação
+
+CECI LINK PROG(SBIVN05) COMMAREA(&A)
+
+CEDX TRANSAÇÃO = Prende uma transação especifica
+CEDF 
+
+PF5 = executa próxima linha
+
+PF6 ou DATA VARIAVEL  =  mostra o conteúdo da variável e abre para manipulação.
+
+PF3 = no quadro da variável fecha o quadro.
+
+SHIFT + PF1 = pula a execução para a linha que esta o cursor, porem sem executar
+              a parte pulada.
+
+SHIFT + PF2 = marca com break onde deve começar ou pular executando todas 
+              as linhas.
+
+RUN = manda executar o break
+
+DISC = desconecta
+
+CESN = logoff vai p/ tela de log para entrar com outro usuário.
+
+CEMT I TRANS(*) = lista transação programe e esta Enable.
+
+CEMT I PROGRAM(*) = lista os programas.
+
+CEMT I FILE(*) = verifica um arquivo.
+
+CEMT I TAS =  mostra tudo que esta sendo executado.
+
+F "dentro do cemt i tas, do escolhido" = força a derrubada da transação
+
+CECI SEND MAP(MAPVN28) = Visualizar a tela.	
+ 
+CECI RELEASE PROG(Nome do programa) = derruba todas execuções do programa 
+
+============             
+TSO MidFrame
+============
+
+Mesmo que o INCL do Roscoe:
+--------------------------
+X ALL <ENTER>
+F VARIAVEL X ALL <ENTER>
+RES para voltar 
+
+PROFILE = Mostra os comandos setados.
+RECOVERY ON = Ativa "UNDO"
+KEYS = Configura PF's
+SETTINGS = Configura "Home" p/ linha de comandos, 
+           Configura linha de comando no topo ou na base.   
+Quando não consegue abrir arquivo da geral porque esta em uso 
+PF1 duas vezes para aparecer a chave que esta travando!
+
+===============
+TSO DEBUG TOOLS
+===============
+
+Para se utilizar o DEBUG TOOLS deve-se trocar a Proc de execução,
+na tela de entrada do TSO (Ambiente PROJETOS2) como demonstrado abaixo:
+A proc deve ser trocada de DBSPROC8 para ISPFPROC
+
+OBS1: SOMENTE UTILIZANDO-SE A ISPFPROC TER-SE-A ACESSO A OPCAO DE DEBUGTOOLS.
+OBS2: UTILIZANDO-SE A PROC ISPFPROC NÃO SE TEM ACESSO A OPCAO DE SPUFF E NEM 
+      DE QMF. P/ UTILIZAR-SE DESTAS OPCOES, DEVER-SE-A SAIR DA ISPFPROC E 
+      ENTRAR MA DBSPROC8.
+
+Criar arquivo como no INSYNC
+--------------------------------------------
+
+ISPF Primary Option Menu
+M  More
+
+*
+IBM Products Panel
+17 FMN
+
+*
+Primary Option Menu
+3  Utilities 
+
+*
+Utility Functions
+1  Create
+
+*
+Primary Option Menu
+2  Edit 
+
+*
+Input Partitioned, Sequential or VSAM Data Set:
+Data set name = Nome do arquivo;
+
+Copybook or Template:
+Data set name = Endereço do Book
+Member = Nome do Book
+
+Processing Options: 1.Above
+
+Substituto do INSYNC no MidFrame;
+---------------------------------
+
+ARQUIVOS
+--------
+
+M - More
+17 - FMN File Manager 5.1.0perations and Control
+
+Primary Option Menu
+-------------------
+2  Edit
+
+Edit Entry Panel
+----------------
+Input Partitioned, Sequential or VSAM Data Set:
+   Data set name  . 'PR.PRIME05.SBIVN105.REMVIS5O'  
+
+Copybook or Template: 
+   Data set name  . 'PR.GERAL.BOOKLIB' 
+   Member . . . . . VNSQVISA  
+
+Processing Options:
+ Copybook/template 
+ 1  1. Above       
+
+TABELAS
+--------
+
+M  More          Additional IBM Products
+
+14 QMF V8      Query Management Facility for DB2 V8
+
+Na primeira tela do QMF linha de Command===>
+Adicionar Registro
+EDIT TABLE DB2PRD.TSOLTC_RCUPC_HIST(MODE = ADD)
+
+Alterar Registro
+EDIT TABLE DB2PRD.TSOLTC_RCUPC_HIST(MODE = CHANGE)
+
+============
+PIC MASCARAS
+============
+
+PIC S9(9)V9(2)
+PIC +9(9)V99
+PIC ----.---.--9,99
+PIC -ZZZ.ZZZ.ZZ9,99
+PIC ZZZ.ZZZ.ZZ9,99-
+
+==================
+CARRO DE IMPRESSAO
+==================
+
+'1' = proxima pagina; 
+' ' = proxima linha;
+'0' = pula uma linha;
+'-' = pula duas linhas;
+'+' = mesma linha.
+
+===============
+ATRIBUTOS CICS
+===============
+
+-1 = Move cursor p/ o campo
+Ex.: Move -1 to XXXXL 
+
+/  = Protege o campo
+A  = Desprotege o campo
+I  = Brilha o campo
+>  = Oculta o campo
+_  = Protege e Oculta o campo
+<  = Desprotege e Torna visivel
+Ex.: Move / to XXXXA 
+
+=======================
+LISTA DE ATRIBUTOS IMS:
+=======================
+
+***********************    ATRIBUTOS   *******************
+NUMERICO - POSICIONA CURSOR
+
+PROTEGIDO    - HIGHLIGH - NODISP - MOD   :  VALOR  ( 49405 )
+PROTEGIDO    - NORMAL   - NODISP - MOD   :  VALOR  ( 49397 )
+PROTEGIDO    - HIGHLIGH - DISP   - MOD   :  VALOR  ( 49401 )
+PROTEGIDO    - NORMAL   - DISP   - MOD   :  VALOR  ( 49393 )
+PROTEGIDO    - HIGHLIGH - DISP   - NOMOD :  VALOR  ( 49400 )
+PROTEGIDO    - NORMAL   - DISP   - NOMOD :  VALOR  ( 49392 )
+PROTEGIDO    - HIGHLIGH - NODISP - NOMOD :  VALOR  ( 49404 )
+PROTEGIDO    - NORMAL   - NODISP - NOMOD :  VALOR  ( 49396 )
+
+DESPROTEGIDO - HIGHLIGH - NODISP - MOD   :  VALOR  ( 49373 )                    
+DESPROTEGIDO - NORMAL   - NODISP - MOD   :  VALOR  ( 49365 )                    
+DESPROTEGIDO - HIGHLIGH - DISP   - MOD   :  VALOR  ( 49369 )                    
+DESPROTEGIDO - NORMAL   - DISP   - MOD   :  VALOR  ( 49361 )                    
+DESPROTEGIDO - HIGHLIGH - DISP   - NOMOD :  VALOR  ( 49368 )                    
+DESPROTEGIDO - NORMAL   - DISP   - NOMOD :  VALOR  ( 49360 )                    
+DESPROTEGIDO - HIGHLIGH - NODISP - NOMOD :  VALOR  ( 49372 )                    
+DESPROTEGIDO - NORMAL   - NODISP - NOMOD :  VALOR  ( 49364 )                    
+
+ALFA - POSICIONA CURSOR
+
+PROTEGIDO    - HIGHLIGH - NODISP - MOD   :  VALOR  ( 49389 )
+PROTEGIDO    - NORMAL   - NODISP - MOD   :  VALOR  ( 49381 )                    
+PROTEGIDO    - HIGHLIGH - DISP   - MOD   :  VALOR  ( 49385 )                    
+PROTEGIDO    - NORMAL   - DISP   - MOD   :  VALOR  ( 49377 )                    
+PROTEGIDO    - HIGHLIGH - DISP   - NOMOD :  VALOR  ( 49384 )                    
+PROTEGIDO    - NORMAL   - DISP   - NOMOD :  VALOR  ( 49376 )                    
+PROTEGIDO    - HIGHLIGH - NODISP - NOMOD :  VALOR  ( 49388 )                    
+PROTEGIDO    - NORMAL   - NODISP - NOMOD :  VALOR  ( 49380 )                    
+
+DESPROTEGIDO - HIGHLIGH - NODISP - MOD   :  VALOR  ( 49357 )                    
+DESPROTEGIDO - NORMAL   - NODISP - MOD   :  VALOR  ( 49349 )                    
+DESPROTEGIDO - HIGHLIGH - DISP   - MOD   :  VALOR  ( 49353 )                    
+DESPROTEGIDO - NORMAL   - DISP   - MOD   :  VALOR  ( 49345 )                    
+DESPROTEGIDO - HIGHLIGH - DISP   - NOMOD :  VALOR  ( 49352 )                    
+DESPROTEGIDO - NORMAL   - DISP   - NOMOD :  VALOR  ( 49344 )                    
+DESPROTEGIDO - HIGHLIGH - NODISP - NOMOD :  VALOR  ( 49356 )                    
+DESPROTEGIDO - NORMAL   - NODISP - NOMOD :  VALOR  ( 49348 )                    
+
+NUMERICO - NAO POSICIONA CURSOR
+
+PROTEGIDO    - HIGHLIGH - NODISP - MOD   :  VALOR  ( 253 )
+PROTEGIDO    - NORMAL   - NODISP - MOD   :  VALOR  ( 245 )                      
+PROTEGIDO    - HIGHLIGH - DISP   - MOD   :  VALOR  ( 249 )                      
+PROTEGIDO    - NORMAL   - DISP   - MOD   :  VALOR  ( 241 )                      
+PROTEGIDO    - HIGHLIGH - DISP   - NOMOD :  VALOR  ( 248 )                      
+PROTEGIDO    - NORMAL   - DISP   - NOMOD :  VALOR  ( 240 )                      
+PROTEGIDO    - HIGHLIGH - NODISP - NOMOD :  VALOR  ( 252 )                      
+PROTEGIDO    - NORMAL   - NODISP - NOMOD :  VALOR  ( 244 )                      
+
+DESPROTEGIDO - HIGHLIGH - NODISP - MOD   :  VALOR  ( 221 )                      
+DESPROTEGIDO - NORMAL   - NODISP - MOD   :  VALOR  ( 213 )                      
+DESPROTEGIDO - HIGHLIGH - DISP   - MOD   :  VALOR  ( 217 )                      
+DESPROTEGIDO - NORMAL   - DISP   - MOD   :  VALOR  ( 209 )                      
+DESPROTEGIDO - HIGHLIGH - DISP   - NOMOD :  VALOR  ( 216 )                      
+DESPROTEGIDO - NORMAL   - DISP   - NOMOD :  VALOR  ( 208 )                      
+DESPROTEGIDO - HIGHLIGH - NODISP - NOMOD :  VALOR  ( 220 )                      
+DESPROTEGIDO - NORMAL   - NODISP - NOMOD :  VALOR  ( 212 )                      
+
+ALFA - NAO POSICIONA CURSOR
+
+PROTEGIDO    - HIGHLIGH - NODISP - MOD   :  VALOR  ( 237 )
+PROTEGIDO    - NORMAL   - NODISP - MOD   :  VALOR  ( 229 )                      
+PROTEGIDO    - HIGHLIGH - DISP   - MOD   :  VALOR  ( 233 )                      
+PROTEGIDO    - NORMAL   - DISP   - MOD   :  VALOR  ( 225 )                      
+PROTEGIDO    - HIGHLIGH - DISP   - NOMOD :  VALOR  ( 232 )                      
+PROTEGIDO    - NORMAL   - DISP   - NOMOD :  VALOR  ( 224 )                      
+PROTEGIDO    - HIGHLIGH - NODISP - NOMOD :  VALOR  ( 236 )                      
+PROTEGIDO    - NORMAL   - NODISP - NOMOD :  VALOR  ( 228 )                      
+
+DESPROTEGIDO - HIGHLIGH - NODISP - MOD   :  VALOR  ( 205 )
+DESPROTEGIDO - NORMAL   - NODISP - MOD   :  VALOR  ( 197 )                      
+DESPROTEGIDO - HIGHLIGH - DISP   - MOD   :  VALOR  ( 201 )                      
+DESPROTEGIDO - NORMAL   - DISP   - MOD   :  VALOR  ( 193 )                      
+DESPROTEGIDO - HIGHLIGH - DISP   - NOMOD :  VALOR  ( 200 )                      
+DESPROTEGIDO - NORMAL   - DISP   - NOMOD :  VALOR  ( 192 )                      
+DESPROTEGIDO - HIGHLIGH - NODISP - NOMOD :  VALOR  ( 204 )                      
+DESPROTEGIDO - NORMAL   - NODISP - NOMOD :  VALOR  ( 196 )                      
+
+Ou então no roscoe e digitar CD ATRIBUTO. 
+É uma RPF que monta o atributo com base nos parâmetros passados
+
+=============
+GERA AREA IMS 
+=============
+
+RPF MASC0660
+
+==============
+COMANDO SEARCH
+==============
+
+       01  TB-MENSAGEM.
+           05  FILLER                  PIC  X(60)  VALUE
+           '00OK SEM ERRO                                          '.
+           05  FILLER                  PIC  X(60)  VALUE
+           '01CAMPO DEVE SER NUMERICO                              '.
+           05  FILLER                  PIC  X(60)  VALUE
+           '02CAMPO NAO PODE ESTAR EM BRANCO                       '.
+
+       01  FILLER  REDEFINES  TB-MENSAGEM.
+           05 TABELA-INTERNA  OCCURS 03 TIMES
+                             INDEXED   BY  IN-INDEX.
+              10 TB-COD-MSG         PIC  9(02).
+              10 TB-DESC-MSG        PIC  X(58).
+
+       01  WRK-FLAG-INCONS             PIC  9(02) VALUE ZEROS.
+       01  WRK-VARIAVEL                PIC  X(50) VALUE SPACES.
+       
+             (...)
+
+              SEARCH TABELA-INTERNA
+                AT END
+                      MOVE '** CODIGO NAO ENCONTRADO **' TO WRK-VARIAVEL
+                WHEN
+                    WRK-FLAG-INCONS EQUAL TB-COD-MSG(IN-INDEX)
+                      MOVE TB-DESC-MSG(IN-INDEX)         TO WRK-VARIAVEL
+              END-SEARCH.
+
+===================
+COMMANDO BIF DEEDIT
+===================
+
+Tira todos os caracteres alpha e mantem os numericos alinhados a direita;
+Obs: Tratar NOT NUMERIC, problema na conversão se for o ultimo campo da variavel 
+
+           MOVE CAMPOI                TO WRK-9-X
+           EXEC CICS BIF DEEDIT FIELD(WRK-9-X) 
+                                LENGTH(LENGTH OF WRK-9-X) 
+           END-EXEC. 
+ 
+           IF  WRK-9-X                NOT NUMERIC 
+               MOVE 'I'               TO CAMPOA
+               MOVE -1                TO CAMPOL 
+               PERFORM 3000-ENVIAR-TELA 
+           END-IF. 
+
+===============
+COMANDO INSPECT
+===============
+Troca um caracter por outro:
+WRK-VARIAVEL = 09/03/2009
+INSPECT WRK-VARIAVEL REPLACING ALL '/' BY '.'.
+
+Resultado = 09.03.2009
+
+================
+COMANDO TALLYING
+================
+
+Conta determinado conteudo dentro da string:
+WRK-VARIAVEL = 'TESTE DO COMANDO INSPECT TALLYING'
+
+MOVE ZEROS TO TALLY.
+
+INSPECT WRK-VARIAVEL-INTEIRA TALLYING TALLY FOR ALL 'TESTE'.
+
+IF TALLY GREATER ZEROS
+   DISPLAY 'ENCONTROU'
+ELSE
+   DISPLAY 'NÃO ENCONTROU'   
+   GO TO 0000-99-FIM
+END-IF.
+
+TALLY é nativo do COBOL; 
+assim como o RETURN-CODE (NAO PRECISA SER DECLARADO NA WORKING)
+
+=======================
+TRATAMENTO DE NULIDADE
+=======================
+
+Tratar null
+
+SELECT                                
+       CTPO_SIT_CONTR,                
+       VALUE(CBCO, 0),                
+       VALUE(CAG_BCRIA, 0),           
+       VALUE(CCTA_CORR_EXTER, 0),
+       VALUE(NOME, ' '),     
+       CPRODT_BDSCO,                  
+       CSPROD_LSNG                    
+FROM   DB2PRD.CONTR_ARREN_TEMPR   
+
+============
+STRING DATA
+============
+
+              STRING WRK-ANO-DB2
+                     WRK-MES-DB2
+                     WRK-DIA-DB2
+                DELIMITED BY SIZE INTO WRK-DATA-AUX
+              END-STRING
+---------------
+                      STRING WRK-DIA-AUX '/'
+                             WRK-MES-AUX '/'
+                             WRK-ANO-AUX                
+                      DELIMITED BY SIZE INTO WRK-DATA-X10
+------------------
+           STRING WRK-DATA-DD '.' WRK-DATA-MM '.' WRK-DATA-AAAA                 
+           DELIMITED BY SIZE INTO WRK-DATA-DB2
+
+---------------------------------------------------------------
+Encontrar um periodo de data em um periodo de data na tabela:
+---------------------------------------------------------------
+           EXEC SQL                                                            
+                SELECT CMODLD_SERVC                                            
+                  INTO :FVCOB004.CMODLD-SERVC                                  
+                  FROM DB2PRD.TMODLD_SERVC_VGCIA                               
+                WHERE CMODLD_SERVC     = :FVCOB004.CMODLD-SERVC                
+                  AND                                                          
+                  ((DFIM_VGCIA_MODLD  >= :FVCOB004.DINIC-VGCIA-MODLD AND       
+                    DINIC_VGCIA_MODLD  < :FVCOB004.DINIC-VGCIA-MODLD)          
+                                                                      OR       
+                   (DINIC_VGCIA_MODLD <= :FVCOB004.DFIM-VGCIA-MODLD  AND       
+                    DFIM_VGCIA_MODLD  >= :FVCOB004.DFIM-VGCIA-MODLD )          
+                                                                      OR       
+                   (DINIC_VGCIA_MODLD  > :FVCOB004.DINIC-VGCIA-MODLD AND       
+                    DFIM_VGCIA_MODLD  <= :FVCOB004.DFIM-VGCIA-MODLD ))         
+           END-EXEC.                                                           
+
+=====================
+CONDIÇÕES EVALUATE:
+====================
+------------------x-------------x-------
+Correspondente no caso OR (ou):
+-------------------------
+
+evaluate xx
+   when 1 
+      xxxxxx
+   when 2
+      xxxxxxx
+   when 3
+   when 4
+      xxxxxx
+   when other
+      continue
+end-evaluate.
+
+
+evaluate xx
+   when 1 
+      xxxxxx
+   when 2
+      xxxxxxx
+   when 3 
+    any 4
+      xxxxxx
+   when other
+      continue
+end-evaluate.
+
+----------X-------------X-----------
+Correspondente no caso And (e):
+
+evaluate true
+   when xx equal 1 
+      xxxxxx
+   when xx equal 2
+      xxxxxxx
+   when xx equal 3 
+   also yy equal 'A'
+      xxxxxx
+   when other
+      continue
+end-evaluate.
+
+
+=========================
+COMPILAR E CORRIGIR ERROS
+=========================
+exp dsn=pr.geral.coblib(prime05) = exportar o arquivo para coblib
+imp dsn=pr.geral.coblib(prime05) = importar o arquivo da coblib
+f compila = pegar o compila
+sub = submeter 
+dis prime05c = verificar se submetido mostra os jobs ou 'disp'
+
+a j 3504 = atachar o job numero mais recente
+sta = status do erro
+
+a j prime05c = abre os erros do prime05c
+  
+=============
+CICS BRADESCO
+=============
+Consultar mensagens do modulo SBI#MSG.
+
+CICS04
+
+Usuario   = A
+senha     = TESTEDDS
+
+Transação = MG01
+
+==========
+ABEND CICS
+==========
+
+ASRA = 07C = Movimentação de alfanumérico para numérico.
+
+===============
+ROSCOE BRADESCO
+===============
+
+========== RPF CALCDIGI ==========                                
+                                                                  
+ESSA RPF TEM POR FUNCAO CALCULAR O DIGITO MODULO 11,              
+DE DETERMINADO PESO                                               
+                                                                  
+SINTAXE: RPF CALCDIGI X ( SENDO X O PESO QUE SE QUER CALCULAR )   
+                                                                  
+SERA' ENTAO SOLICITADO O NUMERO ( ENTER FINALIZA )                
+                                                                  
+PRESSIONE 'ENTER'                                                 
+                                                                  
+========== RPF CALCDIGI ==========                                
+                                                                  
+Tira todos os remarks dos programas no ROSCOE:
+----------------------------------------------
+FILL 1 6 ' '
+Cuidado pois tira TODOS os remarks, não só FAB01
+Também tira os comandos INC. Ou seja, só serve para programas novos.
+Para tirar apenas o FAB01:
+E .FAB01.     .
+----------------------------------------------
+
+RPF REASY = Mostra os campos coluna tamanho e tipo da book.
+
+SET HEX ON = Ativa hexadecimal p/ visualisar no data set.
+
+
+RDW = 4 bits que carrega o tamanho do arquivo variavel. 
+      Sempre colocar 4 bits a mais nos arquivos variaveis (VB)
+
+CD IMPC MAPKB42,,33 = Importa do Pacote do Changeman
+
+
+A D AD.DB2.DCLGEN(BIBCB005) = Atacha a definição dos campos da tabela.
+
+imp dsn=AD.DB2.DCLGEN(BIBCB005) = Importa
+
+SF MANUAIS = Abre os manuais das Pools, entra em manuais corporativos.
+
+Select para descobrir o nome do DCLGEN da tabela:
+	SELECT TSNAME 
+	FROM DB2PRD.DBAS_SYSTABLES
+	WHERE NAME = 'NOME_DA_TABELA'
+
+Endereço do Create da Tabela para saber confirmar a Chave "Primary Key"
+AD.G07.DBAS.DB2FONTE(FVCOB001)
+AD.G07.DBAS.DB2FONTE(NOME TABELA)
+ 
+-- SELECT UTILIZANDO LOCATE --
+-- LOCATE MOSTRA A POSIÇÃO ONDE O CDEPDC SE ENCONTRA NO STRING DIGITADO --
+-- CDEPDC VARIAVEL DE 5 DIGITOS, SE FOR 00402 ELE SE ENCONTRA NA POSIÇÃO 6 --
+
+SELECT LOCATE (DIGITS(CDEPDC) , '0425300402')       
+  FROM DB2PRD.PSSOA_OPER                             
+ WHERE LOCATE (DIGITS(CDEPDC) , '0425300402') <> 0   
+
+Verifica o centro de custo do sistema: 
+CCUSTO 'BIBC' 
+CCUSTO 'NOME DO SISTEMA'
+
+======
+INSYNC
+======
+
+TFMT = coloca resultado do INSYNC em linha.
+
+OPÇAO 6 = pegar arquivo.
+
+===============
+INSYNC BRADESCO
+===============
+
+Endereço de Book = 
+AD.CHGM.STAGE.CSAL.#000034.CPY(I#CSAL32)
+AD.CHGM.STAGE. NOME DO PROJETO .# Nº DO PACOTE COM 6 DIGITOS .CPY(NOME DO BOOK)
+
+Endereço de Book na Baseline =
+AV.CHGM.DMASTER.BSLLB.CPY(I#MORAN6)
+AV.CHGM.DMASTER.BSLLB.CPY(NOME DO BOOK)
+
+Endereço de BooK de Tela = 
+BRADESCO:
+AD.CHGM.STAGE.FVCO.#000003.CPB(FVCOM30)
+AD.CHGM.STAGE. NOME DO PROJETO .# Nº DO PACOTE COM 6 DIGITOS .CPY(BOOK DA TELA)
+MIDFRAME:
+PR.GERAL.MAPLIB(MAPVC00)
+
+Endereço da Tela =
+AD.CHGM.STAGE.FVCO.#000003.MPS(FVCOM40) 
+
+Criar arquivo VSAM
+--------------------------------
+
+U  UTILITIES      INSYNC utilities
+***Enter
+3  VSAM           VSAM utility 
+***Enter
+
+1  -  Define catalog entry
+			ENTRY NAME    ===> 'AD.TEMP.NOMEDOARQUIVO' 
+			ENTRY TYPE    ===> 1       (Required for option "1")
+***Enter
+
+			Key length            ===> 5   (1 - 255)            ***Tamanho da Chave      
+			Relative key position ===> 0   (0 - maximum record) ***Onde começa a Chave
+			Average record length ===> 100                      ***Tamanho do Arquivo
+			Maximum record length ===> 100                ***Tamanho Maximo do Arquivo
+***Enter			
+
+			Region share options ===> 2           (1,2,3,4) 
+      System share options ===> 3           (3,4)     
+***Enter
+
+6  -  Initialize VSAM dataset                          ***Inicializa o Arquivo
+***Enter
+
+
+Criar arquivo Sequencial
+------------------------
+
+5  CREATE         Record create
+***Enter
+
+			OUTPUT DATA FILE: ===> 'AD.TEMP.NOMEDOARQUIVO'
+
+			Use COBOL or PL/1 layout             ===> NO      (COB, PLI, YES, NO)
+			
+			CONCATENATED LIBRARY LIST: MEMBER ===>          DISPLAY ===> YES (YES, NO)
+***Enter
+
+			RECORD FORMAT      ===> FB             ***Fixo Blocado
+			RECORD LENGTH      ===> 210            ***Tamanho
+***Enter
+
+==================
+Changeman BRADESCO
+==================
+
+EXP DSN=AD.PRIME(SBLF9514) = Exporta p/ um area compactada
+
+5 - para subir programas 
+
+C1 = Puxar programa da produção
+
+S2 = Abre o pacote
+
+S1 = Puxa o programa do roscoe
+
+Puchar a versão 0 do programa em Browser:
+1 - Build    - Create, update and review package data
+B - Browse   - Browse\print\copy baseline or promotion
+
+TSO CMNVIEW  - Para ver a ultima versão de um programa ou books
+
+-------------------
+
+::::::::::EM TESTE:::::::::
+
+testar para ver ser funciona
+Entrar direto em opções do TSO mesmo sem 
+TSO @ 34 
+
+EX: TSO @ 'NUMERO DA OPÇÃO'
+:::::::::::::::::::::::::::::::
+
+===============
+EVT04 BRADESCO
+===============
+
+usuário 4253-445 senha em branco
+usuário: 4253-437 senha: 4253-437
+
+C = P/ compilação de programas
+
+.3 = P/ colocar o nome do programa q procura
+
+Erros do CICS no EVT = S IGY
+ 
+------------------------- LIBRARY TYPE SELECTION LIST --------
+                                                               
+  LIB  DESCRIPTION                                             
+_ CPY Copy books                                              
+_ SRC Fontes Batch/Online ou Online CICS                      
+_ JSL Job Source Library - XEROX                              
+_ FSL Forms Source Language - XEROX                           
+_ CAL Relacao de modulos chamados                             
+_ MFS Fonte de Telas MFS                                      
+_ TDF Fontes Telon                                            
+_ AIO Fontes AION/DS                                          
+
+===============================
+Para demonstrar o uso do IMS ;
+===============================
+
+ ===> Digite "TSO" -  "Roscoe" -  "L CICS" ou "L IMS3270"             
+
+l ims3270                                      
+
+? Digite o LOGON
+
+DFS3649A /SIGN COMMAND REQUIRED FOR IMS IVP1               
+
+DATE: 02/27/08     TIME: 10:28:58                         
+
+NODE NAME: SC0TCP04                                        
+
+USERID: ibmuser                                            
+
+PASSWORD:                                                  
+
+USER DESCRIPTOR:                                           
+
+GROUP NAME:                                                
+
+NEW PASSWORD:                                              
+
+OUTPUT SECURITY AVAILABLE                                        
+
+DFS3650I SESSION STATUS FOR IMS IVP1                                  
+
+DATE: 02/27/08     TIME: 10:29:29                                     
+
+NODE NAME:           SC0TCP04    IPADDR: 200.186.236.43..43328        
+
+USER:                IBMUSER                                          
+
+PRESET DESTINATION:                                                   
+
+CURRENT SESSION STATUS:                                               
+
+   OUTPUT SECURITY AVAILABLE                                          
+
+Emitir o comando CLEAR para apagar as mensagens de logon                        
+
+Caso queira emitir alguns comandos;
+
+/DIS DB ALL
+
+CLEAR  -  para APAGAR  (pause break no teclado)
+ 
+/DIS Q TRAN
+
+CLEAR – para APAGAR
+
+/STOP TRAN ALL.
+
+/START TRAN ALL
+
+Etc...........
+
+Para sair do IMS e voltar para a tela do VTAM.
+
+- CLEAR    (pause break do teclado)
+
+-  /RCL
+
+Para demonstrar o uso de uma aplicação .
+
+Digite ;
+
+/FOR IVTNV 
+
+Adicione alguem com o cmd ADD e preencha os campos.
+
+Depois vc pode consultar com DISPLAY.
+
+Se quiser pode eliminar com o comando DELETE
+
+Isto é uma transação simples so para demonstrar que o ims esta 
+ativo e operacional.
+
+Para tirar o IMS do ar.
+
+ Nro do reply na console , emitir o comando ........      xx,/CHE DUMPQ.        
+ (Colocar o ponto final apos o comando)
+
+Para ativar o IMS.
+
+S IMS91CR1
+
+Em seguida pegar o nro do reply e emitir o comando  xx,/NRE.    (Normal Restart)
+(Colocar o ponto final apos o comando)
+
+Se o ims cair pq. alguem cancelou ele.
+
+- Verifiique se todos os Address spaces IMS91* tb cairam 
+( cancele eles caso necessario)
+
+- Na console emitir   S IMS91CR1
+
+- Em seguida pegar o nro do reply na console e emitir o comando  xx,/ERE.     
+(Emergency Restart)      (Colocar o ponto final apos o comando)
+
+============================
+Area de desenvolvimento rede
+============================
+
+\\Prime-arquivos\Eng_Sw\FC1\FC1
+
+=================================
+CKRS - CheckPoit / Restart
+=================================
+
+Leitura simples de arquivo o registro de entrada e de saida já são posicionados 
+automaticamente, não sendo nesseçario movimentar os campos para 
+a wrk-area-restart;
+
+Leitura com quebra que precisa ser armazenado Flags e Condições da quebra e 
+retornar para os devidos campos se "Rest";
+
+                                                                               
+           IF CK01-STATUS EQUAL 'REST'                                         
+              MOVE CK01-AREA-RESTART(1:CK01-TAM-AREA-RESTART)                  
+                                           TO WRK-AREA-RESTART                 
+              DISPLAY '================================================'       
+              DISPLAY '==============  EFETUADO RESTART  =============='       
+              DISPLAY 'WRK-FLAG               = ' WRK-FLAG                  
+              DISPLAY 'WRK-COND-QUEBRA        = ' WRK-COND-QUEBRA           
+              DISPLAY 'ACU-LIDO-DEVL          = ' ACU-LIDO-DEVL                
+              DISPLAY 'ACU-DELETADOS-TRBAB090 = ' ACU-DELETADOS-TRBAB090       
+              DISPLAY 'CK01-TAM-AREA-RESTART  = ' CK01-TAM-AREA-RESTART        
+              DISPLAY '================================================'       
+              DISPLAY '================================================'       
+              
+              move WRK-FLAG                to XXX-FLAG       
+              move WRK-COND-QUEBRA         to XXX-COND-QUEBRA
+              move wrk-LIDO-DEVL           to ACU-LIDO-DEVL            
+              move wrk-DELETADOS-TRBAB090  to ACU-DELETADOS-TRBAB090    
+           END-IF.                                                             
+
+Leitura por cursor armazenar os campos chaves, se "Rest" movimentar os campos de
+volta aos devidos lugares e fazer um fetch até que atinja o ponto de partida 
+devido. 
+
+
+Comando => " SQLERRT Index (3) "
+retorna a quantidade de registros que foram alterados, inseridos ou excluidos 
+em massa.   
+
+.CAL
+-----
+
+CKRS0100
+SRSDBRM
+
+BIBLIOTECA NO JOB DE EXECUÇÃO
+-----------------------------
+
+//JOBLIB   DD   DSN=SA.RDG2.SREST.AL2.DCALOAD,DISP=SHR
+
+
+TESTAR CKRS - FORÇAR ERRO
+--------------------------
+             . .
+             . .
+TIRAR *================================================================*
+.      LINKAGE                         SECTION.                         
+.     *================================================================*
+.                                                                       
+.      01  LNK-LINK.                                                    
+.          05 LNK-TAM                  PIC  S9(004) COMP.               
+.          05 LNK-FLAG                 PIC  X(001).                     
+TIRAR      05 LNK-CONT                 PIC  9(002).                     
+
+                                                                        
+      *================================================================*
+TROCAR PROCEDURE                       DIVISION USING LNK-LINK.         
+      *================================================================*
+
+             . .
+             . .
+
+             . .
+             . .
+TIRAR      IF LNK-FLAG                 EQUAL 'S' AND                
+.             ACU-LIDOS                GREATER LNK-CONT
+.             MOVE '***ABEND FORCADO PARA TESTE DE RESTART***'     
+.                                      TO ERR-TEXTO                 
+.             PERFORM 9999-ROTINA-ERRO                              
+TIRAR      END-IF.                                                  
+             . .
+             . .
+
+=======
+TRACEID
+=======
+Usado como display no Cics para aparecer no "sedf";
+
+EXEC CICS 
+   ENTER TRACEID(02) FROM(WRK-VARIAVEL) 
+END-EXEC.                                            
+
+===========
+HEXAVISION
+===========
+
+Endereço: https://hexavision.redeempresa.bradesco/
+
+NOTICIAS BRADESCO
+=================
+
+ACCTER DAFI
+
+CANTO ESQUERDO COLOCAR " SY33 "
+ENTER
+
+OPÇAO "NT" BOLSA "44" 
+
+=========================
+COMPILAÇÃO BIND BRADESCO
+=========================
+
+1. Arquivos .CAL (lista dbrm)
+Deve existir um arquivo .CAL na transação sempre que houver chamadas a 
+módulos DB2 não corporativos. 
+Isso vale também para alterações.
+Exemplo:Se foi incluído um módulo novo que acessa DB2 em um módulo ou transação,
+        o mesmo deve ser acrescentado na lista dbrm caso não esteja com XXXX****
+
+2. Conexões DB2
+Os programas batch que usam DB2 devem ter no início do programas a chamada 
+CALL 'POOL1050' que abre a conexão com o DB2
+
+3. Chamadas de módulos
+Todo módulo não corporativo deve ser chamado de forma dinâmica, ou seja, através
+de uma variável
+CALL WRK-MODULO
+
+4. Nas alterações de programas, se foi incluído algum acesso DB2 em programa que
+não tinha DB2, ou chamada a módulo DB2 onde não tinha DB2, verificar se o tipo 
+de bind precisa ser alterado e se é necessário criar lista dbrm.  
+
+Tipos de BIND:
+--------------
+L/A    Transação ou programa Batch que chamam módulos com DB2              
+K        Módulo que possui DB2                                          
+X/A    Transação ou programa que possui DB2 e não chama ninguém com DB2    
+N       não possui e não chama ninguém com DB2                         
+
+TRN = Y                                                              
+    quando for uma transação IMS ou programa batch que não possua DB2, porém 
+    chama alguém que possui                                  
+TRN = N                                                              
+    "Sempre que que possuir DB2 é N"
+    quando for uma transação IMS ou programa batch que acessa DB2, 
+    e chama alguém que possui                                      
+
+TEM LISTA DE DBRM : = YES  quando tem .CAL                                      
+
+BIBMODOB : = YES quando módulo chamado on-line                 
+
+5. Utilizar a rotina de checkpoint/restart padrão do Bradesco para programas 
+   Batch que atualizam DB2.   
+
+=============
+IMS
+=============
+
+Visualização de telas no bradesco IMS:
+--------------------------------------
+
+IMS04
+<PAUSE BREAK>
+/TEST MFS <ENTER>
+SENHAS <ENTER>
+1 <TAB>
+TESTEDDS <ENTER>
+
+============
+SANTANDER
+============
+
+Browser no programa
+-------------------
+TSO CHGM OEKT0017
+TSO CHGM "Nome do Programa"
+
+Browser no Book
+-------------------
+TSO CHGM OECE0001 CPB
+TSO CHGM "Nome do book" CPB

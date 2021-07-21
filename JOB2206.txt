@@ -1,0 +1,28 @@
+JOB PARA EXECUCAO DE ARQUIVO DE ENTRADA COMPRIMIDO VAZIO (CADACLIE).
+PARA EXECUTAR UM ARQUIVO DE ENTRADA COMPRIMIDO COMO DUMMY, DEVE SER INFORMADO O DCB DO ARQUIVO,
+OU CRIAR O PROPRIO ARQUIVO SEM REGISTROS.
+
+
+
+
+//DC71R00P JOB 'CBFI,4150,BN,CBFI6005',MSGCLASS=Z,CLASS=E 
+//*   TIME=1                                              
+//JOBLIB   DD DSN=AV.BIBGERTT,DISP=SHR                    
+//         DD DSN=AV.BIBGERAL,DISP=SHR                    
+//         DD DSN=DB2A2.R2.DSNLOAD,DISP=SHR               
+//         DD DSN=SYS1.CEE.SCEERUN,DISP=SHR               
+//OUT1     OUTPUT JESDS=ALL,DEST=ANYLOCAL,CLASS=T         
+//*                                                       
+//STEP1    EXEC PGM=GIPS2206                              
+//*                                                       
+//RESUHOJE DD DSN=AD.TEMP.GIPS2206.RESUHOJE,DISP=SHR      
+//*CADACLIE DD DSN=AD.TEMP.GIPS2206.CLIECOMP,DISP=SHR     
+//CADACLIE DD DUMMY,                                      
+//       DCB=(LRECL=180,RECFM=FB)                         
+//CADALERT DD DSN=AD.TEMP.GIPS2206.CADALERT,              
+//       DISP=(OLD,CATLG,KEEP),                           
+//       DCB=(LRECL=83,RECFM=FB), 
+//       SPACE=(TRK,(150,50),RLSE)
+//SYSOUT   DD SYSOUT=*            
+//SYSPRINT DD SYSOUT=*            
+//SYSUDUMP DD SYSOUT=Y            

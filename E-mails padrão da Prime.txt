@@ -1,0 +1,10 @@
+E-MAILS Padrão Prime
+
+PORTAL >> PROCESSOS >> BASELINE DE PROCESSOS
+
+
+e-mail para liberação de acesso ao CVS.
+em OUTROS EMAILS PADRÃO
+categoria: Engenharia
+
+PRI-xx/xxxx-xx - Liberação de Acesso no Repositório do Projeto.oft

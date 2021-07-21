@@ -1,0 +1,25 @@
+Comando ROUNDED.
+utilizado para arredondamento de cálculos com casas decimais.
+
+Ex. 1.
+[16:32:00] <Edson Luiz>
+ COMPUTE WRK-TAXA-BRUTA ROUNDED =
+                           ((WRK-TAXA / 100) + 1) ** WRK-N
+
+
+
+*** ROUNDED ***
+Quando no campo receptor foi reservado um certo número de posições decimais e esse campo receber o resultado de uma operação cujo número de posições decimais excede àquele, 
+então os dígitos mais à direita do resultado serão perdidos.
+
+Por exemplo: Se o campo que irá receber o resultado foi definido com 3 casas inteiras e 2 decimais, 
+e a operação der como resultado o valor 543,212, o valor que será armazenado será 543,21 perdendo-se os dígitos mais à direita que não couberem.
+
+Para se eliminar tal truncamento, utilize ROUNDED, que irá arredondar o dígito menos significativo.
+
+- Exemplos:
+MULTIPLY PRECO BY QUANTIDADE GIVING PRODUTO ROUNDED.
+
+SUBTRACT 100 FROM DIF ROUNDED.
+
+ADD CAMPO TO TOTAL ROUNDED.

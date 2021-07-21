@@ -1,0 +1,117 @@
+*=====================================================================* 
+*                      P R I M E - I N F O R M A T I C A              * 
+*=====================================================================* 
+*      TELA........:   CADUTBTM                                       * 
+*      PROGRAMA....:   CADU1201                                       * 
+*      PROGRAMADOR.:   FLAVIO AUGUSTO MARIA        - PRIME            * 
+*      ANALISTA....:   NAJARA SANTOS               - PRIME            * 
+*      DATA........:   09/06/2010                                     * 
+*---------------------------------------------------------------------* 
+*      OBJETIVO....:   MENU PARAMETROS DE SERVICOS.                   * 
+*=====================================================================* 
+         PRINT NOGEN                                                    
+CADUTB   FMT                                                            
+         DEV   TYPE=(3270,2),FEAT=IGNORE,SYSMSG=MENSA,DSCA=X'00A0',    X
+               PFK=(PF,1='HELP6100 1201  ',2='/RCL          .',        X
+               03='CADU1201      3',04='CADU1201      *',              X
+               05='CADU1201      5',06='CADU1201      *',              X
+               07='CADU1201      *',08='CADU1201      *',              X
+               09='CADU1201      *',10='CADU1201      A',              X
+               11='CADU1201      *',12='CADU1201      *',              X
+               13='CADU1201      *',14='CADU1201      *',              X
+               15='CADU1201      *',16='CADU1201      *',              X
+               17='CADU1201      *',18='CADU1201      *',              X
+               19='CADU1201      *',20='CADU1201      *',              X
+               21='CADU1201      *',22='CADU1201      *',              X
+               23='CADU1201      *',24='CADU1201      *')               
+*---------------------------------------------------------------------* 
+*                          D I F  /  D O F                            * 
+*---------------------------------------------------------------------* 
+         DIV TYPE=INOUT                                                 
+         DPAGE CURSOR=((04,13,POSI))                                    
+*---------------------------------------------------------------------* 
+*                              LINHA 01                               * 
+*---------------------------------------------------------------------* 
+         DFLD  'CADU1201',POS=(01,02),ATTR=(PROT)                       
+         DFLD  'CADASTRO UNICO BRADESCO',POS=(01,30),ATTR=(PROT,HI)     
+         DFLD  'CADUTBTM',POS=(01,73),ATTR=(PROT)                       
+*---------------------------------------------------------------------* 
+*                              LINHA 02                               * 
+*---------------------------------------------------------------------* 
+DATA     DFLD  LTH=10,POS=(02,02),ATTR=(PROT,NUM)                       
+         DFLD  'PARAMETROS SERVICOS',POS=(02,32),ATTR=(PROT,HI)
+HORA     DFLD  LTH=08,POS=(02,73),ATTR=(PROT,NUM)                       
+*---------------------------------------------------------------------* 
+*                              LINHA 03                               * 
+*---------------------------------------------------------------------* 
+SENHAS   DFLD  LTH=37,POS=(03,02),ATTR=(PROT,NUM,MOD,NODISP)            
+*---------------------------------------------------------------------* 
+*                              LINHA 04                               * 
+*---------------------------------------------------------------------* 
+         DFLD  'COMANDO =>',POS=(04,02),ATTR=(PROT)                     
+COMANDO  DFLD  LTH=68,POS=(04,13),ATTR=(NUM,MOD)                        
+*---------------------------------------------------------------------* 
+*                              LINHA 08                               * 
+*---------------------------------------------------------------------* 
+SEL1     DFLD  LTH=01,POS=(08,29),ATTR=(MOD,NODISP)                     
+         DFLD  '1. INCLUSAO DE SERVICOS',POS=(08,31),ATTR=(PROT)  
+*---------------------------------------------------------------------* 
+*                              LINHA 10                               * 
+*---------------------------------------------------------------------* 
+SEL2     DFLD  LTH=01,POS=(10,29),ATTR=(MOD,NODISP)                     
+         DFLD  '2. ALTERACAO DE SERVICOS',POS=(10,31),ATTR=(PROT)
+*---------------------------------------------------------------------* 
+*                              LINHA 12                               * 
+*---------------------------------------------------------------------* 
+SEL3     DFLD  LTH=01,POS=(12,29),ATTR=(MOD,NODISP)                     
+         DFLD  '3. CONSULTA DE SERVICOS',POS=(12,31),ATTR=(PROT)                       
+*---------------------------------------------------------------------* 
+*                              LINHA 14                               * 
+*---------------------------------------------------------------------* 
+SEL4     DFLD  LTH=01,POS=(14,29),ATTR=(MOD,NODISP)                     
+         DFLD  '4. LIBERACAO DO SERVICO PARA TODAS DEPENDENCIAS',      X
+               POS=(14,31),ATTR=(PROT)                       
+*---------------------------------------------------------------------* 
+*                              LINHA 23                               * 
+*---------------------------------------------------------------------* 
+MENSA    DFLD  LTH=79,POS=(23,02),ATTR=(PROT,NUM,MOD,HI)                
+*---------------------------------------------------------------------* 
+*                              LINHA 24                               * 
+*---------------------------------------------------------------------* 
+         DFLD  'PF:     1-AJUDA   2-DESCONEXAO   3-PROC.ANT   5-MENU DEX
+                ROTINAS    10-MENU CADU',POS=(24,02),ATTR=(PROT)
+         FMTEND                                                         
+*=====================================================================* 
+*                              M  I  D                                * 
+*=====================================================================* 
+         PRINT NOGEN                                                    
+CADUTBIM MSG   TYPE=INPUT,SOR=(CADUTB,IGNORE),NXT=CADUTBTM,OPT=1        
+         SEG                                                            
+         MFLD  (PF,'CADU1201      .'),LTH=15                            
+         MFLD  SENHAS,LTH=37,JUST=L,FILL=C' '                           
+         MFLD  COMANDO,LTH=68,JUST=L,FILL=C' '                          
+         MFLD  POSI,LTH=04,JUST=R,FILL=C' '                             
+         MFLD  SEL1,LTH=01,JUST=L,FILL=C' '                             
+         MFLD  SEL2,LTH=01,JUST=L,FILL=C' '
+         MFLD  SEL3,LTH=01,JUST=L,FILL=C' '
+         MFLD  SEL4,LTH=01,JUST=L,FILL=C' '
+         MFLD  MENSA,LTH=79,JUST=L,FILL=C' '                            
+         MSGEND                                                         
+*=====================================================================* 
+*                              M  O  D                                * 
+*=====================================================================* 
+         PRINT NOGEN                                                    
+CADUTBTM MSG   TYPE=OUTPUT,SOR=(CADUTB,IGNORE),NXT=CADUTBIM,OPT=1,     X
+               FILL=PT                                                  
+         SEG                                                            
+         MFLD  (DATA,DATE3Y4)                                           
+         MFLD  (HORA,TIME)                                              
+         MFLD  SENHAS,LTH=37                                            
+         MFLD  COMANDO,LTH=70,ATTR=YES                                  
+         MFLD  SEL1,LTH=01                                              
+         MFLD  SEL2,LTH=01
+         MFLD  SEL3,LTH=01
+         MFLD  SEL4,LTH=01
+         MFLD  MENSA,LTH=79                                             
+         MSGEND                                                         
+         END                                                            

@@ -1,0 +1,29 @@
+COMO COMPILAR PROGRAMAS 
+
+EM: \\prime-arquivos\publico\AdonilioJ\Adonilio (COMANDOS).txt
+
+
+Tipos de BIND:
+--------------
+L/A    Transação ou programa Batch que chamam módulos com DB2              
+K        Módulo que possui DB2                                          
+X/A    Transação ou programa que possui DB2 e não chama ninguém com DB2    
+N       não possui e não chama ninguém com DB2                         
+
+TRN = Y                                                              
+    quando for uma transação IMS ou programa batch que não possua DB2, porém 
+    chama alguém que possui                                  
+TRN = N                                                              
+    "Sempre que possuir DB2 é N"
+    quando for uma transação IMS ou programa batch que acessa DB2, 
+    e chama alguém que possui                                      
+
+TEM LISTA DE DBRM : = YES  quando tem .CAL                                      
+
+BIBMODOB : = YES quando módulo chamado on-line                 
+
+5. Utilizar a rotina de checkpoint/restart padrão do Bradesco para programas 
+   Batch que atualizam DB2.   
+
+
+

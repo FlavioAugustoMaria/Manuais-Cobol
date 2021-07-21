@@ -1,0 +1,28 @@
+//*AD.C87.FLAVIOAM(COPIAARQ)
+
+//COPIAARQ JOB 'AAAA,4510,PR41','B460076',MSGCLASS=Z,SCHENV=BATCH,      
+//         NOTIFY=&SYSUID                                               
+//JOBLIB   DD DSN=AV.BIBGERTT,DISP=SHR                                  
+//         DD DSN=AV.BIBGERAL,DISP=SHR                                  
+//         DD DSN=DB2A2.R2.DSNLOAD,DISP=SHR                             
+//         DD DSN=SYS1.CEE.SCEERUN,DISP=SHR                             
+//*                                                                     
+//* JOB PARA FAZER COPIA DE ARQUIVOS                                    
+//* - INFORMAR EM SORTIN  O ARQUIVO COM OS DADOS A SEREM COPIADOS       
+//* - INFORMAR EM SORTOUT O ARQUIVO P/ ONDE OS DADOS DEVEM SER COPIADOS 
+//* OBS 1. SE O ARQUIVO DE ENTRADA ESTIVER VAZIO O JOB ABENDA           
+//* OBS 2. O ARQUIVO DE SAIDA SERA CRIADO COM O MESMO TAMANHO DA ENTRADA
+//*                                                                     
+//STEP01   EXEC SORTD                        
+//*                                          
+//SORTIN   DD DSN=AD.C87.TESTE.CADASTRO,     
+//       DISP=SHR                            
+//SORTOUT  DD DSN=AD.C87.TESTE.CERI.COPIAARQ,
+//       DISP=(OLD,CATLG,DELETE),            
+//       UNIT=DISCO,                         
+//       SPACE=(TRK,(0020000,08000),RLSE),   
+//*      DCB=(AC.A,LRECL=0206,RECFM=FB)      
+//       DCB=*.SORTIN,                       
+//       DATACLAS=PRODX37                    
+//SYSIN    DD *                              
+ OPTION COPY

@@ -1,0 +1,16 @@
+ver GLOG de fluxo no ambiente de TU.
+
+
+GLOG TU:
+ 
+https://intranet8.unitario.teste.bradesco.com.br/glog/
+I900679
+teste05 (02/06/2021)
+
+---------------------------------------
+
+GLOG TI:
+
+https://intranet8.integrado.teste.bradesco.com.br/glog/
+i913041 (usuário do PSCT)
+psct0621 (02/06/2021)

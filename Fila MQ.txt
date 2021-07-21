@@ -1,0 +1,148 @@
+
+________________________________________
+De: Mauricio de Sa Cominetti [mailto:mauriciosc@primeinformatica.com.br] 
+Enviada em: quarta-feira, 19 de janeiro de 2011 08:49
+Para: mauriciosc@primeinformatica.com.br
+Assunto: Programas com Fila MQ
+
+Pessoal;
+Para quem está fazendo programas IMS com Fila MQ, seguem algumas considerações abaixo:
+
+O programa deve ter a seguinte estrutura:
+
+      *----------------------------------------------------------------*        
+       LINKAGE                         SECTION.                                 
+      *----------------------------------------------------------------*        
+                                                                                
+       01  LNK-IO-PCB.                                                          
+           03  LNK-IO-LTERM            PIC  X(08).                              
+           03  FILLER                  PIC  X(02).                              
+           03  LNK-IO-STATUS           PIC  X(02).                              
+           03  LNK-IO-CUR-DATE         PIC  9(07) COMP-3.                       
+           03  LNK-IO-CUR-TIME         PIC  9(07) COMP-3.                       
+           03  FILLER                  PIC  X(04).                              
+           03  LNK-IO-MODNAME          PIC  X(08).                              
+           03  FILLER                  PIC  X(20).                              
+           03  LNK-IO-HR-TMST          PIC  9(15) COMP-3.                       
+                                                                                
+       01  LNK-ALT-PCB.                                                         
+           03  LNK-ALT-LTERM           PIC X(08).                               
+           03  FILLER                  PIC X(02).                               
+           03  LNK-ALT-STATUS          PIC X(02).                               
+           03  FILLER                  PIC X(12).                               
+           03  LNK-ALT-MODNAME         PIC X(08).                               
+                                                                                
+      *================================================================*        
+       PROCEDURE                       DIVISION.                                
+      *================================================================*        
+                                                                                
+           ENTRY 'DLITCBL'             USING LNK-IO-PCB                         
+                                             LNK-ALT-PCB.                       
+                                                                                
+      *----------------------------------------------------------------*        
+       0000-INICIAR                    SECTION.                                 
+      *----------------------------------------------------------------*        
+                                                                                
+           PERFORM 1000-INICIALIZAR.                                            
+                                                                                
+           PERFORM 2000-ROTINA-PRINCIPAL.                                       
+                                                                                
+           GO TO 0000-INICIAR.                                                  
+                                                                                
+      *----------------------------------------------------------------*        
+       0000-99-FIM.                    EXIT.                                    
+      *----------------------------------------------------------------*        
+                                                                                
+      *----------------------------------------------------------------*        
+       1000-INICIALIZAR                SECTION.                                 
+      *----------------------------------------------------------------*        
+                                                                                
+           CALL 'CBLTDLI'              USING WRK-GU                             
+                                             LNK-IO-PCB                         
+                                             WRK-ENTRADA.                       
+                                                                                
+           IF  LNK-IO-STATUS           NOT EQUAL SPACES AND 'QC'                
+               MOVE '0010'             TO ERR-LOCAL                             
+               MOVE 'IMS'              TO ERR-TIPO-ACESSO                       
+               MOVE 'GU'               TO ERR-FUN-COMANDO                       
+               MOVE LNK-IO-STATUS      TO ERR-STA-CODE                          
+               STRING 'ERRO NA COMUNICACAO COM O IMS / FUNCAO: GU / '           
+                      'STATUS: '       LNK-IO-STATUS                            
+                                       DELIMITED BY SIZE                        
+                                       INTO ERR-TEXTO                           
+               PERFORM 9999-TRATAR-ERRO                                         
+           END-IF.                                                              
+                                                                                
+           IF  LNK-IO-STATUS           EQUAL 'QC'                               
+               GOBACK                                                           
+           END-IF.                                                              
+                                                                                
+      *----------------------------------------------------------------*        
+       1000-99-FIM.                    EXIT.                                    
+      *----------------------------------------------------------------*
+
+      *----------------------------------------------------------------*        
+       2000-ROTINA-PRINCIPAL           SECTION.                                 
+      *----------------------------------------------------------------*        
+             
+            Procedimentos do seu programa...
+                                                                   
+      *----------------------------------------------------------------*        
+       2000-99-FIM.                    EXIT.                                    
+      *----------------------------------------------------------------*        
+
+
+O programa não deve terminar o processamento chamando diretamente a rotina FINALIZAR, deve ser feito o GO TO 0000-INICIAR para finalizar a comunicação com o IMS e encerrar a transação.
+
+Para testar, é possível inserir dados manualmente na fila MQ:
+
+1.	Acessar o IMS04
+2.	Limpar a tela (Pause Break / Clear)
+3.	Digitar STIMQA
+4.	Função: (GET: Lê a fila e limpa a mensagem, BRW: Lê a fila sem limpar a mensagem, PUT: Grava uma mensagem na fila)
+5.	Queue: Nome da fila
+
+
+- Se o seu programa faz gravação na fila, faça um GET para limpar a fila e em seguida rode o programa. Faça um BRW para ver se a fila foi gravada corretamente.
+
+ - Se o seu programa faz leitura da fila, faça um PUT para gravar uma mensagem e em seguida rode o programa. Se for necessário rodar o programa novamente, faça um novo PUT, pois sempre que a fila é lida (GET) a mensagem é automaticamente excluída da fila.
+
+
+O programa OPRE0705 já foi ajustado e está funcionando, pode ser usado como base.
+
+
+O JOB para testes é o seguinte, altere os pontos destacados com o nome do seu programa:
+
+//PPRIM001  JOB 'CNSE,4250,BN,DC64BT12',CLASS=E,MSGCLASS=Z,REGION=8M    
+/*JOBPARM  SYSAFF=AL2C                                                  
+//JOBLIB   DD DSN=MQ2A2.MQ4.USERAUTH,DISP=SHR                           
+//         DD DSN=MQ2A2.VPADRAO.SCSQLOAD,DISP=SHR                       
+//         DD DSN=MQ2A2.VPADRAO.SCSQAUTH,DISP=SHR                       
+//         DD DSN=AV.BIBGERTT,DISP=SHR                                  
+//         DD DSN=IMSVS.TST.TPGMLIB,DISP=SHR                            
+//         DD DSN=IMSVS.TST.PGMLIB.VLF,DISP=SHR                         
+//         DD DSN=SA.RDG2.SREST.AL2.DCALOAD,DISP=SHR                    
+//         DD DSN=SA.RDG0.PROCLIB,DISP=SHR                              
+//         DD DSN=DB2A2.R2.DSNLOAD,DISP=SHR                             
+//         DD DSN=AV.BIBGERAL,DISP=SHR                                  
+//         DD DSN=SYS1.CEE.SCEERUN,DISP=SHR                             
+//         DD DSN=ID.BIBGERAL,DISP=SHR                                  
+//         DD DSN=CICS2A2.V220.SDFHEXCI,DISP=SHR                        
+//         DD DSN=BI.BIBGERAL,DISP=SHR                                  
+//         DD DSN=SYS1.COBLIB,DISP=SHR                                  
+//*                                                                     
+//STEP1     EXEC   BTSIIC,IOSEG=3072,SOUT=T,REGION=8M                   
+//G.BTSOUT    DD   SYSOUT=T                                             
+//G.SYSABOUT  DD   SYSOUT=T                                             
+//G.BTSIN   DD *                                                        
+./P MBR=BTSCOM00   PA=000C14    PC=DB2                                  
+./T TC=OPRE0705 MBR=OPRE0705 PSB=GENERICA LANG=CBL PLC=5                
+./T TC=RDA0001E PLC=0                                                   
+./D LTERM=RDA0001B EOS=? EOM=$ TYPE=3270-A7 SIZE=(27,132)               
+./O ATR=NO                                                              
+OPRE0705SBLF.QL.REQ.SBLF.SBLF.01                        SBLF.QL.REQ.SBLX
+F.SBLF.01                        ?                                      
+//SYSOUT    DD  SYSOUT=T                                                
+//SYSUDUMP  DD  DUMMY                                                   
+//DFSVSAMP DD *                                                         
+//*   

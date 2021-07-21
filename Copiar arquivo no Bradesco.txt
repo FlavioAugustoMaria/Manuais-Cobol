@@ -1,0 +1,8 @@
+COPIAR ARQUIVO NO BRADESCO.
+
+TS48
+161 - INSYNC
+6   - EXTRACT
+
+na opção "INPUT  DATA FILE" informar o endereço do arquivo a ser copiado.
+na opção "OUTPUT DATA FILE" informar o endereço do arquivo a ser criado.

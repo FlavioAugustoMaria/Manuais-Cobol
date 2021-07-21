@@ -1,0 +1,19 @@
+VER CREATES DE TABELAS NO BRADESCO.
+
+NO TSO,
+OPCAO 001        ISPF/PDF,
+OPCAO 3  	 Utilities,
+OPCAO 4  	 Dslist,
+
+EM "Dsname Level . . ." DIGITAR: AD.G07.DBAS.DB2FONTE
+EM SEGUIDA EXPANDI-LO COM "/" NA FRENTE
+
+
+Command - Enter "/" to select action
+------------------------------------
+/        AD.G07.DBAS.DB2FONTE
+
+LOCALICAR A TABELA QUE DESEJA VISUALIZAR E ABRIR COM "B"
+
+
+

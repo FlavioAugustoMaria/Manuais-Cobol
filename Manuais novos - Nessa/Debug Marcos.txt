@@ -1,0 +1,9 @@
+Debug
+dtcn
+PF9-> Preference File ==> AD.D493.READ.FERR.DTZ.PREF.ONL
+enter->Pf3
+LoadMod::>CU(s) ==> cinv153c ->Pf4
+
+
+
+yy03------------ldd cinv153c

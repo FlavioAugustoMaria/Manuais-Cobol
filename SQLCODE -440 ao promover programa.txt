@@ -1,0 +1,24 @@
+Ao promover o programa estava dando erro no promote, com as seguintes informações:
+SQLCODE -440
+SQLSTATE=42884
+
+na declaração de cursor
+
+           STATEMENT=1617                                                       
+           SQLCODE=-440                                                         
+           SQLSTATE=42884                                                       
+           TOKENS=FUNCTION.IN                                                   
+           CSECT NAME=DSNXORFN                                                  
+           RDS CODE=-100 
+
+
+o problema era a utilização da função IN de forma errada,
+usando '=' antes do comando IN.
+conforme abaixo:
+
+                FROM   DB2PRD.TALT_GER_RLCTO_CLI
+                WHERE  CFUNC_BDSCO_GER     = :PSCTB000.CFUNC-BDSCO-GER
+                AND    CIDTFD_GER_PRINC    = :PSCTB000.CIDTFD-GER-PRINC
+                AND    CSSGTO_CLI          = IN (998, 999)                   <<<<<< ERRO NESSA LINHA
+
+não apontava erro ao compilar o programa, apenas ao promover.

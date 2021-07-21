@@ -1,0 +1,5 @@
+BIBLIOTECAS JOB / JCL
+
+
+//JOBLIB   DD DSN=AV.BIBGERTT,DISP=SHR - biblioteca de TESTE    
+//         DD DSN=AV.BIBGERAL,DISP=SHR - biblioteca de PRODUCAO 

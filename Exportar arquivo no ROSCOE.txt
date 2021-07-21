@@ -1,0 +1,3 @@
+para exportar algum arquivo do roscoe para algum particionado:
+
+EXP DSN=AD.ALEX.FONTES(FVCO0080)

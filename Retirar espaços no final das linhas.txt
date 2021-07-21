@@ -1,0 +1,4 @@
+para remover espaços do fim das linhas no pspad.
+
+Editar -> Manipulacao das linhas -> remover espacos redundantes -> 
+marcar somente opcao "do final das linhas" -> OK.

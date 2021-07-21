@@ -1,0 +1,29 @@
+Parâmetros de compilação para PSPad no Ambiente PROJETO2!
+
+para compilar no pspad utilizar: Ctrl + F9.
+
+
+1 - Cobol simples
+
+2 - Cobol + CICS
+
+3 - Cobol + DB2
+
+4 - Cobol + CICS + DB2
+
+5 - Mapa BMS
+
+6 - Mapa MFS
+
+7 - Cobol simples (DEBUGTOOL)
+
+8 - Cobol + CICS (DEBUGTOOL)
+
+9 - Cobol + DB2 (DEBUGTOOL)
+
+0 - Cobol + CICS + DB2 (DEBUGTOOL)
+
+
+No link da wiki tem os parâmetros novos:
+
+http://pdadebian/wiki/doku.php?id=pda:aplicativos:compiladormf_baixa

@@ -1,0 +1,19 @@
+CONTATOS DO BRADESCO POR CENTRO DE CUSTO
+Contatos de analistas do bradesco responsáveis por sistemas / centros de custo.
+
+PERFORMANCE - solicitar análise de processo quando ocorre abend
+ROMULO MARCHINA SOARES [romulo.soares@bradesco.com.br] 
+15/06/2021
+
+PSCT - obter informações sobre carteiras de gerentes e seus clientes
+VINICIUS GABRIEL NOGUEIRA HOFFMANN <vinicius.hoffmann@bradesco.com.br>
+15/06/2021
+
+SARH - Obter informações sobre funcionários Bradesco
+ANNIE CAROLINE FERRAZ <annie.c.ferraz@bradesco.com.br>
+15/06/2021
+
+UORG - informações sobre Unidade Organizacional (Agência)
+CYNTHIA ANNICELLI <cynthia.annicelli@bradesco.com.br>
+15/06/2021
+

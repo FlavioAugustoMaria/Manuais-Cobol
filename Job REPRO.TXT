@@ -1,0 +1,30 @@
+job para execução de repro.
+transforma o arquivo AD.C87.TESTE.PITDV01 (vsam)
+no arquivo AD.C87.TESTE.PITDV01S (sequencial).
+
+
+//L951859B JOB MSGCLASS=Z,CLASS=E,NOTIFY=&SYSUID                        
+//JOBLIB   DD DSN=AV.BIBGERAL,DISP=SHR                                  
+//         DD DSN=AV.BIBGERTT,DISP=SHR                                  
+//         DD DSN=SA.RDG2.SREST.AL2.DCALOAD,DISP=SHR                    
+//         DD DSN=DB2A2.R2.DSNLOAD,DISP=SHR                             
+//         DD DSN=SYS1.CEE.SCEERUN,DISP=SHR                             
+//OUT1     OUTPUT JESDS=ALL,DEST=ANYLOCAL,CLASS=T                       
+//*---------------------------------------------------------------------
+//STEP01   EXEC PGM=IDCAMS                                              
+//*                                                                     
+//DD1      DD DSN=AD.C87.TESTE.PITDV01,DISP=SHR                         
+//DD2      DD DSN=AD.C87.TESTE.PITDV01S,                                
+//       DISP=(,CATLG,DELETE),                                          
+//       UNIT=DISCO,                                                    
+//       SPACE=(TRK,(000020,0005),RLSE),                                
+//       DCB=(LRECL=1024,RECFM=FB)                                      
+//SYSTSPRT DD SYSOUT=*                                                  
+//SYSPRINT DD SYSOUT=*                                                  
+//LISTING  DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSUDUMP DD SYSOUT=Y                                                  
+//SYSIN    DD *                                                         
+ REPRO INFILE (DD1) OUTFILE (DD2)                                       
+//                                                                      
+ VERIFY FILE DD1                                                        

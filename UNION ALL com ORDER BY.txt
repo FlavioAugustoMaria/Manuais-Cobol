@@ -1,0 +1,4 @@
+Então o erro era que quanto tem union all o order by não pode ser pelo nome da coluna e sim pelo número dela. Tipo order by 1. vivendo e aprendendo hehehe
+
+O flaviao vc tem um documento com sqlcode.. no q eu tenho não tinha esse.
+

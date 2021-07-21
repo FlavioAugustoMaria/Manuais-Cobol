@@ -1,0 +1,22 @@
+YY03/YY06 Ambiente TI
+
+
+Macro Library . . . SA.RDG2.TM.AL2E.XTMACLIB
+
+Symbols Library . . AV.CHGM.DMASTER.BSL.TMST.ONL
+
+Display Format. . . C    (D or Blank=Dump; C=Character)   
+
+Screen Size . . . . 2    (2=24x80; 3=32x80; 4=43x80; 5=27x13
+
+   Use M4Explorer. . . N    (Y or N)                   
+
+  Profile Save Prompt Y    (Y=Prompt to save, N=Discard without
+
+o resto em branco
+
+
+
+4 AOR00M50
+8 AOR01M50
+11 AOR02M50

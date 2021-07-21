@@ -1,0 +1,255 @@
+*=====================================================================*
+*                 P R I M E - I N F O R M A T I C A                   *         
+*=====================================================================*
+*        TELA.................: BIBCG2TM                              *
+*        PROGRAMA.............: BIBC0202                              *
+*        PROGRAMADOR..........: FLAVIO AUGUSTO MARIA   - PRIME        *
+*        ANALISTA.............: RONALDO NATIVIDADE     - PRIME        *
+*        DATA.................: 03/02/2011                            *
+*---------------------------------------------------------------------*
+*        OBJETIVO.............: TELA PARA A CONSULTA SUMARIZADA DE    *
+*        TRANSACOES.                                                  *
+*=====================================================================*
+         PRINT NOGEN                                                            
+BIBCG2   FMT
+         DEV   TYPE=(3270,2),FEAT=IGNORE,SYSMSG=MENSA,DSCA=X'00A0',    X        
+               PFK=(PF,01='HELP6100 0202  ',02='/RCL          .',      X
+               03='BIBC0202      3',04='BIBC0202      4',              X
+               05='BIBC0202      5',06='BIBC0202      *',              X
+               07='BIBC0202      7',08='BIBC0202      8',              X
+               09='BIBC0202      9',10='BIBC0202      A',              X
+               11='BIBC0202      *',12='BIBC0202      *',              X
+               13='BIBC0202      *',14='BIBC0202      *',              X
+               15='BIBC0202      *',16='BIBC0202      *',              X
+               17='BIBC0202      *',18='BIBC0202      *',              X
+               19='BIBC0202      *',20='BIBC0202      *',              X
+               21='BIBC0202      *',22='BIBC0202      *',              X
+               23='BIBC0202      *',24='BIBC0202      *')
+*---------------------------------------------------------------------*         
+*                            D I F / D O F                            *         
+*---------------------------------------------------------------------*         
+         DIV   TYPE=INOUT                                                       
+         DPAGE CURSOR=((04,13))
+*---------------------------------------------------------------------*         
+*                              LINHA 01                               *         
+*---------------------------------------------------------------------*         
+         DFLD  'BIBC0202',POS=(01,02),ATTR=(PROT)
+         DFLD  'CORRESPONDENTE BANCARIO',POS=(01,29),ATTR=(PROT,HI)             
+         DFLD  'BIBCG2TM',POS=(01,72),ATTR=(PROT)
+*---------------------------------------------------------------------*         
+*                              LINHA 02                               *         
+*---------------------------------------------------------------------*         
+DATA     DFLD  POS=(02,02),LTH=10,ATTR=(PROT,NUM)                               
+         DFLD  'CONSULTA SUMARIZADA DE TRANSACOES',                    X
+               POS=(02,24),ATTR=(PROT,HI)
+HORA     DFLD  POS=(02,72),LTH=08,ATTR=(PROT,NUM)                               
+*---------------------------------------------------------------------*         
+*                              LINHA 03                               *         
+*---------------------------------------------------------------------*         
+SENHA    DFLD  POS=(03,02),LTH=37,ATTR=(PROT,NUM,MOD,NODISP)                    
+FASE     DFLD  LTH=01,POS=(03,40),ATTR=(PROT,NUM,MOD,NODISP)                    
+ULTPAG   DFLD  LTH=01,POS=(03,42),ATTR=(PROT,MOD,NODISP)                        
+NATURE   DFLD  LTH=01,POS=(03,44),ATTR=(PROT,MOD,NODISP)
+SOMPAG   DFLD  LTH=03,POS=(03,46),ATTR=(PROT,MOD,NODISP)
+PAGINA   DFLD  LTH=03,POS=(03,50),ATTR=(PROT,NUM,MOD,NODISP)
+LIQEST   DFLD  LTH=20,POS=(03,54),ATTR=(PROT,MOD,NODISP)
+TPACES   DFLD  LTH=01,POS=(03,75),ATTR=(PROT,MOD,NODISP)
+*---------------------------------------------------------------------*         
+*                              LINHA 04                               *         
+*---------------------------------------------------------------------*         
+         DFLD  'COMANDO==>',POS=(04,02),ATTR=(PROT)                             
+COMANDO  DFLD  POS=(04,13),LTH=68,ATTR=(MOD)                                    
+*---------------------------------------------------------------------*         
+*                              LINHA 05                               *         
+*---------------------------------------------------------------------*         
+INCONS   DFLD  LTH=06,POS=(05,02),ATTR=(PROT,MOD,NODISP)                        
+PAGIMP   DFLD  LTH=06,POS=(05,10),ATTR=(PROT,NUM,MOD,NODISP)                    
+TOTIMP   DFLD  LTH=51,POS=(05,17),ATTR=(PROT,MOD,NODISP)                        
+*---------------------------------------------------------------------*         
+*                              LINHA 06                               *         
+*---------------------------------------------------------------------*         
+         DFLD  'BCO......:',POS=(06,07),ATTR=(PROT)                             
+BCO      DFLD  LTH=03,POS=(06,18),ATTR=(MOD,PROT)
+         DFLD  'EMP.:',POS=(06,25),ATTR=(PROT)                                  
+EMP      DFLD  POS=(06,31),LTH=05,ATTR=(NUM,MOD)
+         DFLD  'AG.ORIG...:',POS=(06,40),ATTR=(PROT)                            
+AGORI    DFLD  POS=(06,54),LTH=05,ATTR=(NUM,MOD)
+         DFLD  'PACB ORIG:',POS=(06,63),ATTR=(PROT)                             
+PACB     DFLD  POS=(06,76),LTH=03,ATTR=(NUM,MOD)
+*---------------------------------------------------------------------*         
+*                              LINHA 07                               *         
+*---------------------------------------------------------------------*         
+         DFLD  'DE',POS=(07,07),ATTR=(PROT)                                     
+DEDIA    DFLD  POS=(07,10),LTH=02,ATTR=(NUM,MOD)
+         DFLD  '/',POS=(07,13),ATTR=(PROT)                                      
+DEMES    DFLD  POS=(07,15),LTH=02,ATTR=(NUM,MOD)
+         DFLD  '/',POS=(07,18),ATTR=(PROT)                                      
+DEANO    DFLD  POS=(07,20),LTH=04,ATTR=(NUM,MOD)
+         DFLD  'ATE',POS=(07,25),ATTR=(PROT)                                    
+ATEDIA   DFLD  POS=(07,29),LTH=02,ATTR=(NUM,MOD)
+         DFLD  '/',POS=(07,32),ATTR=(PROT)                                      
+ATEMES   DFLD  POS=(07,34),LTH=02,ATTR=(NUM,MOD)
+         DFLD  '/',POS=(07,37),ATTR=(PROT)                                      
+ATEANO   DFLD  POS=(07,39),LTH=04,ATTR=(NUM,MOD)
+         DFLD  '(DD/MM/AAAA)',POS=(07,44),ATTR=(PROT)                           
+         DFLD  'TRANSACAO:',POS=(07,63),ATTR=(PROT)                             
+TRAN     DFLD  POS=(07,75),LTH=04,ATTR=(NUM,MOD)
+*---------------------------------------------------------------------*
+*                              LINHA 08                               *
+*---------------------------------------------------------------------*
+LITPAG   DFLD  POS=(08,02),LTH=11,ATTR=(PROT,MOD,NODISP)
+TOTPAG   DFLD  POS=(08,14),LTH=14,ATTR=(PROT,MOD,NODISP)
+LIQPAG   DFLD  POS=(08,29),LTH=16,ATTR=(PROT,MOD,NODISP)
+QTDPAG   DFLD  POS=(08,46),LTH=06,ATTR=(PROT,MOD,NODISP)
+LITREC   DFLD  POS=(08,53),LTH=15,ATTR=(PROT,MOD,NODISP)
+QTDREC   DFLD  POS=(08,69),LTH=06,ATTR=(PROT,MOD,NODISP)
+*---------------------------------------------------------------------*         
+*                              LINHA 09                               *         
+*---------------------------------------------------------------------*
+         DFLD  'DATA       TRAN DESCRICAO',POS=(09,02),ATTR=(PROT)
+         DFLD  'QTD TRX VL TOTAL CHEQ',POS=(09,42),ATTR=(PROT)
+         DFLD  'VLR TOTAL DIN P/R',POS=(09,64),ATTR=(PROT)
+*---------------------------------------------------------------------*         
+*                              LINHA 10                               *         
+*---------------------------------------------------------------------*         
+CHREST   DFLD  LTH=12,POS=(10,02),ATTR=(PROT,MOD,NODISP)                        
+*---------------------------------------------------------------------*         
+*                              LINHA 11 A 21                          *
+*---------------------------------------------------------------------*         
+         DO 11
+ODATA    DFLD  POS=(11,02),LTH=10,ATTR=(PROT,MOD)                               
+OTRAN    DFLD  POS=(11,13),LTH=04,ATTR=(PROT,MOD)                               
+DESCR    DFLD  POS=(11,18),LTH=24,ATTR=(PROT,MOD)
+QTDTRX   DFLD  POS=(11,43),LTH=06,ATTR=(PROT,MOD)
+VTOTCH   DFLD  POS=(11,50),LTH=13,ATTR=(PROT,MOD)
+VTOTDN   DFLD  POS=(11,64),LTH=13,ATTR=(PROT,MOD)
+PAGREC   DFLD  POS=(11,78),LTH=01,ATTR=(PROT,MOD)
+         ENDDO                                                                  
+*---------------------------------------------------------------------*         
+*                              LINHA 22                               *
+*---------------------------------------------------------------------*         
+TOTREC   DFLD  POS=(22,02),LTH=14,ATTR=(PROT,MOD,NODISP)
+LIQREC   DFLD  POS=(22,17),LTH=20,ATTR=(PROT,MOD,NODISP)
+LITEST   DFLD  POS=(22,38),LTH=15,ATTR=(PROT,MOD,NODISP)
+TOTEST   DFLD  POS=(22,54),LTH=14,ATTR=(PROT,MOD,NODISP)
+QTDEST   DFLD  POS=(22,69),LTH=06,ATTR=(PROT,MOD,NODISP)
+*---------------------------------------------------------------------*         
+*                              LINHA 23                               *         
+*---------------------------------------------------------------------*         
+MENSA    DFLD  LTH=79,POS=(23,02),ATTR=(PROT,MOD,HI)                            
+*---------------------------------------------------------------------*         
+*                              LINHA 24                               *         
+*---------------------------------------------------------------------*         
+         DFLD  'PF: 1-AJUDA 2-DESC 3-PROC.ANT 4-IMPR 5-MENU 7-RET',    X        
+               POS=(24,02),ATTR=(PROT)                                          
+         DFLD  '8-AVANCA 9-CANC 10-MENU BIBC',POS=(24,52),ATTR=(PROT)           
+         FMTEND                                                                 
+*=====================================================================*         
+*                           M I D                                     *         
+*=====================================================================*         
+         PRINT NOGEN                                                            
+BIBCG2IM MSG   TYPE=INPUT,SOR=(BIBCG2,IGNORE),NXT=BIBCG2TM,OPT=1
+         SEG                                                                    
+         MFLD  (PF,'BIBC0202      .'),LTH=15
+         MFLD  SENHA,LTH=37,JUST=L,FILL=C' '
+         MFLD  COMANDO,LTH=68,JUST=L,FILL=C' '                                  
+         MFLD  FASE,LTH=01,JUST=R,FILL=C' '                                     
+         MFLD  ULTPAG,LTH=01,JUST=R,FILL=C' '                                   
+         MFLD  NATURE,LTH=01,JUST=R,FILL=C' '                                   
+         MFLD  SOMPAG,LTH=03,JUST=R,FILL=C' '                                   
+         MFLD  PAGINA,LTH=03,JUST=R,FILL=C' '
+         MFLD  LIQEST,LTH=20,JUST=L,FILL=C' '
+         MFLD  TPACES,LTH=01,JUST=L,FILL=C' '
+         MFLD  INCONS,LTH=06,JUST=L,FILL=C' '                                   
+         MFLD  PAGIMP,LTH=06,JUST=L,FILL=C' '                                   
+         MFLD  TOTIMP,LTH=51,JUST=L,FILL=C' '
+         MFLD  BCO,LTH=03,JUST=R,FILL=C' '                                      
+         MFLD  EMP,LTH=05,JUST=R,FILL=C' '                                      
+         MFLD  AGORI,LTH=05,JUST=R,FILL=C' '                                    
+         MFLD  PACB,LTH=03,JUST=R,FILL=C' '
+         MFLD  DEDIA,LTH=02,JUST=R,FILL=C' '                                    
+         MFLD  DEMES,LTH=02,JUST=R,FILL=C' '                                    
+         MFLD  DEANO,LTH=04,JUST=R,FILL=C' '                                    
+         MFLD  ATEDIA,LTH=02,JUST=R,FILL=C' '                                   
+         MFLD  ATEMES,LTH=02,JUST=R,FILL=C' '                                   
+         MFLD  ATEANO,LTH=04,JUST=R,FILL=C' '                                   
+         MFLD  TRAN,LTH=04,JUST=L,FILL=C' '
+         MFLD  LITPAG,LTH=11,JUST=L,FILL=C' '
+         MFLD  TOTPAG,LTH=14,JUST=L,FILL=C' '
+         MFLD  LIQPAG,LTH=16,JUST=L,FILL=C' '
+         MFLD  QTDPAG,LTH=06,JUST=L,FILL=C' '
+         MFLD  LITREC,LTH=15,JUST=L,FILL=C' '
+         MFLD  QTDREC,LTH=06,JUST=L,FILL=C' '
+         MFLD  CHREST,LTH=12,JUST=R,FILL=C' '                                   
+         DO 11
+         MFLD  ODATA,LTH=10,JUST=L,FILL=C' '                                    
+         MFLD  OTRAN,LTH=04,JUST=L,FILL=C' '                                    
+         MFLD  DESCR,LTH=24,JUST=L,FILL=C' '
+         MFLD  QTDTRX,LTH=06,JUST=R,FILL=C' '
+         MFLD  VTOTCH,LTH=13,JUST=R,FILL=C' '
+         MFLD  VTOTDN,LTH=13,JUST=R,FILL=C' '
+         MFLD  PAGREC,LTH=01,JUST=L,FILL=C' '                                   
+         ENDDO                                                                  
+         MFLD  TOTREC,LTH=14,JUST=L,FILL=C' '                                   
+         MFLD  LIQREC,LTH=20,JUST=L,FILL=C' '
+         MFLD  LITEST,LTH=15,JUST=L,FILL=C' '
+         MFLD  TOTEST,LTH=14,JUST=L,FILL=C' '                                   
+         MFLD  QTDEST,LTH=06,JUST=L,FILL=C' '                                   
+         MFLD  MENSA,LTH=79,JUST=L,FILL=C' '                                    
+         MSGEND                                                                 
+*=====================================================================*         
+*                           M O D                                     *         
+*=====================================================================*         
+         PRINT NOGEN                                                            
+BIBCG2TM MSG   TYPE=OUTPUT,SOR=(BIBCG2,IGNORE),NXT=BIBCG2IM,OPT=1,     X
+               FILL=PT                                                          
+         SEG                                                                    
+         MFLD  (DATA,DATE3Y4)
+         MFLD  (HORA,TIME)                                                      
+         MFLD  SENHA,LTH=37                                                     
+         MFLD  COMANDO,LTH=68                                                   
+         MFLD  FASE,LTH=1                                                       
+         MFLD  ULTPAG,LTH=01                                                    
+         MFLD  NATURE,LTH=01                                                    
+         MFLD  SOMPAG,LTH=03                                                    
+         MFLD  PAGINA,LTH=03
+         MFLD  LIQEST,LTH=22,ATTR=YES
+         MFLD  TPACES,LTH=01
+         MFLD  INCONS,LTH=06                                                    
+         MFLD  PAGIMP,LTH=06                                                    
+         MFLD  TOTIMP,LTH=51                                                    
+         MFLD  BCO,LTH=03                                                       
+         MFLD  EMP,LTH=07,ATTR=YES                                              
+         MFLD  AGORI,LTH=07,ATTR=YES                                            
+         MFLD  PACB,LTH=05,ATTR=YES                                             
+         MFLD  DEDIA,LTH=04,ATTR=YES                                            
+         MFLD  DEMES,LTH=04,ATTR=YES                                            
+         MFLD  DEANO,LTH=06,ATTR=YES                                            
+         MFLD  ATEDIA,LTH=04,ATTR=YES                                           
+         MFLD  ATEMES,LTH=04,ATTR=YES                                           
+         MFLD  ATEANO,LTH=06,ATTR=YES                                           
+         MFLD  TRAN,LTH=06,ATTR=YES
+         MFLD  LITPAG,LTH=13,ATTR=YES
+         MFLD  TOTPAG,LTH=16,ATTR=YES
+         MFLD  LIQPAG,LTH=18,ATTR=YES
+         MFLD  QTDPAG,LTH=08,ATTR=YES
+         MFLD  LITREC,LTH=17,ATTR=YES
+         MFLD  QTDREC,LTH=08,ATTR=YES
+         MFLD  CHREST,LTH=12                                                    
+         DO 11
+         MFLD  ODATA,LTH=10                                                     
+         MFLD  OTRAN,LTH=04                                                     
+         MFLD  DESCR,LTH=24
+         MFLD  QTDTRX,LTH=06                                                    
+         MFLD  VTOTCH,LTH=13
+         MFLD  VTOTDN,LTH=13
+         MFLD  PAGREC,LTH=01                                                    
+         ENDDO                                                                  
+         MFLD  TOTREC,LTH=16,ATTR=YES                                           
+         MFLD  LIQREC,LTH=22,ATTR=YES
+         MFLD  LITEST,LTH=17,ATTR=YES
+         MFLD  TOTEST,LTH=16,ATTR=YES
+         MFLD  QTDEST,LTH=08,ATTR=YES                                           
+         MFLD  MENSA,LTH=79                                                     
+         MSGEND                                                                 
+         END

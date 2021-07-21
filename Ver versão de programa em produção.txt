@@ -1,0 +1,50 @@
+Ver versão de programa em produção.
+
+para ver uma versão de programa anterior a versão implantada, fazer o seguinte:
+
+
+TS04
+041        CHGMAN           Sistema de Catalogacao de Fontes 
+1  Build    - Create, update and review package data
+B  Browse    - Browse\print\copy baseline or promotion 
+
+
+Digitar "B" na linha de comando
+
+informar o centro de custo do programa ("SEAN")
+o tipo do fonte ("SRC")
+a versão que deseja ver (-1)
+e o nome do programa que deseja (SEAN1000)
+
+
+------------ BASELINE BROWSE/PRINT FACILITY  SYS(C)   -------------------------
+|OPTION ===>                                                  SCROLL ===> CSR   
+|                                                                               
+|  L  - List libraries where component is located                               
+|  B  - Browse  C  - Copy     V  - View              X  - Print expanded        
+|  P  - Print   H  - History  BS - Browse SRD stack  VS - View SRD stack        
+|                                                                               
+|APPLICATION       ===> SEAN      (Blank for list)                              
+|LIBRARY TYPE      ===> SRC       (Blank for list)                              
+|LIBRARY LEVEL     ===> -1        (Baseline 0 to -n; Promotion +1 to +n)        
+|COMPONENT NAME    ===> sean1000                                              +
+|                                                                               
+|MEMBER LIST SCAN  ===> N         (Y/N to build member list from scan results)  
+|RECORDS TO SELECT ===> 0         (0 = all)                                     
+|CASE SENSITIVE    ===> N         (Y/N)                                         
+|FROM COLUMN       ===> 0         (0 = all)                                     
+|  TO COLUMN       ===> 0         (Max = 80)                                    
+|                                                                               
+|DATA STRING       ===>                                                         
+|                                                                               
+|Press ENTER to process; Enter END command to exit.                             
+|                                                                               
+| F1=Help    F2=Split   F3=Exit    F4=Expand  F7=Up      F8=Down    F9=Swap     
+|F10=Left   F11=Right  F12=Cancel                                               
+---------------------------------------------------------------------------------
+
+vai gerar um arquivo temporário com a versão do programa informada,
+com o seguinte endereço:
+
+CHGMAN.L748443.#CE99E46.#7F2BA5D.SEAN1000
+

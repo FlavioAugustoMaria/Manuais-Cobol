@@ -1,0 +1,5 @@
+Biblioteca com erro JCL
+
+Comentar esta biblioteca nos jlc’s Bradesco.
+
+SYS1.COBLIB,DISP=SHR

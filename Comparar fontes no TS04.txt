@@ -1,0 +1,8 @@
+Comparar programas / fontes no TS04
+
+No TS04:
+- 001 ISPF/PDF
+- 3  Utilities
+- 13 SuperCE
+
+Informar nomes dos fontes que deseja comparar.

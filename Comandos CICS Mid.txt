@@ -1,0 +1,44 @@
+COMANDOS CICS NO MID FRAME.
+
+***VER LAYOUT DE TELA:
+CECI SEND MAP(NOMEMAPA)
+
+
+*** Verificar se programa está cadastrado no CICS:
+CEMT I PROG(PSGL101L)
+CEMT S PROG(PSGL101L)
+
+
+*** Pesquisar transação de programa:
+CEMT I TRANS(*) PRO(CDPS*)
+
+
+****
+Para testar programa CICS com tela no Mid Frame quando tiver arquivos,
+deve-se cadastrar os arquivos utilizados no endereço: 'PR.GERAL.TEMP.NOMEARQ'
+pois se cadastrar o arquivo em outro endereço, por ex: 'PR.PRIME31.TEMP.NOMEARQ'
+o CICS nao 'enxerga' o arquivo.
+****
+
+*** Abrir e fechar arquivos no CICS para manipular o arquivo manualmente (quando estiver fechado)
+*** e para utilizá-lo na execução do programa (quando estiver aberto).
+CEMT I FILE(ASPRENGX)
+
+
+******New copy do programa: 
+CEMT SET PROG(CDPS1D34) NEW
+
+******New copy do mapa:
+CEMT SET PROG(MAPPR26) NEW
+
+
+
+
+***********Comando para 'debugar' programa cics no bradesco
+No ACCTER, opção CICS04, ou AOR00M04 (opção 2) ou AOR01M04 (opção 5)
+
+CEDX LP02
+
+onde 'LP02' é o nome da transação.
+com este comando ao executar o programa, é exibida a execução de todos os comandos cics
+como uma espécie de debug.

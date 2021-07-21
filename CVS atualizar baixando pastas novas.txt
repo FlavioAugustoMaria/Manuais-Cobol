@@ -1,0 +1,7 @@
+CVS
+
+quando atualizar o CVS e não aparecer a janela com opção para selecionar
+para baixar as pastas novas, fazer o seguinte:
+
+ADMIN -> PREFERENCES -> aba Command Dialogs 
+desmarcar a opção "Update"

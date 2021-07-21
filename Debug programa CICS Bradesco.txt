@@ -1,0 +1,20 @@
+Comando para 'debugar' programa cics no bradesco
+
+No ACCTER, opções:
+CICS04, ou AOR00M04 (opção 2) ou AOR01M04 (opção 5)
+
+
+
+Ex:
+CEDX LP02
+
+
+onde 'LP02' é o nome da transação.
+com este comando ao executar o programa, é exibida a execução de todos os comandos cics
+como uma espécie de debug.
+
+este comando prende a transação.
+depois de executado, startar a transação que foi presa, informando apenas o nome da transação:
+
+Ex: 
+LP02

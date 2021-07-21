@@ -1,0 +1,8 @@
+DISPLAY EM PROGRAMA SBAT EXECUTADO PELO TESTADOR DO BILL
+--------------------------------------------------------
+
+- Colocar o a transação na classe 7
+- Executar o programa pelo testador
+- Entrar no TSO opção 138, ST
+- Setar o Prefix do job como: IMSDM0*
+- Procurar nos jobs que serão listados. O display pode sair em qualquer um.

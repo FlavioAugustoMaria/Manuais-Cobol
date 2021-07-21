@@ -1,0 +1,18 @@
+AV.CHGM.DMASTER.BSLLBP.SRC(PPRI2603)
+
+                     | 
+
+                     -> identifica a inicial do CCUSTO, porem podem ter derivações, exemplo, 
+
+                        o CADU é AV.CHGM.DMASTER.BSLLBCC.SRC, normalmente eu faço o seguinte 
+
+                        executo um A D AV.CHGM.DMASTER.BSLLB?+ onde ? é a primeira letra do 
+
+                        CCUSTO, ai abrem as bibliotecas para aquele letra inicial de CCUSTO, 
+
+                        daí pra frete é trabalho braçal, tem que procurar de uma por uma onde 
+
+                        esta o CCUSTO que você quer, todos os programas estarão na mesma, e 
+
+                        normalmente não tem muitos não.. 2 ou 3 bibliotecas.
+

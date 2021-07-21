@@ -1,0 +1,11 @@
+EDITAR PROGRAMAS NO BRADESCO / TS04.
+
+
+Para editar um programa que esteja em um pacote de desenvolvimento:
+
+No TS04, opções: 41 (CHGMAN) – 5 (LIST) – 
+
+- NA OPCAO “PACKAGE ID” INFORMAR O PACOTE (onde deseja está o programa a ser editado/alterado) - ENTER;
+– S2 NO PACOTE DESEJADO (serão exibidos todos os fontes do pacote);
+- Para editar qualquer fonte informar 'E' na frente do nome do fonte;
+- Para ver sem alterar 'V' na frente do nome do fonte;

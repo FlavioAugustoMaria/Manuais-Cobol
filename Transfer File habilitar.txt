@@ -1,0 +1,2 @@
+Obs. Caso a opção “Transfer File” não esteja habilitada, proceder da seguinte forma para habilitá-la:
+Options -> Session Type -> na opção ‘File transfer protocol’ selecionar IND$FILE -> OK.  

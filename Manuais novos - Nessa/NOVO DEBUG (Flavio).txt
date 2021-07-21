@@ -1,0 +1,116 @@
+NOVO DEBUG (Flavio)
+
+------------------------
+DEBUG NO AMBIENTE DE TU
+------------------------
+
+--------------------------------------------------
+Ver se programa está compilado com debug:
+
+- 041 CHGMAN
+- 5  List
+- Package . . . . . . . . . CERI000961
+-    Package   
+  S2 CERI000961
+- Command ===> LONG
+  - Coluna 'Name' = 0 > programa NÃO está compilado com debug
+  - Coluna 'Name' = 1 > programa ESTÁ compilado com debug
+- Command ===> SHORT
+  - para deixar de exibir 'se está compilado com Debug'
+--------------------------------------------------
+
+logar no ACCTER
+
+os ambientes para teste em TU são os terminados com '04', conforme abaixo:
+
+1  - AOR0AM04
+4  - AOR0BM04
+7  - AOR00M04
+11 - AOR01M04
+
+usuário: I901134
+senha: test2104
+(mais usuários PFIN no endereço: https://confluence.bradesco.com.br:8443/pages/viewpage.action?pageId=63253021&requestEditAccess=true)
+
+digitar na linha de comando: DTCN > Enter
+
+TU:
+PF9 > Preference File ==> AD.D493.READ.FERR.DTZ.PREF.ONL
+
+TI:
+PF9 > Preference File ==> MP.T78T.PRV.UPDT.DTZ.PREF.ONL
+
+
+Enter > PF3
+
+No campo: LoadMod::>CU(s) ==>
+ - Informar os nomes dos programas do debug
+ - Enter > PF4 (salvar) > PF3 (retorna)
+
+YY03 > Enter
+
+Informar:
+ - Usuario:
+ - Senha
+ - Executar Servico
+ E
+
+ >>> Para teste via fluxo:
+ - Fluxo de Execução
+ - Canal de Acesso
+
+ OU
+
+ >>> Para teste via programa funcional (sem fluxo)
+ - Nome do programa:
+ - Tamanho da Commarea:
+
+ - Enter > PF5
+
+Na próxima tela informar:
+ - Indicador paginação
+ - Dados de entrada
+ - PF5-executa programa
+
+Na tela do Debug, é necessário carregar o programa:
+Informar na linha de comando:
+LDD PSCT3BEL > Enter
+
+Principais PFS:
+2:STEP – executar comando após comando;
+3:QUIT – sair da execução;
+4:LIST – ver o conteúdo de uma variável;
+6:AT/CLEAR – colocar o break na linha desejada;
+PF  7:UP    8:DOWN – avançar ou voltar no código;
+9:GO – executar até um break, até um programa chamado, ou até o fim;
+10:ZOOM – Expande a janela onde o cursor está posicionado.
+
+Linha de comando:
+MONITOR LIST ('NOME-VARIAVEL') - Alterar valor de variável (a janela com o programa não pode estar expandida (PF10))
+
+*=======================================================================================================================================*
+
+------------------------
+DEBUG NO AMBIENTE DE TI
+------------------------
+
+logar no ACCTER
+
+os ambientes para teste em TI são os terminados com '50', conforme abaixo:
+
+3 - AOR0AM50
+6 - AOR0BM50
+9 - AOR00M50
+
+digitar na linha de comando: DTCN > Enter
+
+TI:
+PF9 > Preference File ==> MP.T78T.PRV.UPDT.DTZ.PREF.ONL
+
+Enter > PF3
+
+No campo: LoadMod::>CU(s) ==>
+ - Informar os nomes dos programas do debug
+ - Enter > PF4 (salvar) > PF3 (retorna)
+
+YY07 > Enter

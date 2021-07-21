@@ -1,0 +1,38 @@
+1. Arquivos .CAL (lista dbrm)
+Deve existir um arquivo .CAL na transação sempre que houver chamadas a módulos DB2 não corporativos. 
+Isso vale também para alterações.
+Exemplo: Se foi incluído um módulo novo que acessa DB2 em um módulo ou transação, o mesmo deve ser acrescentado 
+na lista dbrm caso não esteja com XXXX**** 
+
+2. Conexões DB2
+Os programas batch que usam DB2 devem ter no início do programas a chamada CALL 'POOL1050' que abre a conexão 
+com o DB2
+
+3. Chamadas de módulos
+Todo módulo não corporativo deve ser chamado de forma dinâmica, ou seja, através de uma variável
+CALL WRK-MODULO
+
+4. Nas alterações de programas, se foi incluído algum acesso DB2 em programa que não tinha DB2, ou chamada a 
+módulo DB2 onde não tinha DB2, verificar se o tipo de bind precisa ser alterado e se é necessário criar lista dbrm.   
+
+Tipos de BIND:
+L/A  - Transação ou programa Batch que chamam módulos com DB2              
+
+K    - Módulo que possui DB2                                          
+
+X/A  - Transação ou programa que possui DB2 e não chama ninguém com DB2    
+
+N    - não possui e não chama ninguém com DB2                         
+
+TRN = Y                                                              
+quando for uma transação IMS ou programa batch que não possua DB2,  porém chama alguém que possui                                  
+
+TRN = N                                                              
+quando for uma transação IMS ou programa batch que acessa DB2, e chama alguém que possui                                      
+
+TEM LISTA DE DBRM : = YES  quando tem .CAL                                                   
+
+BIBMODOB : = YES quando módulo chamado on-line                 
+
+5. Utilizar a rotina de checkpoint/restart padrão do Bradesco para programas Batch que atualizam DB2.   
+

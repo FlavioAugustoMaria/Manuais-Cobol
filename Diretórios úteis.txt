@@ -1,0 +1,32 @@
+endereços úteis:
+
+arquivos compartilhados na rede:
+\\prime-arquivos
+
+
+Apostilas, manuais e dicas:
+\\prime-arquivos\Eng_Sw\FC1\FC1\Desenvolvimento\Manuais\Diversos\Apostilas
+
+quando fazer alteração de programa, 
+jogar a versão original em:
+- Y:\FC1\Desenvolvimento\Projetos\BRADESCO\BRADESCO-2010\PRI-09-0269-80-YMPR\PGM_FONTE\Original
+
+jogar a versão alterada em: 
+- Y:\FC1\Desenvolvimento\Projetos\BRADESCO\BRADESCO-2010\PRI-09-0269-80-YMPR\PGM_FONTE\Fábrica
+
+
+chaves bradesco:
+- Y:\FC1\Desenvolvimento\Pastas Utilitárias
+
+Evidências Hexavision
+Y:\FC1\Desenvolvimento\Projetos\BRADESCO\BRADESCO-2010\PRI-09-0269-80-YMPR\DOCTO_GERENCIAL\Gestao\14.Dresscode Hexavision
+
+Projetos em desenvolvimento:
+Y:\FC1\Desenvolvimento\Projetos\BRADESCO\BRADESCO-2010
+
+planilha de programas e seu responsaveis.
+Y:\FC1\Desenvolvimento\Projetos\BRADESCO\BRADESCO-2010\PRI-10-0015-01-FVCO\DOCTO_GERENCIAL\Gestao\05.Controle de Programas
+
+
+instalador WinMerge.
+\\prime-arquivos\Publico\Rapha Marques

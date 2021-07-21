@@ -1,0 +1,40 @@
+//DC52R001  JOB 'GIPS,2491,BN,GIPS-FB1',MSGCLASS=Z,CLASS=F,REGION=8M,
+//    TIME=1                                                         
+//JOBLIB   DD   DSN=SA.RDG2.SREST.AL2.DCALOAD,DISP=SHR               
+//         DD   DSN=DB2A2.R2.DSNLOAD,DISP=SHR                        
+//         DD   DSN=SYS1.COBLIB,DISP=SHR                             
+//         DD   DSN=AV.BIBGERTT,DISP=SHR                             
+//         DD   DSN=BI.BIBGERAL,DISP=SHR                             
+//         DD   DSN=AV.BIBGERAL,DISP=SHR                             
+//         DD   DSN=ID.BIBGERAL,DISP=SHR                             
+//         DD   DSN=IMSVS.TST.PGMLIB.VLF,DISP=SHR                    
+//         DD   DSN=IMSVS.TST.PGMLIB.VLF.OLD,DISP=SHR                
+//         DD   DSN=AV.PCPA.ALTA.BIBGERTT,DISP=SHR                   
+//         DD   DSN=SYS1.CEE.SCEERUN,DISP=SHR                        
+//*        DD   DSN=MQ2A2.V531.SCSQAUTH.OLD,DISP=SHR                 
+//         DD   DSN=MQ2A2.MQ4.USERAUTH,DISP=SHR                      
+//*                                                                  
+//OUT1     OUTPUT JESDS=ALL,DEST=ANYLOCAL,CLASS=T                    
+//*                                                                  
+//STEP01   EXEC PGM=PSCL3TST,                                        
+//       PARM='0002269651001199999900100001001001000000000001200TOTI' 
+//*                                                                   
+//*FUNADMI  DD DISP=SHR,DSN=AD.TEMP.PSCT20ET.FUNADMI                  
+//**EARQENTR DD DUMMY                                                 
+//*                                                                   
+//*ALERTACL DD DISP=(OLD,CATLG,KEEP),                                 
+//*            UNIT=(DISCO),                                          
+//*            SPACE=(CYL,(000032,0006),RLSE),                        
+//*            DCB=(AC.A,LRECL=0083,RECFM=FB),                        
+//*            DSN=AD.TEMP.GIPS2165.ALERTACL                          
+//*                                                                   
+//*INTFCONS DD DISP=SHR,DSN=AD.TEMP.GIPS2165.INTFCONS                 
+//*                                                                   
+//*ALERTACL DD DISP=(OLD,CATLG,KEEP),                                 
+//*            UNIT=(DISCO),                                          
+//*            SPACE=(CYL,(000032,0006),RLSE),                        
+//*            DCB=(AC.A,LRECL=0083,RECFM=FB),                        
+//*            DSN=AD.TEMP.GIPS2165.ALERTACL                          
+//SYSOUT   DD SYSOUT=*                                                
+//SYSUDUMP DD SYSOUT=Y
+//SYSDUMP  DD SYSOUT=*

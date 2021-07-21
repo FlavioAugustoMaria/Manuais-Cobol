@@ -1,0 +1,165 @@
+
+------------------------------------------------------------------------------------
+CPRODT_SERVC_OPER  CPRODT_OPER_RLCDO  CRLCTO_PRODT_PRODT  HFNAL_VGCIA_PRODT     
+------------------------------------------------------------------------------------
+           12345.             12345.                  1.  2009-05-30-10.10.10.111111
+
+
+ INSERT INTO DB2PRD.TOPER_HIST_RLCDO      
+     SELECT 1,                            
+            1,                            
+            1,                            
+            '2009-05-10-15.30.45.123456'  
+            '2009-05-10-15.30.45.123456'  
+            CIDTFD_OBRIG_PRODT,           
+            CUSUAR_INCL,                  
+            CUSUAR_MANUT,                 
+            HINCL_REG,                    
+            HMANUT_REG                    
+       FROM DB2PRD.TOPER_HIST_RLCDO;      
+---    WHERE CPRODT_SERVC_OPER = 1;       
+  SELECT * FROM DB2PRD.TOPER_HIST_RLCDO   
+   ORDER BY  CRLCTO_PRODT_PRODT;          
+
+
+  INSERT INTO DB2PRD.TOPER_HIST_RLCDO      
+      SELECT 1,                            
+             1,                            
+             1,                            
+             '2009-05-10-15.30.45.123456', 
+             '2009-05-10-15.30.45.123456', 
+             CIDTFD_OBRIG_PRODT,           
+             CUSUAR_INCL,                  
+             CUSUAR_MANUT,                 
+             HINCL_REG,                    
+             HMANUT_REG                    
+        FROM DB2PRD.TOPER_HIST_RLCDO       
+        WHERE  CRLCTO_PRODT_PRODT = 1;     
+   SELECT * FROM DB2PRD.TOPER_HIST_RLCDO   
+    ORDER BY  CRLCTO_PRODT_PRODT;          
+
+
+     INSERT INTO DB2PRD.TDEPDC_AFERC_CONFM    
+     SELECT                                   
+         (CPSSOA_JURID + 8),                  
+         NSEQ_UND_ORGNZ,                      
+         CIDTFD_DEPDC,                        
+         CFUNC_BDSCO,                         
+         CUSUAR_INCL,                         
+         CUSUAR_MANUT,                        
+         HINCL_REG,                           
+         HMANUT_REG                           
+ FROM DB2PRD.TDEPDC_AFERC_CONFM               
+ WHERE CIDTFD_DEPDC = 2;                      
+ SELECT * FROM DB2PRD.TDEPDC_AFERC_CONFM      
+ ORDER BY  CPSSOA_JURID;                      
+
+
+                    INSERT INTO DB2PRD.TRQSTO_FALTT_PLANO        
+                    SELECT                                       
+                        CPRODT_SERVC_MOD,                        
+                        DCRIAC_PLANO_NEGOC,                      
+                        DRQSTO_FALTT_PLANO,                      
+                        (NSEQ_RQSTO_FALTT + 1),                  
+                        CPSSOA_JURID,                            
+                        CPSSOA_JURID_RESP,                       
+                        NSEQ_UND_RESP,                           
+                        CIDTFD_SIT_RQSTO,                        
+                        CUSUAR_INCL,                             
+                        CUSUAR_MANUT,                            
+                        HINCL_REG,                               
+                        HMANUT_REG,                              
+                        RRQSTO_FALTT_PLANO                       
+        FROM DB2PRD.TRQSTO_FALTT_PLANO                           
+        WHERE  DCRIAC_PLANO_NEGOC = '2009-05-25-10.20.30.123456';
+   SELECT * FROM DB2PRD.TRQSTO_FALTT_PLANO  
+    ORDER BY  NSEQ_RQSTO_FALTT;             
+
+
+
+
+
+2007-05-10-15.30.45.123456
+
+           INSERT INTO DB2PRD.PSSOA_UNIC 
+           SELECT                                 
+                       (CCLUB + 2),               
+                        CPTCAO_ESPAC_TBELA,       
+                        CCLUB_VINC,               
+                        CEMPR_INC,                
+                        CCTRO_CUSTO,              
+                        CSIT_RLCTO_PSSOA,         
+                        CDEPDC,                   
+                        CTPO_CLI_CREDT,           
+                        CID_TPO_PSSOA,            
+                        CSGMTO_CLI,               
+                        CSSGTO_CLI,               
+                        CGER_RESP,                
+                        CINDCD_ENQUA_SGMTO,       
+                        CCLUB_ORIGE_PRSCT,        
+                        RCOMEN_LIVRE_GER,         
+                        CINDCD_CONS_BACEN,    
+                        CINDCD_CPO_FALTT,     
+                        CISENC_CPF_CNPJ,      
+                        CMOTVO_ISENC_CPF,     
+                        CCPF_CNPJ,            
+                        CCTRL_CPF_CNPJ,       
+                        CFLIAL_CPF_CNPJ,      
+                        DNASC_FUNDC,          
+                        CAGPTO_PSSOA,         
+                        DCLUB_VINC,           
+                        DENQUA_PSSOA,         
+                        DSIT_CAD,             
+                        DCAD_PSSOA,           
+                        DULT_RENOV,           
+                        DPROX_RENOV,          
+                        DCLI_DESDE,           
+                        CSIT_CAD_PSSOA,       
+                        DINIC_VALDD_BACEN,     
+                        DFIM_VALDD_BACEN,      
+                        CCLASS_CAD,            
+                        PCOBR_TARIF,           
+                        CBCO_COBR_TARIF,       
+                        CAG_COBR_TARIF,        
+                        CCTA_COBR_TARIF,       
+                        CFUNC_BDSCO_LIBRC,     
+                        QREG_CNTRL_FONE,       
+                        QREG_CLI,              
+                        CINDCD_COMPL,          
+                        QREG_DEPDT,            
+                        QREG_ENDER,            
+                        CINDCD_EXPOR,          
+                        CINDCD_FAMLR,          
+                        CINDCD_FINCR,          
+                        QREG_FORNC,            
+                        CINDCD_IMPOR,         
+                        QREG_LSNG,            
+                        QREG_PSSOA_OPER,      
+                        QREG_OUTRA_DESP,      
+                        QREG_OUTRA_RENDA,     
+                        CINDCD_FROTA_VEIC,    
+                        QREG_PATRM_IMOV,      
+                        QREG_OUTRO_BEM,       
+                        QREG_PATRM_VEIC,      
+                        QREG_PRODT_SERVC,     
+                        CINDCD_PROFS,         
+                        QREG_PRTCP_EMPR,      
+                        QREG_PRTCP_SCIO,      
+                        QREG_QUADR_ADMTV,     
+                        QREG_QUADR_COSLH,     
+                        QREG_QUADR_SCIAL,     
+                        QREG_REFT_BCRIA,      
+                        QREG_REFT_CATAO,    
+                        QREG_REFT_COML,     
+                        QREG_REFT_PSSOA,    
+                        QREG_SEGUR,         
+                        DINCL_REG,          
+                        CFUNC_BDSCO_ULT,    
+                        CTERM_ULT_ATULZ,    
+                        HULT_ATULZ,         
+                        QREG_DEFIC_PSSOA    
+ FROM DB2PRD.PSSOA_UNIC                     
+ WHERE CCLUB = 5;                           
+ SELECT * FROM DB2PRD.PSSOA_UNIC            
+ ORDER BY  CCLUB;                           
+

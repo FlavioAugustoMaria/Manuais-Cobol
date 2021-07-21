@@ -1,0 +1,35 @@
+Endereços de Jobs:
+
+=============== TU ===============
+
+AV.JCLFILE(T7K8****)
+
+PFCP:
+AV.JCLFILE(T7K8A***)
+
+
+=============== TI =============== 
+BTCM.MP.JCLFILE =====>> jobs de TI
+
+
+
+=============== PRODUÇÃO =============== 
+
+BTM1.MJ.JCLFILE =====>> jobs de produção
+MX.JCLFILE.MZ01 =====>> jobs de produção
+
+
+
+MX.JCLFILE.AL4B  =====>> jobs de homologação (quando já estão aprovados pelo gestor)
+
+MX.JCLTRANS.AL4B =====>> jobs de homologação (que ainda não foram estão aprovados pelo gestor)
+
+
+
+16/04/2014 - job T6DBA480:
+
+ID do pacote criado no hexa
+HX0032878
+
+
+NRO BOLETO T6DBIG3W

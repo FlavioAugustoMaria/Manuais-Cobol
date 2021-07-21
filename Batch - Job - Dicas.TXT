@@ -1,0 +1,621 @@
+//SER48ARA JOB (INC1,RS1M),116681.LUIZ,                                 
+//       CLASS=B,MSGCLASS=R,REGION=0M                                   
+//*END                                                                  
+/*ROUTE PRINT MC0000                                                    
+/*JOBPARM S=MVSA                                                        
+//                                                                      
+//**********************************************************************
+CONCATENAÇÃO : COLOCA + NA COL 72
+//**********************************************************************
+//**********************************************************************
+//*--------------------------------------------------------------------*
+//* ORDENACAO COM HEADER E TRAILLER                                           
+//*--------------------------------------------------------------------*
+  INREC IFTHEN=(WHEN=INIT,OVERLAY=(39:C'1')),                      
+        IFTHEN=(WHEN=(1,1,CH,EQ,C'H'),OVERLAY=(39:C'0')),          
+        IFTHEN=(WHEN=(1,1,CH,EQ,C'T'),OVERLAY=(39:C'9'))
+  SORT FIELDS=(39,1,CH,A,2,15,CH,A),EQUALS                                
+  SUM FIELDS=NONE
+  OUTREC FIELDS=(1,38)  
+//* CONTANDO QUE O REGISTRO DE ENTRADA TEM 38 CAMPOS. 
+//* O 39 É ACRESCENTADO PARA ORDENAÇÃO
+//*--------------------------------------------------------------------*
+//* DESCOMPACTACAO DE CAMPOS                                            
+//*--------------------------------------------------------------------*
+//DESCOM   EXEC PGM=SORT                                                
+//SORTLIB  DD DSN=CTB.SORTLIB,DISP=SHR                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTIN   DD DISP=SHR,DSN=F.SER12.A7401214                             
+//         DD DISP=SHR,DSN=F.SER12.A7401215                             
+//         DD DISP=SHR,DSN=F.SER12.A7401216                             
+//         DD DISP=SHR,DSN=F.SER12.A7401217                             
+//         DD DISP=SHR,DSN=F.SER12.A6400918                             
+//SORTOUT  DD DSN=D.EVERIS.TBACKUP.FOLDERS,                             
+//         UNIT=SYSDA,DCB=(LRECL=350,RECFM=FB),BUFNO=60,                
+//         SPACE=(CYL,(1000,100),RLSE),DISP=(NEW,CATLG,CATLG)           
+//SYSIN    DD *                                                         
+  OPTION COPY                                                           
+  OUTREC FIELDS=(0001,01,BI,M11; ** NAT-NUM                             
+                 C'|',                                                  
+                 0043,01,BI,M11; ** STATUS ORDEM                        
+                 C'|',                                                  
+                 0004,04,BI,M11; ** NUM-OS                              
+                 C'|',                                                  
+                 0009,06,PD,M26; ** NRC                                 
+                 C'|',                                                  
+                 0053,03,BI,M11) ** DT-ATENDIMENTO-E                    
+  DEBUG ABEND,NODUMP                                                    
+//*                                                                     
+//* DESCOMPACTA CAMPOS.                                                 
+//* BI PD CH ZD SAO FORMATOS DE CAMPO, CH NAO PRECISA SER INDICADO      
+//* E NEM DESCOMPACTADO.                                                
+//* AS MASCARAS DE DESCOMPACTACAO COMO O M11 E M26 ESTAO NO LINK ABAIXO 
+//* ENCURTADOR.COM.BR/AHQJ3                                             
+//*                                                                     
+//                                                                      
+//*-------------------------------------------------------------------* 
+//* DELETA ARQUIVOS DE TRABALHO                                         
+//*-------------------------------------------------------------------* 
+//STEP01   EXEC PGM=IDCAMS                                              
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+  DELETE   AD.C87.EVERIS.DBMZ.IEMF.LANCDANT                             
+  SET LASTCC = 0                                                        
+  SET MAXCC  = 0                                                        
+//*                                                                     
+//* DELETA ARQUIVO DE TRABALHO COM CONTROLE DE RC                       
+//*                                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* SELECT EM ARQUIVO                                                  *
+//*--------------------------------------------------------------------*
+//GERACOP2 EXEC PGM=ICETOOL                                             
+//TOOLMSG  DD SYSOUT=*                                                  
+//DFSMSG   DD SYSOUT=*                                                  
+//SORTWK03 DD UNIT=TESTE,SPACE=(CYL,(99999,9999),RLSE)                  
+//SORTWK04 DD UNIT=TESTE,SPACE=(CYL,(99999,9999),RLSE)                  
+//INFILE   DD DISP=SHR,DSN=D5.SER71.S071.FOLDER.DT.COR                  
+//OUTFILE  DD DSN=D.EVERIS.TMMARA.TESTE2,                               
+//            DISP=(NEW,CATLG,DELETE),                                  
+//            UNIT=SYSDA,                                               
+//            SPACE=(CYL,(99999,9999),RLSE),                            
+//            DCB=(RECFM=FB,LRECL=54)                                   
+//TOOLIN   DD   *                                                       
+ SELECT FROM(INFILE) TO(OUTFILE) ON(4,09,CH) ON(01,02,CH) -             
+ FIRST                                                                  
+/*                                                                      
+//*                                                                     
+//* SELECIONA REORDENA E REMOVE DUPLICADOS                              
+//*                                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* CONTROLE DE SAIDA                                                  *
+//*--------------------------------------------------------------------*
+//GERAMAS  EXEC PGM=SORT                                                
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTIN   DD DISP=SHR,DSN=D.EVERIS.TMMARA.ULTPROCE.CSO                 
+//SORTOUT  DD DSN=D.EVERIS.TMMARA.ULTPROCE.CSO.VEI,                     
+//            DISP=(OLD,CATLG,DELETE),                                  
+//            UNIT=SYSDA,                                               
+//            SPACE=(CYL,(1000,1000),RLSE),DCB=*.SORTIN                 
+//SYSIN    DD *                                                         
+   SORT FIELDS=(160,10,CH,A)                                            
+   OMIT COND=(160,10,CH,EQ,C'0000000000')                               
+   OUTREC FIELDS=(0010,10;        ** NRC                                
+                  C'|',                                                 
+                  0160,10;        ** NR-PED-ATIS                        
+                  C'|',                                                 
+                  0001,09;        ** NUM-OS                             
+                  C'|',                                                 
+                  0186,02;        ** NAT-NUM                            
+                  C'|',                                                 
+                  0020,02;        ** STATUS-ORDEM                       
+                  C'|',                                                 
+                  0122,06)        ** DT-COMP-CANC                       
+   DEBUG ABEND,NODUMP                                                   
+//*                                                                     
+//* OMITE CAMPOS CONFORME CONDICAO                                      
+//* IMPRIME SAIDA CONFORME OUTREC, POSICIONAR E FILLER |                
+//*                                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* RETIRAR DUPLICADOS                                                 *
+//*--------------------------------------------------------------------*
+//SORT001  EXEC PGM=SORT                                                
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTIN   DD DSN=D.EVERIS.TMMARA.ALUMINIO.ASAIDA.ORD,DISP=SHR          
+//SORTOUT  DD DSN=D.EVERIS.TMMARA.ALUMINIO.ASAIDA.ORD.SEMDUP,           
+//            DISP=(,CATLG,DELETE),                                     
+//            DCB=(RECFM=FB,LRECL=163),                                 
+//            SPACE=(TRK,(5000,5000),RLSE),UNIT=SYSDA                   
+//SYSIN    DD *                                                         
+   SORT FIELDS=(1,11,CH,A),EQUALS                                       
+   SUM FIELDS=NONE                                                      
+//                                                                      
+//*--------------------------------------------------------------------*
+//* SORT COM DUAS CONDIÇÕES                                         
+//*--------------------------------------------------------------------*
+//SORT0002 EXEC PGM=SORT                                                
+//SORTIN   DD  DSN=D.EVERIS.TMMARA.ALUMINIO.ASAIDA,DISP=SHR             
+//SORTOUT  DD  DSN=D.EVERIS.TMMARA.ALUMINIO.ASAIDA.ORD.SEMDUP,          
+//             DISP=(NEW,CATLG,DELETE),                                 
+//             UNIT=SYSDA,                                              
+//             SPACE=(CYL,(1000,1000),RLSE),DCB=*.SORTIN                
+//SYSOUT   DD  SYSOUT=*                                                 
+//SYSPRINT DD  SYSOUT=*                                                 
+//SYSIN    DD  *                                                        
+  SORT FIELDS=(1,11,ZD,A,13,9,ZD,A)                                     
+//*                                                                     
+//* O SORT COM DUAS CONDICOES ACONTECE COM HIERARQUIA DE ORDENACAO      
+//* OU SEJA, ORDENA-SE O PRIMEIRO CRITERIO, EM SEGUIDA O PROXIMO MANTEN_
+//* DO A ORDENACAO DO PRIMEIRO CRITERIO.                                
+//*                                                                     
+//* EXEMPLO :                                                           
+//* A 3            A 1                                                  
+//* A 1 -------- > A 3                                                  
+//* C 2            C 2                                                  
+//*                                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* SORT: ORDENACAO DO ARQUIVO ANTES DO BATIMENTO                       
+//*--------------------------------------------------------------------*
+//SORT0002 EXEC PGM=SORT                                                
+//SORTIN   DD  DSN=D.SER09.T0361709.DTRET3,DISP=SHR                     
+//SORTOUT  DD  DSN=D.SER09.T0361709.DTRET3.SORT,                        
+//             DISP=(NEW,CATLG,DELETE),                                 
+//             UNIT=SYSDA,                                              
+//             SPACE=(CYL,(1000,1000),RLSE),DCB=*.SORTIN                
+//SYSOUT   DD  SYSOUT=*                                                 
+//SYSPRINT DD  SYSOUT=*                                                 
+//SYSIN    DD  *                                                        
+  SORT FIELDS=(2,12,ZD,A)                                               
+//*                                                                     
+//*--------------------------------------------------------------------*
+//* CONVERTE VB PARA FB                                                *
+//*--------------------------------------------------------------------*
+//*                                                                     
+//CONVERT  EXEC PGM=SORT                                                
+//SORTIN   DD DSN=D.EVERIS.TMMARA.TESTESQL,DISP=SHR                     
+//FBOUTP   DD DSN=D.EVERIS.TMMARA.TESTEFBV,                             
+//             DISP=(,CATLG,DELETE),                                    
+//             DCB=(RECFM=FB,LRECL=100),                                
+//             SPACE=(TRK,(5000,5000),RLSE),UNIT=SYSDA                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+     OPTION COPY                                                        
+     OUTFIL FNAMES=FBOUTP,VTOF,OUTREC=(5,100)                           
+//*                                                                     
+//* NESTE PASSO, PARA QUE FUNCIONE A ENTRADA, CONVERTEMOS A SAIDA NO    
+//* FORMATO VB PARA FB. VB EH OBTIDA EM RESULTADO DE SQL                
+//  
+//*--------------------------------------------------------------------*
+//* CONVERTE FB PARA VB                                                *
+//*--------------------------------------------------------------------*
+//*                                                                     
+//CONVERT  EXEC PGM=SORT                                                
+//SORTIN   DD DISP=SHR,DSN=AD.C87.EVERIS.TMMARA.ARQ.YMKA                
+//VBOUTP   DD DSN=AD.C87.EVERIS.TMMARA.ARQ.YMKA1,                       
+//       DISP=(,CATLG,DELETE),                                          
+//       UNIT=DISCO,                                                    
+//       SPACE=(TRK,(010000,2000),RLSE),                                
+//       DCB=(AV.A,LRECL=655,RECFM=VB)                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+     OPTION COPY                                                        
+     OUTFIL FNAMES=VBOUTP,FTOV                                          
+//*                                                                     
+//* NESTE PASSO, PARA QUE FUNCIONE A ENTRADA, CONVERTEMOS A SAIDA NO    
+//* FORMATO FB PARA VB.                                                 
+//*                                                                                                                                                                                        
+//*--------------------------------------------------------------------*
+//* GERA COPIA: GERA ARQUIVOS IGUAIS AO DE ENTRADA                     *
+//*--------------------------------------------------------------------*
+//GERACOP EXEC PGM=ICETOOL                                              
+//TOOLMSG DD SYSOUT=*                                                   
+//DFSMSG  DD SYSOUT=*                                                   
+//IN      DD DISP=SHR,DSN=D.EVERIS.TMMARA.ENTRADA.SORT                  
+//OUT1    DD DSN=D.EVERIS.TMMARA.ENTRADA.SORT1,                         
+//           DISP=(NEW,CATLG,DELETE),                                   
+//           UNIT=SYSDA,                                                
+//           SPACE=(CYL,(1000,1000),RLSE),DCB=*.IN                      
+//OUT2    DD DSN=D.EVERIS.TMMARA.ENTRADA.SORT2,                         
+//           DISP=(NEW,CATLG,DELETE),                                   
+//           UNIT=SYSDA,                                                
+//           SPACE=(CYL,(1000,1000),RLSE),DCB=*.IN                      
+//TOOLIN  DD *                                                          
+  COPY FROM(IN) TO(OUT1,OUT2)                                           
+//*                                                                     
+//* NESTE PASSO, O ARQUIVO DE ENTRADA EH COPIADO PARA OS DE SAIDA       
+//* SEM ALTERACOES.                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* GERA MASSA: GERA MASSA PARA ENTRADA COM CAMPOS SELECIONADOS        *
+//*--------------------------------------------------------------------*
+//GERAMAS  EXEC PGM=SORT                                                
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTIN   DD DSN=D.EVERIS.TMMARA.TESTEFBV,DISP=SHR                     
+//SORTOUT  DD DSN=D.EVERIS.TMMARA.SAIDATES,                             
+//            DISP=(,CATLG,DELETE),                                     
+//            DCB=(RECFM=FB,LRECL=14),                                  
+//            SPACE=(TRK,(5000,5000),RLSE),UNIT=SYSDA                   
+//SYSIN    DD *                                                         
+   SORT FIELDS=COPY                                                     
+   OUTREC BUILD=(1,10,C'0',58,3)                                        
+//*                                                                     
+//* NESTE PASSO O OBJETIVO E SEPARAR APENAS OS CAMPOS DE UMA ENTRADA    
+//* QUE SAO INTERESSANTES PARA O PROXIMO PASSO.                         
+//* NESTE CASO, PEGOU-SE DO CARACTER 1 AO 10, ISERIU-SE UM ZERO ENTRE   
+//* E PEGOU-SE DOS CARACTER 58 AO 60.                                   
+//* MUDAR O LRECL DE ACORDO COM O TANTO DE CARACTERES NO OUTREC.        
+//*                                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* BATIMENTO                                                           
+//*--------------------------------------------------------------------*
+//SOR3JOIN EXEC PGM=SORT                                                
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTJNF1 DD DSN=D.EVERIS.TMMARA.SYSREC.CONT,DISP=SHR                  
+//SORTJNF2 DD DSN=D.EVERIS.TMMARA.SYSREC.TSERH1,DISP=SHR                
+//SORTOUT  DD DSN=D.EVERIS.TMMARA.SYSREC.BOTH,                          
+//             DISP=(,CATLG,DELETE),                                    
+//             UNIT=TAPEROBO                                            
+//DFSPARM   DD *                                                        
+      JOINKEYS FILE=F1,FIELDS=(1,15,A)                                  
+      JOINKEYS FILE=F2,FIELDS=(4,15,A)                                  
+      REFORMAT FIELDS=(F2:4,15,19,10,F1:1,15,17,10)                     
+      OPTION COPY                                                       
+//*                                                                     
+//* NESTE CASO EXISTEM DUAS ENTRADAS. O BATIMENTO ENTRE AS DUAS OCORRE  
+//* COMPARANDO-SE OS CAMPOS 1 A 15 DE UMA E 4 A 18 DA OUTRA ENTRADA.    
+//* A SAIDA ACONTECE CONFORME O REFORMAT FIELDS                         
+//* O UNIT=TAPEROBO FOI USADO DEVIDO AO TAMANHO DO ARQUIVO. ELE NAO     
+//* PODE SER ACESSADO NESTE FORMATO.                                    
+//*                                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* RETIRA LINHAS COM CARACTERES ESPECIFICOS                            
+//*--------------------------------------------------------------------*
+//SORT001  EXEC PGM=SORT                                                
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTIN   DD DSN=D.EVERIS.TMMARA.SYSREC.BOTH,DISP=SHR                  
+//SORTOUT  DD DSN=D.EVERIS.TMMARA.SYSREC.BOTH.SEM0,                     
+//            DISP=(,CATLG,DELETE),                                     
+//            UNIT=TAPEROBO                                             
+//SYSIN    DD *                                                         
+   SORT FIELDS=COPY                                                     
+   OMIT COND=(1,15,CH,EQ,C'000000000000000')                            
+//*                                                                     
+//* NESTE PASSO, AS LINHAS QUE ESTIVEREM COM OS CAMPOS DE 1 A 15        
+//* CONTENDO ZEROS SERO OMITIDAS NA SAIDA.                           
+//*                                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* SORTJOI1: BALANCE LINE DOS REGISTROS DE RETORNO COM INSTANCIA      *
+//*--------------------------------------------------------------------*
+//SOR2JOI3 EXEC PGM=SORT                                                
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTJNF1 DD DISP=SHR,DSN=D.EVERIS.TMMARA.ENTRADA.SORT                 
+//SORTJNF2 DD DISP=SHR,DSN=D.EVERIS.TMMARA.TRML.SORT                    
+//F1ONLY   DD DSN=D.EVERIS.TMMARA.BAT1.SONAENT,                         
+//            DISP=(,CATLG,DELETE),                                     
+//            SPACE=(TRK,(1000,5000),RLSE),UNIT=SYSDA                   
+//F2ONLY   DD DSN=D.EVERIS.TMMARA.BAT1.SONATRML,                        
+//            DISP=(,CATLG,DELETE),                                     
+//            SPACE=(TRK,(1000,5000),RLSE),UNIT=SYSDA                   
+//BOTH01   DD DSN=D.EVERIS.TMMARA.BAT1.TUDO,                            
+//            DISP=(,CATLG,DELETE),                                     
+//            SPACE=(TRK,(1000,5000),RLSE),UNIT=SYSDA                   
+//DFSPARM  DD *                                                         
+   JOINKEYS FILE=F1,FIELDS=(3,09,A)                                     
+   JOINKEYS FILE=F2,FIELDS=(5,09,A)                                     
+   JOIN UNPAIRED,F1,F2                                                  
+   REFORMAT FIELDS=(F1:1,11,F2:1,122,?)                                 
+   OPTION COPY                                                          
+   OUTFIL FNAMES=F1ONLY,INCLUDE=(134,01,CH,EQ,C'1'),BUILD=(01,134)      
+   OUTFIL FNAMES=F2ONLY,INCLUDE=(134,01,CH,EQ,C'2'),BUILD=(01,134)      
+   OUTFIL FNAMES=BOTH01,INCLUDE=(134,01,CH,EQ,C'B'),BUILD=(01,134)      
+//*                                                                     
+//* NOS JOINKEYS COLOCA-SE OS CAMPOS QUE VAO BATER.                     
+//* O REFORMAT FIELDS E O ARQUIVO QUE E GERADO DAS DUAS ENTRADAS E SERVE
+//*DE BASE PARA OS OUTFIL.                                              
+//* OS OUTFIL DEVEM TER O LENGTH DO REFORMAT FIELDS.                    
+//* O INCLUDE ADICIONA O CARACTER QUE DESCREVE CADA SAIDA,SENDO O LENGTH
+//*DO BUILD O LENGTH DO REFORMAT FIELDS.                                
+//                                                                      
+//*--------------------------------------------------------------------*
+//* SORTJOI1: BALANCE LINE DOS REGISTROS DE RETORNO COM INSTANCIA      *
+//*--------------------------------------------------------------------*
+//SOR2JOI3 EXEC PGM=SORT                                                
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTJNF1 DD DISP=SHR,DSN=D.EVERIS.TMMARA.ENTRADA.SORT                 
+//SORTJNF2 DD DISP=SHR,DSN=D.EVERIS.TMMARA.BAT1.TUDO.SEM9999            
+//F1F2TL   DD DSN=D.EVERIS.TMMARA.BAT1.ENTR.BDOFECHA,                   
+//            DISP=(,CATLG,DELETE),                                     
+//            SPACE=(TRK,(1000,5000),RLSE),UNIT=SYSDA                   
+//DFSPARM  DD *                                                         
+   JOINKEYS FILE=F1,FIELDS=(01,11,A)                                    
+   JOINKEYS FILE=F2,FIELDS=(01,11,A)                                    
+   JOIN UNPAIRED,F1,F2                                                  
+   REFORMAT FIELDS=(F1:1,11,F2:1,0134,?)                                
+   OPTION COPY                                                          
+   OUTFIL FNAMES=F1F2TL,BUILD=(1,11,C' ',12,132)                        
+//*                                                                     
+//* NESTE CASO AS ENTRADAS SAO BATIDAS E O RESULTADO SAI TUDO JUNTO NA  
+//* MESMA SAIDA.                                                        
+//                                                                      
+//*--------------------------------------------------------------------*
+//* JUNTAR DOIS ARQUIVOS DE ENTRADA EM UM DE SADA                    
+//*--------------------------------------------------------------------*
+//GERAMAS  EXEC PGM=SORT                                                
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTIN   DD DISP=SHR,DSN=D.EVERIS.TMMARA7.STATUS.ORD.STAPED           
+//         DD DISP=SHR,DSN=D.EVERIS.TMMARA.TODOS.VOO.BAT                
+//SORTOUT  DD DSN=D.EVERIS.TMMARA.RELATORIO,                            
+//            DISP=(,CATLG,DELETE),                                     
+//            DCB=(RECFM=FB,LRECL=3000),                                
+//            SPACE=(TRK,(5000,5000),RLSE),UNIT=SYSDA                   
+//SYSIN    DD *                                                         
+   SORT FIELDS=COPY                                                     
+//*                                                                     
+//* JUNTAR DOIS ARQUIVOS DE ENTRADA EM UM DE SADA                    
+//* DA PRA FAZER MAIS COISAS AQUI COM SORT POR EXEMPLO, OMIT            
+//                                                                      
+//*--------------------------------------------------------------------*
+//* SORT: GRAVAR APENAS ALGUMAS LINHAS DO ARQUIVO NO NOVO               
+//*--------------------------------------------------------------------*
+//SORT0002 EXEC PGM=SORT                                                
+//SORTIN   DD  DSN=D.EVERIS.TMMARA.CONTRATO,DISP=SHR                    
+//SORTOUT  DD  DSN=D.EVERIS.TMMARA.CONTRATO.ENTR.TESTE,                 
+//             DISP=(NEW,CATLG,DELETE),                                 
+//             UNIT=SYSDA,                                              
+//             SPACE=(CYL,(1000,1000),RLSE),DCB=*.SORTIN                
+//SYSOUT   DD  SYSOUT=*                                                 
+//SYSPRINT DD  SYSOUT=*                                                 
+//SYSIN    DD  *                                                        
+   OPTION COPY,STOPAFT=50                                               
+//                                                                      
+//*   NESTE CASO, A ENTRADA TEM N LINHAS, MAS SO QUEREMOS ALGUMAS.     *
+//*   O ARQUIVO DE SAIDA TERA A QUANTIDADE DE LINHAS DEFINIDAS NO      *
+//*   STOPAFT.                                                         *
+//                                                                      
+//*--------------------------------------------------------------------*
+//* SELECT EM ARQUIVO                                                  *
+//*--------------------------------------------------------------------*
+//GERACOP EXEC PGM=ICETOOL                                              
+//TOOLMSG DD SYSOUT=*                                                   
+//DFSMSG  DD SYSOUT=*                                                   
+//INFILE  DD DISP=SHR,DSN=D.SER48.T261118.SYSREC.ATIS.DESBIN.ORD1       
+//OUTFILE DD DSN=D.SER48.T261118.SYSREC.ATIS.SELECT1,                   
+//           DISP=(NEW,CATLG,DELETE),                                   
+//           UNIT=SYSDA,                                                
+//           SPACE=(CYL,(1000,1000),RLSE),DCB=*.INFILE                  
+//TOOLIN DD   *                                                         
+ SELECT FROM(INFILE) TO(OUTFILE) ON(PEDIDO) ON(EQUIP) ON(TPORDEM) -     
+ ON(DATA) FIRST USING(CTL1)                                             
+/*                                                                      
+//CTL1CNTL DD *                                                         
+ SORT FIELDS=(PEDIDO,A,EQUIP,A,TPORDEM,A,DATA,D),EQUALS                 
+ SUM FIELDS=NONE                                                        
+/*                                                                      
+//SYMNAMES DD *                                                         
+ PEDIDO,1,10,CH                                                         
+ ORDEM,12,11,CH                                                         
+ TPORDEM,24,05,CH                                                       
+ CLASS,51,04,CH                                                         
+ EQUIP,56,03,CH                                                         
+ DATA,66,4,CH                                                           
+/*                                                                      
+//*                                                                     
+//* SELECIONA REORDENA E REMOVE DUPLICADOS, TEM VARIAS OUTRAS FUNCS     
+//*                                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* SORT: GRAVAR APENAS ALGUMAS LINHAS DO ARQUIVO NO NOVO               
+//* E PULAR LINHAS NO INICIO                                            
+//*--------------------------------------------------------------------*
+//SORT0002 EXEC PGM=SORT                                                
+//SORTIN   DD  DISP=SHR,DSN=D.SER19.T072.RESULTAD.FAAMMDD               
+//SORTOUT  DD  DSN=D.SER19.T072.RESULTAD.FAAMMDD.COMP,                  
+//             DISP=(NEW,CATLG,DELETE),                                 
+//             UNIT=SYSDA,                                              
+//             SPACE=(CYL,(1000,1000),RLSE),DCB=*.SORTIN                
+//SYSOUT   DD  SYSOUT=*                                                 
+//SYSPRINT DD  SYSOUT=*                                                 
+//SYSIN    DD  *                                                        
+   OPTION COPY,SKIPREC=25000,STOPAFT=5000                               
+//*                                                                     
+//* PULA ALGUMAS LINHAS ANTES E PARA DEPOIS DE TANTAS LINHAS            
+//*                                                                     
+//                                                                      
+//*--------------------------------------------------------------------*
+//* GERA MASSA: GERA MASSA PARA ENTRADA COM CAMPOS SELECIONADOS        *
+//*--------------------------------------------------------------------*
+//GERAMAS  EXEC PGM=SORT                                                
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTMSG  DD SYSOUT=*                                                  
+//SORTIN   DD DISP=SHR,DSN=D.EVERIS.TMMARA7.VEI80                       
+//SORTOUT  DD DSN=D.EVERIS.TMMARA7.VEI80.OMIT,                          
+//            DISP=(NEW,CATLG,DELETE),                                  
+//            UNIT=SYSDA,                                               
+//            SPACE=(CYL,(1000,1000),RLSE),DCB=*.SORTIN                 
+//SYSIN    DD *                                                         
+   SORT FIELDS=(07,16,CH,A)                                             
+   OMIT COND=((01,02,BI,EQ,MN),AND,(04,02,BI,EQ,MN))                    
+//*                                                                     
+//* OMITE CAMPOS NAO ALPHA, QUE NAO TENHAM LETRAS                       
+//* LINK PARA O SET DE TESTMASK ENCURTADOR.COM.BR/CQR17                 
+//*                                                                     
+//                                                                      
+//********************************************************************  
+//*        REPRODUZIR ARQUIVO SEQUENCIAL OU VSAM                        
+//********************************************************************  
+//SIDC0103 EXEC PGM=IDCAMS                                              
+//ENTRADA  DD   DSN=VPPRD400.MCE03.KCNOTFIS,DISP=SHR                    
+//SAIDA    DD   DSN=D5.PERM.EVERIS.KCNOTFIS,                            
+//        DISP=(,CATLG,DELETE),                                         
+//        DCB=(GDGCTB,LRECL=68,RECFM=FB),UNIT=PROD,                     
+//        SPACE=(CYL,(2000,200),RLSE)                                   
+//SYSPRINT DD   SYSOUT=*                                                
+//SYSIN    DD   *                                                       
+  REPRO  INFILE(ENTRADA) OUTFILE(SAIDA)                                 
+//*                                                                     
+//********************************************************************  
+//*        COMPACTAR ARQUIVO ZIP                                        
+//********************************************************************  
+//COMPACT  EXEC PGM=PKZIP                                               
+//STEPLIB  DD DSN=SYS7.PKZIP.LOADLIB,DISP=SHR                           
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSUDUMP DD SYSOUT=U                                                  
+//SYSIN    DD *                                                         
+-ECHO                                                                   
+-ARCHIVE_DSNAME(D.SER19.TESTE.ZIP)                                      
+-ARCHIVE_UNIT(SYSDA)                                                    
+//*                                                                     
+//*  O UNICO CUIDADO  QUE NA HORA DE BAIXAR, TEM QUE SER COMO BINARIO
+//*  NAO ASCII                                                          
+//*                                                                     
+//********************************************************************* 
+//* UNLOAD02: UNLOAD DE PEDIDOS (AGSP/SUPE)                           * 
+//********************************************************************* 
+//UNLOAD02 EXEC PGM=INZUTILB,PARM='DSN5'                                
+//STEPLIB  DD  DSN=DSN5.SDSNEXIT,DISP=SHR                               
+//         DD  DSN=DSN5.SDSNLOAD,DISP=SHR                               
+//         DD  DSN=SYS3.HPU.V21.SINZLINK,DISP=SHR                       
+//SYSREC00 DD  DSN=D5.ATI32.S032.UNTESTE.F190519,                       
+//             DISP=(,CATLG,DELETE),                                    
+//             UNIT=SYSDA,SPACE=(CYL,(4000,4000),RLSE),RECFM=FB         
+//SYSPUNCH DD  DUMMY                                                    
+//UTPRINT  DD  SYSOUT=*                                                 
+//SYSPRINT DD  SYSOUT=*                                                 
+//SYSTSPRT DD  SYSOUT=*                                                 
+//SYSOUT   DD  SYSOUT=*                                                 
+//SYSUDUMP DD  SYSOUT=A                                                 
+//SYSIN    DD  *                                                        
+  UNLOAD TABLESPACE                                                     
+  DB2 FORCE LOCK NO QUIESCE YES QUIESCECAT NO                           
+     SELECT DIGITS(AGS_COD_PET_CD)                                      
+          , AGS_ITE_ALT_SIS_TS                                          
+      FROM ATISOWN.PEAGSPDV                                             
+       WHERE AGS_EST_AGR_SUB_CD NOT IN ('CS','RB','TM','EB')            
+       WITH UR;                                                         
+  OUTDDN SYSREC00                                                       
+  FORMAT DELIMITED SEP ';'                                              
+  LOADDDN  SYSPUNCH                                                     
+//*                                                                     
+//*  UNLOAD MAIS USADO, BAIXA OS CAMPOS SOLICITADOS DE TABELAS EM       
+//*  ARQUIVO SEQUENCIAL. UTILIZAR DIGITS NOS CAMPOS NUMERICOS PARA      
+//*  DESCOMPACTAR POSSIVEIS COMPACTACOES                                
+//*                                                                     
+//*---------------------------------------------------------------------
+//***  CRIA DSN  
+//*---------------------------------------------------------------------
+//STEP006  EXEC PGM=IEFBR14                                             
+//DD1      DD DSN=D.EVERIS.TMMARA.GUTGUT,                               
+//            UNIT=SYSDA,DISP=(,CATLG,DELETE),                          
+//            DCB=(RECFM=FB,LRECL=200),                                 
+//            SPACE=(TRK,(10000,1000,1000),RLSE)                        
+//*                                                                     
+//* CRIA DSN                                                            
+//* PODE COMPORTAR PROGRAMAS E ARQUIVOS SEQUENCIAIS DENTRO              
+//*                                                                     
+//**********************************************************************
+//********       TRANSFORMA COLUNA EM LINHA            *****************
+//**********************************************************************
+//SORT02    EXEC  PGM=ICETOOL                                           
+//TOOLMSG   DD SYSOUT=*                                                 
+//DFSMSG    DD SYSOUT=*                                                 
+//IN        DD DSN=D5.ATI32.S032.SORTDUP.F190519,DISP=SHR               
+//OUT       DD DSN=D.EVERIS.TMMARA.GUTGUT(GUTGUT2),                     
+//             DISP=SHR,UNIT=SYSDA,                                     
+//             DCB=(RECFM=FB,LRECL=200)                                 
+//TOOLIN DD *                                                           
+  RESIZE FROM(IN) TO(OUT) TOLEN(200) USING(CTL1)                        
+//CTL1CNTL DD *                                                         
+  INREC BUILD=(1,10,C',')                                               
+  OUTFIL FNAMES=OUT,OVERLAY=(1:1,200,SQZ=(SHIFT=LEFT))                  
+//*                                                                     
+//* EXEMPLO, TINHA INUMEROS NUM-OS DE 10 POSICOES NUM ARQUIVO, SO QUE EM
+//* COLUNA.                                                             
+//* EU PRECISAVA QUE ELES FICASSEM EM SEQUENCIA, QUANTOS COUBESSEM NUM  
+//* LRECL DE 200, SEPARADOS POR VIRGULA.                                
+//* ASSIM, DE A                                                         
+//*           A                                                         
+//* FICOU A,A                                                           
+//*                                                                     
+//*                                                                     
+//********************************************************************* 
+//* UNLOAD02: UNLOAD DE TABELAS                                       * 
+//********************************************************************* 
+//UNLOAD02 EXEC PGM=IKJEFT01                                            
+//STEPLIB  DD DSN=DSN5.SDSNEXIT,DISP=SHR                                
+//         DD DSN=DSN5.SDSNLOAD,DISP=SHR                                
+//         DD DSN=DSN5.RUNLIB.LOAD,DISP=SHR                             
+//SYSTSPRT DD SYSOUT=*                                                  
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSTSIN DD *                                                          
+   DSN SYSTEM(DSN5)                                                     
+   RUN PROGRAM(DSNTIAUL)  PLAN(DSNTIB71) PARMS('SQL')                   
+   END                                                                  
+//SYSPUNCH DD SYSOUT=*                                                  
+//SYSREC00 DD  DSN=D.EVERIS.TMMARA.TESTE.GUTGUT1,                       
+//             DISP=(,CATLG,DELETE),                                    
+//             UNIT=SYSDA,SPACE=(CYL,(4000,4000),RLSE),RECFM=FB         
+//SYSIN DD *                                                            
+     SELECT CLT_TIP_DOC_CD                                              
+          , CLT_NUM_DOC_CLI_CD                                          
+          , CLT_DIG_CLT_DOC_CD                                          
+          , AGS_COD_PET_CD                                              
+          , AGS_ITE_ALT_SIS_TS                                          
+          , AGS_COD_CLI_CD                                              
+          , AGS_COD_CTA_CD                                              
+          , AGS_COD_PRO_CMR_CD                                          
+          , PRC_COD_EST_CD                                              
+          , IDP_NUM_IDE_NU                                              
+          , TABL_DATOS_FILA                                             
+      FROM ATISOWN.PEAGSPDV , ATISOWN.CCCLTDDV , ATISOWN.PQPRCODV ,     
+           ATISOWN.PQIDPCDV , ATISOWN.ASTABLMD                          
+      WHERE AGS_COD_PET_CD IN (                                         
+//      DD DSN=D.EVERIS.TMMARA.GUTGUT(GUTGUT2),DISP=SHR                 
+//      DD *                                                            
+       )                                                                
+       AND CLT_COD_CLI_CD = AGS_COD_CLI_CD                              
+       AND PRC_COD_PRO_CMR_CD = AGS_COD_PRO_CMR_CD                      
+       AND AGS_COD_PRO_CMR_CD = IDP_COD_PRO_CMR_CD                      
+       AND TABL_COD_TABLA = 'INTIOCTP'                                  
+       AND TABL_EMPRESA = 'TELE'                                        
+       AND TABL_ID_IDIOMA = 'B'                                         
+       AND TABL_CLAVE_FILA = AGS_TIP_OPR_CMR_CD                         
+     ORDER BY CLT_TIP_DOC_CD;                                           
+//*                                                                     
+//* UNLOAD DE DADOS DE TABELA COM ARQUIVO COM DADOS PARA UNLOAD DINAMICO
+//* CONCATENADO NO MEIO                                                 
+//*                                                                     
+//*--------------------------------------------------------------------*
+//*     PREPARACAO DO ARQUIVO DE CARGA PARA A PROXIMA EXECUCAO          
+//*--------------------------------------------------------------------*
+//SORT#003  EXEC  PGM=SORT,PARM='JP1"20&AA-&MM-&DD-00.00.00.00"'        
+//SORTLIB   DD DSN=CTB.SORTLIB,DISP=SHR                                 
+//SORTMSG   DD SYSOUT=*                                                 
+//SYSOUT    DD SYSOUT=*                                                 
+//SORTIN    DD DSN=D.SER72.R001.A003A.F&AAMMDD..T&HORA,DISP=SHR         
+//          DD DSN=D.SER72.R001.A002A.CARGA,DISP=SHR                    
+//SORTOUT   DD DSN=D.SER72.R001.A002A.CARGA.F&AAMMDD..T&HORA,           
+//             DISP=(NEW,CATLG,DELETE),                                 
+//             UNIT=SYSDA,SPACE=(CYL,(4000,800),RLSE),                  
+//             DCB=(RECFM=FB,LRECL=1557)                                
+//SYSIN     DD *
+	INCLUDE COND=(44,22,CH,GE,JP1)       
+	SORT FIELDS=COPY                     
+	END                                  
+//* TEM QUE SER JPX A VARIAVEL
+//*
+//*

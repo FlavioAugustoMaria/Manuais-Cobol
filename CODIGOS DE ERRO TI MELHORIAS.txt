@@ -1,0 +1,7 @@
+CODIGOS DE ERRO TI MELHORIAS
+
+08 – erro físico, lógico e quando não encontrar dados em um determinado módulo.
+
+12 – quando ocorrer erro em um acesso a módulo.
+
+16 – erro CICS e DB2.

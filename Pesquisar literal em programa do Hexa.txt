@@ -1,0 +1,8 @@
+pesquisar literal dentro de programas no hexa.
+
+Tem que ir em “RECURSOS” --> “PESQUISA” 
+
+Aí digita no campo “*Pesquisa por:” a palavra que vc quer pesquisar,
+
+Aí procura em todos os programas do hexa.
+

@@ -1,0 +1,36 @@
+Informações sobre PLANO DE IMPLANTAÇÃO:
+
+-----------------------------------------------
+Opção: 'Necessário NEWCOPY, DESCPGM, DESCTELA ou SBAMODL?? ':
+
+- Newcopy - Sempre que tiver implantação de programas ou telas CICS.
+
+-----------------------------------------------
+Opção: 'Qual a forma dos procedimentos':
+
+- Se a conferência da implantação for feita na mesma noite antes de 00:30 (meia-noite e meia), deverá ser feito NEWCOPY Manual. Para isso marcar a opção "()Manual".
+  - Nesse caso informar também: 'Horário do Procedimento'.
+
+- Se a conferência da implantação for feita depois de 00:30 (meia-noite e meia), deverá ser feito NEWCOPY Automático. Para isso marcar a opção "()Automático".
+
+-----------------------------------------------
+Opção: 'Descreva cronologicamente os procedimentos de implantação':
+
+Fazer da seguinte forma:
+
+Data 30/06/2021
+
+1.	Início às 22hrs.
+
+2.	Aprovar e implantar os pacotes Changeman listados abaixo:
+
+*** Obs. (não informar isso no plano de implantação) ***
+*** 1. A ordem informada dos pacotes não faz diferença. Quando faz o AUDIT ele monta o bind, que é o que vai para produção. ****
+*** 2. Books e programas podem ser implantados no mesmo pacote ou em pacotes separados, não faz diferença. ****
+
+PSCT000511 (Programas e Books).
+PSCT000512 (Fluxo CICS);
+PSCT000514 (Gide);
+
+3.	Após implantação do pacote Changeman, o analista irá conferir os binds.
+-----------------------------------------------

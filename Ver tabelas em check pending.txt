@@ -1,0 +1,57 @@
+no TS04
+
+opção 001 - ISPF/PDF --> 006 - Command --> 
+
+digitar na linha de comando:
+
+DSN SYS(DB2)
+
+Enter
+
+abaixo da linha escrito 'DSN':
+
+-DIS DB(SPBFD000) SP(*) RESTRICT
+
+vai listar as tabelas, atentar para o status CHKP,
+é quando a tabela está em CHECK PENDING.
+
+ENTER VAI LISTANDO AS TABELAS (PAGINANDO).
+
+END para sair.
+
+
+
+******** RETIRAR TABELA DE COPY PENDING ***********
+
+1. trocar o centro de custo pelo desejado:
+de GIPS, para centro de custo da tabela presa
+2. trocar o TABLESPACE pelo da tabela presa.
+
+AD.C87.FLAVIOAM(JOBCOPPY)
+
+
+//JOBCOPPY JOB 'GIPS,0000,BN,GIPS    ',MSGCLASS=Z,CLASS=E               
+//JOBLIB   DD  DSN=DB2A2.R2.DSNLOAD,DISP=SHR                            
+//         DD  DSN=AV.BIBGERTT,DISP=SHR                                 
+//         DD  DSN=AV.BIBGERAL,DISP=SHR                                 
+//         DD  DSN=IMSVS.TST.TPGMLIB,DISP=SHR                           
+//         DD  DSN=IMSVS.TST.PGMLIB.VLF,DISP=SHR                        
+//         DD  DSN=SYS1.COBLIB,DISP=SHR                                 
+//         DD  DSN=SYS1.CEE.SCEERUN,DISP=SHR                            
+//*                                                                     
+//STEP01   EXEC DB2UPROC,CYL1='2',CYL2='2',UID='DC73VIVI'               
+//*                                                                     
+//SYSCOPY  DD DSN=&DISCO5,                                              
+//         DISP=(,PASS),                                                
+//         UNIT=(DISCO,20),SPACE=(TRK,(10000,1000),RLSE)                
+//SYSPRINT DD SYSOUT=I                                                  
+//SYSIN    DD *                                                         
+      COPY TABLESPACE RCGED000.RCGES031                                 
+//*                                                                     
+//STEP02   EXEC DB2TUTIL,COND=((8,LE,STEP01.DB2UPROC),ONLY),SOUT=T       
+//*                                                                     
+//SYSTSIN  DD *                                                         
+DSN SYSTEM(DB2) R(1) T(1)                                               
+-TERM UTILITY (DC73VIVI)                                                
+END                                                                     
+//*                                                                     

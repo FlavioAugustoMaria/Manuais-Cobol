@@ -1,0 +1,43 @@
+Para ver fontes no TS04 (programas, telas, books), mesmo que a chave não possua acesso ao sistema.
+
+ENTRAR NO TS04, OPCAO 01 - ISPF/PDF, OPCAO 01 - View, 
+INFORMAR EM 'NAME' O NOME, ENTRE ASPAS SIMPLES, DO PARTICIONADO DO ARQUIVO QUE DESEJA:
+
+*================*
+EM PRODUÇÃO: 
+*================*
+
+Programas:
+Av.chgm.dmaster.bsllbS.src
+
+books:
+Av.chgm.dmaster.bsllb.cpy
+
+Mapas CICS:
+AV.CHGM.DMASTER.BSLLB.MPS(SWPPMFS) 
+
+Telas IMS:
+AV.CHGM.DMASTER.BSLLB.MFS(DCITTA31)
+
+Fluxos:
+AV.CHGM.DMASTER.BSL.TXA(SPBFIATG)
+
+JCL:
+'AV.JCLFILE(T7E7*)' 
+
+*================*
+EM DESENVOLVIMENTO:
+*================*
+
+'AD.CHGM.STAGE.CDPS.#000187.SRC(CDPS1D42)'
+
+'AD.CHGM.STAGE.CDPS.#000187.CPY(CDPSW000)'
+
+JCL:
+'AD.JCLFILE(T7E7*)' 
+
+*===============================================================*
+
+CREATE DE TABELAS DB2 no bradesco:
+
+AD.G07.DBAS.DB2FONTE

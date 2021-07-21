@@ -1,0 +1,3 @@
+ALTERAR SENHA DA CHAVE DE ACESSO AO HEXAVISION.
+
+Acessar o Bradesco com a opção BRAD2, entrar no SENHAS apertando PF4 e colocar login, senha e nova senha.

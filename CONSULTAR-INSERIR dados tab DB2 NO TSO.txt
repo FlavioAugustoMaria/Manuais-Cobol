@@ -1,0 +1,49 @@
+VER DADOS DE TABELA DB2 NO TSO.
+
+ENTRAR NO TS48, 
+OPCAO:  021        QMF              Consultas ao DB2 
+PF6=Query
+INSERIR O COMANDO NO ESPACO LIVRE
+PF2=RUN PARA EXECUTAR.
+
+
+
+
+PARA INSERIR DADOS, ALEM DA OPCAO ACIMA 
+PODE-SE FAZER TBM:
+
+ENTRAR NO TS48, 
+OPCAO:  021        QMF              Consultas ao DB2 
+PF6=Query
+PF6=Draw
+
+informar em 'NAME' o nome da tabela a ser inserido o registro
+e em 'Type' o comando a ser executado 'INSERT', 'SELECT', 'UPDATE' ou 'DELETE'
+(a tela anterior deve estar limpa, sem nenhum comando SQL, nenhuma linha com comentario).
+
+
+SQL QUERY                                            MODIFIED  LINE    37      
++-----------------------------------------------------------------------------+
+×                             DRAW Command Prompt                             ×
+×                                                              1_ to 15 of 19 ×
+× Name       ( DB2PRD.TINTFC_RECBD_FLUXO                          ) +         ×
+× ....       (                                                    ) +         ×
+× ....       (                                                    ) +         ×
+× ....       (                                                    ) +         ×
+× ....       (                                                    ) +         ×
+× ....       (                                                    ) +         ×
+×            Specify the name of the table or view to be queried.             ×
+×            The DRAW command in SQL creates basic queries.                   ×
+× Type       ( INSERT             )                                           ×
+×            Specify the type of query you want to compose:                   ×
+×            SELECT composes a basic query for selecting data from            ×
+×                   the columns of a table or view.                           ×
+×            INSERT composes a basic query to insert data into                ×
+×                   the columns of a table or view.                           ×
+×            UPDATE composes a basic query to change the data in              ×
++-----------------------------------------------------------------------------+
+× F1=Help  F3=End  F4=List  F7=Backward  F8=Forward                           ×
++-----------------------------------------------------------------------------+
+Give the name of a table or view in the database.                             
+
+

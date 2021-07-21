@@ -1,0 +1,1139 @@
+      *================================================================*
+       IDENTIFICATION                  DIVISION.                        
+      *================================================================*
+                                                                        
+       PROGRAM-ID. AGCO4530.                                            
+       AUTHOR.     RAFAEL HIROSE.                                       
+      *================================================================*
+      *                  P R I M E - I N F O R M A T I C A             *
+      *----------------------------------------------------------------*
+      *    PROGRAMA....:   AGCO4530                                    *
+      *    PROGRAMADOR.:   RAFAEL HIROSE             - PRIME           *
+      *    ANALISTA....:   RICARDO BOING             - PRIME           *
+      *    DATA........:   08/04/2008                                  *
+      *----------------------------------------------------------------*
+      *    OBJETIVO....:   GERAR MOVIMENTO DA FITA4.                   *
+      *                                                                *
+      *----------------------------------------------------------------*
+      *    ARQUIVOS....:                                               *
+      *     DDNAME   DESCRICAO                     INCLUDE/BOOK        *
+      *    SAIFITA4  ARQ.COM REG. DE AGENDAMENTO     I#CCFCCG          *
+      *              P/ O SISTEMA DE CONTAS CORRENTES                  *
+      *    AO#PROC   ARQ.CONTENDO OS AGENDAMENTOS    AOVCPROC          *
+      *              EFETIVADOS ATUALIZADOS (VSAM)                     *
+      *                                                                *
+      *----------------------------------------------------------------*
+      *    TABELAS DB2.:                                               *
+      *     DCLGEN   NOME                                              *
+      *    AGCOB005  DB2PRD.CTRL_DATA_AGNDA                            *
+      *    AGCOB014  DB2PRD.PARM_PRODT_AGNDA                           *
+      *    AGCOB016  DB2PRD.SOLTC_AGNDA_PEND                           *
+      *                                                                *
+      *----------------------------------------------------------------*
+      *    INC'S.......:                                               *
+      *    I#BRAD7C - AREA PARA TRATAMENTO DE ERRO PELA BRAD7100       *
+      *    AOVCPROC - AREA DO ARQUIVO DE AGENDAMENTOS EFETIVADOS       *
+      *    I#CCFCCG - AREA DO ARQUIVO SAIFITA4                         *
+      *                                                                *
+      *----------------------------------------------------------------*
+      *    MODULOS.....:                                               *
+      *    BRAD1050 - CONEXAO COM DB2.                                 *
+      *    BRAD0025 - TRATA DATAS, SOMA E SUBTRAI DIAS.                *
+      *    BRAD0431 - ROTINA PARA CALCULO DO DIGITO DA CONTA.          *
+      *    BRAD7100 - ROTINA PARA TRATAMENTO DE ERROS ( ABEND ).       *
+      *                                                                *
+      *================================================================*
+                                                                        
+      *================================================================*
+       ENVIRONMENT                     DIVISION.                        
+      *================================================================*
+                                                                        
+      *----------------------------------------------------------------*
+       CONFIGURATION                   SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+       SPECIAL-NAMES.                                                   
+           DECIMAL-POINT               IS COMMA.                        
+                                                                        
+      *----------------------------------------------------------------*
+       INPUT-OUTPUT                    SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+       FILE-CONTROL.                                                    
+                                                                        
+           SELECT SAIFITA4 ASSIGN      TO UT-S-SAIFITA4                 
+                  FILE     STATUS      IS WRK-FS-SAIFITA4.              
+                                                                        
+           SELECT AOPROC   ASSIGN      TO AOPROC                        
+                  ORGANIZATION         IS INDEXED                       
+                  ACCESS   MODE        IS DYNAMIC                       
+                  RECORD   KEY         IS FD-CHAVE                      
+                  FILE     STATUS      IS WRK-FS-AOPROC.                
+                                                                        
+      *================================================================*
+       DATA                            DIVISION.                        
+      *================================================================*
+                                                                        
+      *----------------------------------------------------------------*
+       FILE                            SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+      *   OUTPUT:  ARQUIVO DE MOVIMENTO PARA FITA4 - SAIDA             *
+      *            ORG. SEQUENCIAL   -   LRECL = 100                   *
+      *----------------------------------------------------------------*
+                                                                        
+       FD  SAIFITA4                                                     
+           RECORDING MODE              IS F                             
+           LABEL     RECORD            IS STANDARD                      
+           BLOCK     CONTAINS          0  RECORDS.                      
+                                                                        
+       COPY 'I#CCFCCG'.                                                 
+                                                                        
+      *----------------------------------------------------------------*
+      *   OUTPUT:  ARQUIVO CONTENDO OS AGENDAMENTOS EFETIVADOS ATUALI- *
+      *            ZADOS                                               *
+      *            ARQUIVO VSAM                                        *
+      *----------------------------------------------------------------*
+                                                                        
+       FD  AOPROC.                                                      
+                                                                        
+       01  FD-AOPROC.                                                   
+           05  FD-CHAVE                PIC  X(011).                     
+           05  FILLER                  PIC  X(189).                     
+                                                                        
+      *----------------------------------------------------------------*
+       WORKING-STORAGE                 SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** INICIO DA WORKING AGCO4530 ***'.                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DE AUXILIARES ***'.                                
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+
+       01  WRK-BATCH                   PIC  X(008)         VALUE        
+           'BATCH'.                                                     
+       01  WRK-EDICAO                  PIC  ZZZ.ZZZ.ZZ9    VALUE ZEROS. 
+       01  WRK-IND                     PIC  9(002) COMP-3  VALUE ZEROS. 
+       01  WRK-S9-15-V99               PIC +9(015)V99      VALUE ZEROS. 
+       01  FILLER REDEFINES WRK-S9-15-V99.                              
+           05  FILLER                  PIC  X(003).                     
+           05  WRK-9-13-V99            PIC  9(013)V99.                  
+                                                                        
+       01  WRK-9-9                     PIC  9(009)         VALUE ZEROS. 
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DE ACUMULADORES ***'.                              
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       77  ACU-AGCOB014-LIDOS          PIC  9(009) COMP-3  VALUE ZEROS. 
+       77  ACU-AGCOB016-LIDOS          PIC  9(009) COMP-3  VALUE ZEROS. 
+       77  ACU-SAIFITA4-GRAVADOS       PIC  9(009) COMP-3  VALUE ZEROS. 
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DE TESTE DE FILE STATUS ***'.                      
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       77  WRK-FS-SAIFITA4             PIC  X(002)         VALUE SPACES.
+       77  WRK-FS-AOPROC               PIC  X(002)         VALUE SPACES.
+                                                                        
+       77  WRK-ABERTURA                PIC  X(013)         VALUE        
+           'NA ABERTURA*'.                                              
+       77  WRK-LEITURA                 PIC  X(013)         VALUE        
+           'NA LEITURA*'.                                               
+       77  WRK-GRAVACAO                PIC  X(013)         VALUE        
+           'NA GRAVACAO*'.                                              
+       77  WRK-FECHAMENTO              PIC  X(013)         VALUE        
+           'NO FECHAMENTO'.                                             
+       77  WRK-START                   PIC  X(013)         VALUE        
+           'NO START*'.                                                 
+                                                                        
+       01  WRK-ERRO-FS                 PIC  X(075)         VALUE SPACES.
+       01  WRK-DESCRICAO-1             PIC  X(005)         VALUE        
+           'ERRO '.                                                     
+       01  WRK-OPERACAO                PIC  X(013)         VALUE SPACES.
+       01  WRK-DESCRICAO-2             PIC  X(012)         VALUE        
+           ' DO ARQUIVO '.                                              
+       01  WRK-ARQUIVO                 PIC  X(008)         VALUE SPACES.
+       01  WRK-DESCRICAO-3             PIC  X(017)         VALUE        
+           ' - FILE STATUS = '.                                         
+       01  WRK-FS                      PIC  X(002)         VALUE SPACES.
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DA BRAD0025 ***'.                                  
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       01  WRK-DATA-ENTRADA-0025       PIC  9(009) COMP-3  VALUE ZEROS. 
+       01  WRK-NUMERO-DE-DIAS-0025     PIC S9(005) COMP-3  VALUE +0.    
+       01  WRK-DATA-SAIDA-0025         PIC  9(009) COMP-3  VALUE ZEROS. 
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DA BRAD0431 ***'.                                  
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       01  WRK-CAMPOS-0431.                                             
+           03  WRK-VALOR-0431          PIC  9(007)         VALUE ZEROS. 
+           03  WRK-DIG-0431            PIC  X(001)         VALUE SPACES.
+           03  WRK-TAMANHO-0431        PIC  9(002)         VALUE ZEROS. 
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DE TRATAMENTO DE CAMPOS DO ARQUIVO ***'.           
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       01  WRK-MCTE-NUMERO-DOC         PIC  9(007)         VALUE ZEROS. 
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DE TRATAMENTO DE DB2 ***'.                         
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       01  WRK-AGCOB016-CPRODT-AGNDA   PIC  9(005)         VALUE ZEROS. 
+       01  WRK-AGCOB016-CMIDIA-AGNDA   PIC  9(003)         VALUE ZEROS. 
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DE TRATAMENTO DE DATAS DB2 ***'.                   
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       01  WRK-DATA-MOVTO.                                              
+           05  WRK-DIA-MOVTO           PIC  9(002)         VALUE ZEROS. 
+           05  FILLER                  PIC  X(001)         VALUE SPACES.
+           05  WRK-MES-MOVTO           PIC  9(002)         VALUE ZEROS. 
+           05  FILLER                  PIC  X(001)         VALUE SPACES.
+           05  WRK-SEC-MOVTO           PIC  9(002)         VALUE ZEROS. 
+           05  WRK-ANO-MOVTO           PIC  9(002)         VALUE ZEROS. 
+       01  WRK-DATA-MOVTO-R        REDEFINES                            
+           WRK-DATA-MOVTO              PIC  X(010).                     
+                                                                        
+       01  WRK-DATA-FUTURO.                                             
+           05  WRK-DIA-FUTURO          PIC  9(002)         VALUE ZEROS. 
+           05  FILLER                  PIC  X(001)         VALUE '.'.   
+           05  WRK-MES-FUTURO          PIC  9(002)         VALUE ZEROS. 
+           05  FILLER                  PIC  X(001)         VALUE '.'.   
+           05  WRK-SEC-FUTURO          PIC  9(002)         VALUE ZEROS. 
+           05  WRK-ANO-FUTURO          PIC  9(002)         VALUE ZEROS. 
+       01  WRK-DATA-FUTURO-R       REDEFINES                            
+           WRK-DATA-FUTURO             PIC  X(010).                     
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DE TRATAMENTO DE FORMATO DE DATAS ***'.            
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       01  WRK-DATA-SAMD.                                               
+           05  WRK-SEC-SAMD            PIC  9(002)         VALUE ZEROS. 
+           05  WRK-ANO-SAMD            PIC  9(002)         VALUE ZEROS. 
+           05  WRK-MES-SAMD            PIC  9(002)         VALUE ZEROS. 
+           05  WRK-DIA-SAMD            PIC  9(002)         VALUE ZEROS. 
+       01  WRK-DATA-SAMD-N         REDEFINES                            
+           WRK-DATA-SAMD               PIC  9(008).                     
+                                                                        
+       01  WRK-DATA-DB2.                                                
+           05  WRK-DIA-DB2             PIC  9(002)         VALUE ZEROS. 
+           05  FILLER                  PIC  X(001)         VALUE SPACES.
+           05  WRK-MES-DB2             PIC  9(002)         VALUE ZEROS. 
+           05  FILLER                  PIC  X(001)         VALUE SPACES.
+           05  WRK-SEC-DB2             PIC  9(002)         VALUE ZEROS. 
+           05  WRK-ANO-DB2             PIC  9(002)         VALUE ZEROS. 
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DO BOOK AOVCPROC ***'.                             
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       COPY 'I#AGCO31'.                                                 
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DO BOOK BRAD7100 ***'.                             
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+       COPY 'I#BRAD7C'.                                                 
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DE DB2 ***'.                                       
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+           EXEC SQL                                                     
+                INCLUDE SQLCA                                            
+           END-EXEC.                                                    
+                                                                        
+           EXEC SQL                                                     
+                INCLUDE AGCOB005                                         
+           END-EXEC.                                                    
+                                                                        
+           EXEC SQL                                                     
+                INCLUDE AGCOB014                                         
+           END-EXEC.                                                    
+                                                                        
+           EXEC SQL                                                     
+                INCLUDE AGCOB016                                         
+           END-EXEC.                                                    
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '*** AREA DE CURSORES ***'.                                  
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+      *- CURSOR CSR01-AGCOB014 -*                                       
+                                                                        
+           EXEC SQL                                                     
+                DECLARE  CSR01-AGCOB014  CURSOR  FOR                      
+                SELECT   CPRODT_AGNDA                                                                                          
+                   ,     QDIA_LCTO_FUTUR                                      
+                FROM     DB2PRD.PARM_PRODT_AGNDA                              
+                                                                        
+                WHERE     DINIC_VGCIA   <= :AGCOB014.DINIC-VGCIA AND
+                        ( DFIM_VGCIA    >= :AGCOB014.DFIM-VGCIA  OR       
+                          DFIM_VGCIA    IS  NULL )               AND
+                   CINDCD_LCTO_FUTUR     = :AGCOB014.CINDCD-LCTO-FUTUR    
+                ORDER BY                                                   
+                      CPRODT_AGNDA                                         
+                END-EXEC.                                                    
+                                                                        
+      *- CURSOR CSR02-AGCOB016 -*                                       
+                                                                        
+      *- AS AGENCIAS MAIOR QUE 3999 SAO DEPARTAMENTO E NAO GERAM        
+      *- LANCAMENTO FUTURO                                              
+                                                                        
+           EXEC  SQL                                                     
+                 DECLARE  CSR02-AGCOB016  CURSOR   FOR                     
+                 SELECT   CPRODT_AGNDA                                                   
+                   ,      CAG_BCRIA_TRAG                                        
+                   ,      CCTA_CLI_TRAG                                      
+                   ,      CLCTO_FUTUR                                 
+                   ,      VOPER_AGNDA                                        
+                   ,      RSEGDA_LIN_EXTRT                                         
+                   ,      DEFTVC_AGNDA                                   
+                   ,      CMIDIA_AGNDA                                       
+                   ,      CTPO_CTA_AGNDA                                        
+                 FROM     DB2PRD.SOLTC_AGNDA_PEND                              
+                 WHERE    CPRODT_AGNDA     =   :AGCOB016.CPRODT-AGNDA AND
+                         (DEFTVC_AGNDA    >=   :WRK-DATA-MOVTO-R      AND        
+                          DEFTVC_AGNDA    <=   :WRK-DATA-FUTURO-R)    AND
+                          CSIT_AGNDA_CLI   IN  (1, 2, 7, 8, 10)       AND
+                          CAG_BCRIA_TRAG   <    4000                          
+                ORDER BY                                                   
+                   CPRODT_AGNDA,                                        
+                   DEFTVC_AGNDA                                         
+           END-EXEC.                                                    
+                                                                        
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+       77  FILLER                      PIC  X(050)         VALUE        
+           '***  TERMINO DA WORKING AGCO4530 ***'.                      
+      *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
+                                                                        
+      *================================================================*
+       PROCEDURE                       DIVISION.                        
+      *================================================================*
+                                                                        
+      *----------------------------------------------------------------*
+       0000-ROTINA-PRINCIPAL           SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           PERFORM 1000-INICIA-PROCESSAMENTO.                           
+                                                                        
+           PERFORM 2000-INICIALIZA.                                     
+                                                                        
+           PERFORM 3000-PROCESSA                                        
+             UNTIL SQLCODE             EQUAL +100.                      
+                                                                        
+           PERFORM 4000-FINALIZA.                                       
+                                                                        
+      *----------------------------------------------------------------*
+       0000-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       1000-INICIA-PROCESSAMENTO       SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           PERFORM 1100-ABRE-AOPROC.                                    
+                                                                        
+           PERFORM 1200-START-AOPROC.                                   
+                                                                        
+           PERFORM UNTIL WRK-IND       EQUAL 5                          
+               PERFORM 1300-LER-AOPROC                                  
+               IF AGCO31-CSIT-PROCM    NOT EQUAL '2'                    
+               OR AGCO31-PROCESSA      NOT EQUAL 'S'                    
+                  PERFORM 1400-FECHAR-AOPROC                            
+                  GOBACK                                                
+               END-IF                                                   
+               ADD 1                   TO WRK-IND                       
+           END-PERFORM.                                                 
+                                                                        
+           PERFORM 1200-START-AOPROC.                                   
+                                                                        
+           PERFORM UNTIL WRK-IND       EQUAL 5                          
+               PERFORM 1300-LER-AOPROC                                  
+               PERFORM 1500-ATUALIZAR-AOPROC                            
+               ADD 1                   TO WRK-IND                       
+           END-PERFORM.                                                 
+                                                                        
+           PERFORM 1400-FECHAR-AOPROC.                                  
+                                                                        
+      *----------------------------------------------------------------*
+       1000-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       1100-ABRE-AOPROC                SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           OPEN I-O AOPROC.                                             
+                                                                        
+           MOVE WRK-ABERTURA           TO WRK-OPERACAO.                 
+           
+           PERFORM 1110-TESTA-FS-AOPROC.                                
+                                                                        
+           IF WRK-FS-AOPROC            EQUAL '35' OR '97'               
+              PERFORM 1400-FECHAR-AOPROC                                
+              GOBACK                                                    
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       1100-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       1300-LER-AOPROC                 SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           READ AOPROC NEXT INTO AGCO31-REGISTRO-DETALHE.               
+                                                                        
+           MOVE WRK-LEITURA            TO WRK-OPERACAO.  
+                          
+           PERFORM 1110-TESTA-FS-AOPROC.                                
+                                                                        
+           IF WRK-FS-AOPROC            EQUAL '10'                       
+              MOVE 5                   TO WRK-IND                       
+           ELSE                                                         
+              IF WRK-FS-AOPROC         EQUAL '97'                       
+                 PERFORM 1400-FECHAR-AOPROC                             
+                 GOBACK                                                 
+              END-IF                                                    
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       1300-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       1500-ATUALIZAR-AOPROC           SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE SPACES                 TO AGCO31-PROCESSA.              
+                                                                        
+           REWRITE FD-AOPROC           FROM AGCO31-REGISTRO-DETALHE.    
+                                                                        
+           MOVE WRK-GRAVACAO           TO WRK-OPERACAO.   
+                         
+           PERFORM 1110-TESTA-FS-AOPROC.                                
+                                                                        
+           IF WRK-FS-AOPROC            EQUAL '97'                       
+              PERFORM 1400-FECHAR-AOPROC                                
+              GOBACK                                                    
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       1500-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       1400-FECHAR-AOPROC              SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           CLOSE AOPROC.                                                
+                                                                        
+           MOVE WRK-FECHAMENTO         TO WRK-OPERACAO.   
+                         
+           PERFORM 1110-TESTA-FS-AOPROC.                                
+                                                                        
+      *----------------------------------------------------------------*
+       1400-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       1110-TESTA-FS-AOPROC            SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           IF  WRK-FS-AOPROC           NOT EQUAL ZEROS AND '10' AND '23'
+                                       AND '35' AND '97'                
+               MOVE 'AO#PROC'          TO  WRK-ARQUIVO                  
+               MOVE  WRK-FS-AOPROC     TO  WRK-FS                       
+               MOVE 'APL'              TO  ERR-TIPO-ACESSO              
+               STRING  WRK-DESCRICAO-1                                  
+                       WRK-OPERACAO                                     
+                       WRK-DESCRICAO-2                                  
+                       WRK-ARQUIVO                                      
+                       WRK-DESCRICAO-3                                  
+                       WRK-FS          DELIMITED BY '*'                 
+                 INTO  WRK-ERRO-FS                                      
+               END-STRING                                               
+               MOVE  WRK-ERRO-FS       TO  ERR-TEXTO                    
+               PERFORM 9999-ROTINA-ERRO                                
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       1110-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       1200-START-AOPROC               SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE ZEROS                  TO AGCO31-KEY1-DMOVTO.           
+           MOVE 01                     TO AGCO31-KEY1-CSEQ-RANGE.       
+           MOVE ZEROS                  TO WRK-IND.                      
+           MOVE AGCO31-KEY1-PRIM-HEA   TO FD-CHAVE.                     
+                                                                        
+           START AOPROC KEY IS NOT LESS THAN FD-CHAVE.                  
+                                                                        
+           MOVE WRK-START              TO WRK-OPERACAO.                 
+           PERFORM 1110-TESTA-FS-AOPROC.                                
+                                                                        
+           IF WRK-FS-AOPROC            EQUAL '23' OR '97'               
+              PERFORM 1400-FECHAR-AOPROC                                
+              GOBACK                                                    
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       1200-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       2000-INICIALIZA                 SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           PERFORM 2100-CONEXAO-COM-DB2.                                 
+                                                                        
+           PERFORM 2200-INICIALIZA-CAMPOS.                               
+                                                                        
+           PERFORM 2300-OBTER-DATA-MOVTO.                                
+                                                                        
+           PERFORM 2400-ABRIR-CSR-AGCOB014.                              
+                                                                        
+           PERFORM 2500-LER-CSR-AGCOB014.                               
+                                                                        
+      *----------------------------------------------------------------*
+       2000-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       2100-CONEXAO-COM-DB2            SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           CALL 'BRAD1050'.                                             
+                                                                        
+      *----------------------------------------------------------------*
+       2100-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       2200-INICIALIZA-CAMPOS          SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE  SPACES                TO ERRO-AREA                    
+           INITIALIZE                     ERR-DADOS-IMS-DB2            
+           INITIALIZE                     ERR-DADOS-SENHAS             
+           INITIALIZE                     ERRO-AREA.                   
+                                                                        
+      *----------------------------------------------------------------*
+       2200-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       2300-OBTER-DATA-MOVTO           SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           EXEC SQL  SELECT                                             
+                            MAX(DOPER_FUNCN)                                   
+                     INTO   :WRK-DATA-MOVTO-R                                                                                       
+                     FROM   DB2PRD.CTRL_DATA_AGNDA                             
+           END-EXEC.                                                    
+                                                                        
+           IF ( SQLCODE                NOT EQUAL ZEROS )  OR                 
+              ( SQLWARN0               EQUAL     'W'   )                      
+                MOVE 'DB2'             TO ERR-TIPO-ACESSO   
+                MOVE 'CTRL_DATA_AGNDA ' 
+                                       TO ERR-DBD-TAB       
+                MOVE 'SELECT MAX'      TO ERR-FUN-COMANDO   
+                MOVE SQLCODE           TO ERR-SQL-CODE      
+                MOVE '0010'            TO ERR-LOCAL         
+                MOVE SPACES            TO ERR-SEGM          
+                PERFORM 9999-ROTINA-ERRO                             
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       2300-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       2400-ABRIR-CSR-AGCOB014         SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE WRK-DATA-MOVTO         TO DINIC-VGCIA       OF AGCOB014 
+           MOVE WRK-DATA-MOVTO         TO DFIM-VGCIA        OF AGCOB014 
+           MOVE 'S'                    TO CINDCD-LCTO-FUTUR OF AGCOB014 
+                                                                        
+           EXEC  SQL                                                     
+                 OPEN  CSR01-AGCOB014                        
+           END-EXEC.                                                    
+                                                                        
+           IF ( SQLCODE                NOT EQUAL ZEROS )  OR                 
+              ( SQLWARN0               EQUAL     'W'   )                      
+                MOVE 'DB2'             TO ERR-TIPO-ACESSO             
+                MOVE 'PARM_PRODT_AGNDA '                             
+                                       TO ERR-DBD-TAB                 
+                MOVE 'OPEN    '        TO ERR-FUN-COMANDO             
+                MOVE SQLCODE           TO ERR-SQL-CODE                
+                MOVE '0020'            TO ERR-LOCAL                   
+                MOVE SPACES            TO ERR-SEGM                    
+                PERFORM 9999-ROTINA-ERRO                             
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       2400-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       2500-LER-CSR-AGCOB014           SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           EXEC  SQL                                                     
+                 FETCH  CSR01-AGCOB014  
+                 INTO   :AGCOB014.CPRODT-AGNDA                           
+                  ,     :AGCOB014.QDIA-LCTO-FUTUR                            
+           END-EXEC.                                                    
+                                                                        
+           IF ( SQLCODE                NOT EQUAL ZEROS AND +100 )  OR        
+              ( SQLWARN0               EQUAL     'W'            )                      
+                MOVE 'DB2'             TO ERR-TIPO-ACESSO   
+                MOVE 'PARM_PRODT_AGNDA '      
+                                       TO ERR-DBD-TAB       
+                MOVE 'FETCH   '        TO ERR-FUN-COMANDO   
+                MOVE SQLCODE           TO ERR-SQL-CODE      
+                MOVE '0030'            TO ERR-LOCAL         
+                MOVE SPACES            TO ERR-SEGM          
+                PERFORM   9999-ROTINA-ERRO                           
+           END-IF.                                                      
+                                                                        
+           IF  SQLCODE                 EQUAL ZEROS                     
+               ADD 1                   TO ACU-AGCOB014-LIDOS            
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       2500-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3000-PROCESSA                   SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           PERFORM 3100-ACESSA-PENDENTES                                
+                                                                        
+           PERFORM 2500-LER-CSR-AGCOB014.                               
+                                                                        
+      *----------------------------------------------------------------*
+       3000-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3100-ACESSA-PENDENTES           SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           PERFORM 3110-CALCULA-DATA-FUTURO                             
+                                                                        
+           PERFORM 3120-ABRIR-CSR-AGCOB016                              
+                                                                        
+           PERFORM 3130-LER-CSR-AGCOB016                                
+                                                                        
+           PERFORM UNTIL SQLCODE   EQUAL  +100                          
+                                                                        
+               PERFORM 3140-TRATAR-SAIFITA4                             
+                                                                        
+               PERFORM 3130-LER-CSR-AGCOB016                            
+                                                                        
+           END-PERFORM.                                                 
+                                                                        
+           PERFORM 3150-FECHAR-CSR-AGCOB016.                            
+                                                                        
+      *----------------------------------------------------------------*
+       3100-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3110-CALCULA-DATA-FUTURO        SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE WRK-DIA-MOVTO          TO WRK-DIA-SAMD                
+           MOVE WRK-MES-MOVTO          TO WRK-MES-SAMD                
+           MOVE WRK-SEC-MOVTO          TO WRK-SEC-SAMD                
+           MOVE WRK-ANO-MOVTO          TO WRK-ANO-SAMD                
+                                                                        
+           PERFORM  3111-FORMATA-BRAD0025                               
+                                                                        
+           PERFORM  3112-CHAMA-BRAD0025                                 
+                                                                        
+           MOVE WRK-DIA-SAMD           TO WRK-DIA-FUTURO              
+           MOVE WRK-MES-SAMD           TO WRK-MES-FUTURO              
+           MOVE WRK-SEC-SAMD           TO WRK-SEC-FUTURO              
+           MOVE WRK-ANO-SAMD           TO WRK-ANO-FUTURO.             
+                                                                       
+      *----------------------------------------------------------------*
+       3110-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3111-FORMATA-BRAD0025           SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE  WRK-DATA-SAMD-N       TO WRK-DATA-ENTRADA-0025        
+                                                                        
+           MOVE  QDIA-LCTO-FUTUR       OF AGCOB014                     
+                                       TO WRK-NUMERO-DE-DIAS-0025      
+                                                                        
+           MOVE  ZEROS                 TO WRK-DATA-SAIDA-0025.         
+                                                                        
+      *----------------------------------------------------------------*
+       3111-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3112-CHAMA-BRAD0025             SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           CALL  'BRAD0025'            USING WRK-DATA-ENTRADA-0025            
+                                             WRK-NUMERO-DE-DIAS-0025          
+                                             WRK-DATA-SAIDA-0025.             
+                                                                        
+           IF  RETURN-CODE             NOT EQUAL ZEROS                            
+               DISPLAY '**************** AGCO4530 ****************'     
+               DISPLAY '*                                        *'     
+               DISPLAY '*            ERRO NA BRAD0025            *'     
+               DISPLAY '*         PROGRAMA FOI CANCELADO         *'     
+               DISPLAY '*                                        *'     
+               DISPLAY '**************** AGCO4530 ****************'     
+               MOVE 'APL'              TO ERR-TIPO-ACESSO               
+               MOVE 'DADOS INCONSISTENTES NA BRAD0025'                  
+                                       TO ERR-TEXTO                     
+               PERFORM  9999-ROTINA-ERRO                                
+           END-IF.                                                      
+                                                                        
+           MOVE  WRK-DATA-SAIDA-0025   TO WRK-9-9.                  
+           MOVE  WRK-9-9(2:8)          TO WRK-DATA-SAMD-N.          
+                                                                        
+      *----------------------------------------------------------------*
+       3112-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3120-ABRIR-CSR-AGCOB016         SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE CPRODT-AGNDA           OF AGCOB014                      
+                                       TO CPRODT-AGNDA      OF AGCOB016 
+                                                                        
+           EXEC  SQL                                                     
+                 OPEN  CSR02-AGCOB016                        
+           END-EXEC.                                                    
+                                                                        
+           IF  ( SQLCODE               NOT EQUAL ZEROS )    OR                 
+               ( SQLWARN0              EQUAL     'W'   )                      
+                 MOVE 'DB2'            TO ERR-TIPO-ACESSO   
+                 MOVE 'SOLTC_AGNDA_PEND ' 
+                                       TO ERR-DBD-TAB       
+                 MOVE 'OPEN    '       TO ERR-FUN-COMANDO   
+                 MOVE SQLCODE          TO ERR-SQL-CODE      
+                 MOVE '0040'           TO ERR-LOCAL         
+                 MOVE SPACES           TO ERR-SEGM          
+                 PERFORM   9999-ROTINA-ERRO                           
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       3120-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3130-LER-CSR-AGCOB016           SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           EXEC  SQL                                                     
+                 FETCH  CSR02-AGCOB016  
+                 INTO   :AGCOB016.CPRODT-AGNDA                              
+                   ,    :AGCOB016.CAG-BCRIA-TRAG                            
+                   ,    :AGCOB016.CCTA-CLI-TRAG                        
+                   ,    :AGCOB016.CLCTO-FUTUR                         
+                   ,    :AGCOB016.VOPER-AGNDA                            
+                   ,    :AGCOB016.RSEGDA-LIN-EXTRT                           
+                   ,    :AGCOB016.DEFTVC-AGNDA                      
+                   ,    :AGCOB016.CMIDIA-AGNDA                           
+                   ,    :AGCOB016.CTPO-CTA-AGNDA                             
+           END-EXEC.                                                    
+                                                                        
+           IF ( SQLCODE                NOT EQUAL ZEROS AND +100 ) OR        
+              ( SQLWARN0               EQUAL     'W'            )                      
+                MOVE 'DB2'             TO ERR-TIPO-ACESSO   
+                MOVE 'SOLTC_AGNDA_PEND '
+                                       TO ERR-DBD-TAB       
+                MOVE 'FETCH   '        TO ERR-FUN-COMANDO   
+                MOVE SQLCODE           TO ERR-SQL-CODE      
+                MOVE '0050'            TO ERR-LOCAL         
+                MOVE SPACES            TO ERR-SEGM          
+                PERFORM 9999-ROTINA-ERRO                           
+           END-IF.                                                      
+                                                                        
+           IF SQLCODE                  EQUAL ZEROS                     
+              ADD 1                    TO ACU-AGCOB016-LIDOS            
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       2130-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3140-TRATAR-SAIFITA4            SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           IF ACU-SAIFITA4-GRAVADOS   EQUAL ZEROS                     
+              PERFORM 3141-ABRE-ARQUIVOS                               
+           END-IF.                                                      
+                                                                        
+           PERFORM 3142-FORMATA-SAIFITA4.                               
+                                                                        
+           PERFORM 3143-GRAVA-SAIFITA4.                                
+                                                                        
+      *----------------------------------------------------------------*
+       3140-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3141-ABRE-ARQUIVOS              SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           OPEN OUTPUT SAIFITA4.                                        
+                                                                        
+           MOVE WRK-ABERTURA           TO WRK-OPERACAO. 
+                           
+           PERFORM 3144-TESTAR-FILE-STATUS.                             
+                                                                        
+      *----------------------------------------------------------------*
+       3141-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3142-FORMATA-SAIFITA4           SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+      ***  ==== INICIALIZA O REGISTRO ====  ***                         
+                                                                        
+           MOVE SPACES                 TO REG-WORK-MCTE     OF SAIFITA4 
+           INITIALIZE                     REG-WORK-MCTE     OF SAIFITA4 
+                                                                        
+      ***  =========== AGENCIA ===========  ***                         
+                                                                        
+           MOVE CAG-BCRIA-TRAG         OF AGCOB016                      
+                                       TO MCTE-AGENCIA      OF SAIFITA4 
+                                                                        
+      ***  === RAZAO: GRUPO E SUBGRUPO ===  ***                         
+                                                                        
+           MOVE ZEROS                  TO MCTE-GRUPO        OF SAIFITA4 
+           MOVE ZEROS                  TO MCTE-SUBGP        OF SAIFITA4 
+                                                                        
+      ***  ============ CONTA ============  ***                         
+                                                                        
+           MOVE CCTA-CLI-TRAG          OF AGCOB016                      
+                                       TO MCTE-CONTA        OF SAIFITA4 
+                                                                        
+      ***  ======= DIGITO DA CONTA =======  ***                         
+                                                                        
+           MOVE CCTA-CLI-TRAG          OF AGCOB016                      
+                                       TO WRK-VALOR-0431                
+           PERFORM  2145-CHAMA-BRAD0431                                 
+           MOVE WRK-DIG-0431           TO MCTE-DIGITO       OF SAIFITA4 
+                                                                        
+      ***  ====== DATA DE MOVIMENTO ======  ***                         
+                                                                        
+           MOVE DEFTVC-AGNDA           OF AGCOB016                      
+                                       TO WRK-DATA-DB2                  
+           MOVE WRK-DIA-DB2            TO WRK-DIA-SAMD                  
+           MOVE WRK-MES-DB2            TO WRK-MES-SAMD                  
+           MOVE WRK-SEC-DB2            TO WRK-SEC-SAMD                  
+           MOVE WRK-ANO-DB2            TO WRK-ANO-SAMD                  
+           MOVE WRK-DATA-SAMD-N        TO MCTE-DAT-MOV-AAAAMMDD         
+                                                            OF SAIFITA4 
+      ***  ========== LANCAMENTO =========  ***                         
+                                                                        
+           MOVE CLCTO-FUTUR            OF AGCOB016                      
+                                       TO MCTE-LANCAMENTO   OF SAIFITA4 
+                                                                        
+      ***  ===== NUMERO DO DOCUMENTO =====  ***                         
+                                                                        
+           MOVE CPRODT-AGNDA           OF AGCOB016                      
+                                       TO WRK-AGCOB016-CPRODT-AGNDA     
+           MOVE CMIDIA-AGNDA           OF AGCOB016                      
+                                       TO WRK-AGCOB016-CMIDIA-AGNDA     
+                                                                        
+           STRING  WRK-AGCOB016-CMIDIA-AGNDA (1:3)                      
+                   WRK-AGCOB016-CPRODT-AGNDA (2:4) DELIMITED BY SIZE    
+             INTO  WRK-MCTE-NUMERO-DOC                                  
+           END-STRING.                                                  
+                                                                        
+           MOVE WRK-MCTE-NUMERO-DOC    TO MCTE-NUMERO-DOC   OF SAIFITA4 
+                                                                        
+      ***  ======= DIVERSOS CAMPOS =======  ***                         
+                                                                        
+           MOVE '1'                    TO MCTE-DEB-CRED     OF SAIFITA4 
+                                                                        
+           MOVE VOPER-AGNDA            OF AGCOB016                      
+                                       TO WRK-S9-15-V99                 
+           MOVE WRK-9-13-V99           TO MCTE-VALOR        OF SAIFITA4 
+                                                                        
+           MOVE  1                     TO MCTE-DIA-VINCULO  OF SAIFITA4 
+           MOVE 'AGCO'                 TO MCTE-CTRO-CUSTO   OF SAIFITA4 
+           MOVE  4499                  TO MCTE-COD-ORIGEM   OF SAIFITA4 
+           MOVE 'LF'                   TO MCTE-SERVICO      OF SAIFITA4 
+           MOVE  SPACES                TO MCTE-TIPO-ENTRADA OF SAIFITA4 
+           MOVE 'S'                    TO MCTE-SN           OF SAIFITA4 
+                                                                        
+           MOVE RSEGDA-LIN-EXTRT       OF AGCOB016                      
+                                       TO MCTE-HIST-CPL     OF SAIFITA4 
+                                                                        
+           MOVE SPACES                 TO MCTE-MARCA-EX     OF SAIFITA4 
+                                                                        
+      ***  ======== DATA ORIGINAL ========  ***                         
+                                                                        
+           MOVE WRK-DIA-MOVTO          TO WRK-DIA-SAMD                  
+           MOVE WRK-MES-MOVTO          TO WRK-MES-SAMD                  
+           MOVE WRK-SEC-MOVTO          TO WRK-SEC-SAMD                  
+           MOVE WRK-ANO-MOVTO          TO WRK-ANO-SAMD                  
+           MOVE WRK-DATA-SAMD-N        TO MCTE-DATA-ORIGINAL            
+                                                            OF SAIFITA4 
+      ***  == PRODUTO, OPERACAO E SEQ. ===  ***                         
+                                                                        
+           MOVE CTPO-CTA-AGNDA         OF AGCOB016                      
+                                       TO MCTE-PRODUTO      OF SAIFITA4 
+           MOVE ZEROS                  TO MCTE-OPERACAO     OF SAIFITA4 
+           MOVE SPACES                 TO MCTE-NRO-SEQ-LA   OF SAIFITA4.
+                                                                        
+      *----------------------------------------------------------------*
+       3142-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3143-GRAVA-SAIFITA4             SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE WRK-GRAVACAO           TO WRK-OPERACAO.                 
+                                                                        
+           WRITE REG-WORK-MCTE         OF SAIFITA4.  
+                               
+           PERFORM 3144-TESTAR-FILE-STATUS.                             
+                                                                        
+           ADD 1                       TO ACU-SAIFITA4-GRAVADOS.        
+                                                                        
+      *----------------------------------------------------------------*
+       3143-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3144-TESTAR-FILE-STATUS         SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           IF WRK-FS-SAIFITA4          NOT EQUAL ZEROS                  
+              MOVE 'SAIFITA4'          TO  WRK-ARQUIVO                  
+              MOVE  WRK-FS-SAIFITA4    TO  WRK-FS                       
+              MOVE 'APL'               TO  ERR-TIPO-ACESSO              
+              STRING  WRK-DESCRICAO-1                                  
+                      WRK-OPERACAO                                     
+                      WRK-DESCRICAO-2                                  
+                      WRK-ARQUIVO                                      
+                      WRK-DESCRICAO-3                                  
+                      WRK-FS           DELIMITED BY '*'                 
+                INTO  WRK-ERRO-FS                                      
+              END-STRING                                               
+              MOVE  WRK-ERRO-FS        TO  ERR-TEXTO                    
+              PERFORM 9999-ROTINA-ERRO                                
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       3144-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3145-CHAMA-BRAD0431             SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE '7'                    TO WRK-DIG-0431                  
+           MOVE  7                     TO WRK-TAMANHO-0431              
+                                                                        
+           CALL 'BRAD0431'             USING WRK-VALOR-0431                
+                                             WRK-DIG-0431                  
+                                             WRK-TAMANHO-0431              
+                                                                        
+           IF WRK-DIG-0431            EQUAL  '.'                       
+              DISPLAY '**************** AGCO4530 ****************'     
+              DISPLAY '*                                        *'     
+              DISPLAY '*            ERRO NA BRAD0431            *'     
+              DISPLAY '*         PROGRAMA FOI CANCELADO         *'     
+              DISPLAY '*                                        *'     
+              DISPLAY '**************** AGCO4530 ****************'     
+              MOVE 'APL'               TO ERR-TIPO-ACESSO               
+              MOVE 'DADOS INCONSISTENTES NA BRAD0025'                  
+                                       TO ERR-TEXTO                     
+              PERFORM 9999-ROTINA-ERRO                                
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       3145-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       3150-FECHAR-CSR-AGCOB016        SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           EXEC  SQL                                                     
+                 CLOSE  CSR02-AGCOB016                                     
+           END-EXEC.                                                    
+                                                                        
+           IF ( SQLCODE                NOT EQUAL ZEROS )   OR                 
+              ( SQLWARN0               EQUAL     'W'   )                      
+                MOVE 'DB2'             TO ERR-TIPO-ACESSO   
+                MOVE 'SOLTC_AGNDA_PEND '
+                                       TO ERR-DBD-TAB       
+                MOVE 'CLOSE   '        TO ERR-FUN-COMANDO   
+                MOVE SQLCODE           TO ERR-SQL-CODE      
+                MOVE '0060'            TO ERR-LOCAL         
+                MOVE SPACES            TO ERR-SEGM          
+                PERFORM 9999-ROTINA-ERRO                           
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       3150-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       4000-FINALIZA                   SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           IF ACU-SAIFITA4-GRAVADOS    GREATER ZEROS                  
+              PERFORM 4100-FECHA-ARQUIVOS                              
+           END-IF.                                                      
+                                                                        
+           PERFORM 4200-FECHAR-CSR-AGCOB014.                             
+                                                                        
+           PERFORM 4300-EMITE-ESTATISTICA.                               
+                                                                        
+           PERFORM 4400-TRATA-RETURN-CODE.                               
+                                                                        
+           GOBACK.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       4000-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       4100-FECHA-ARQUIVOS             SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           CLOSE SAIFITA4.                                              
+                                                                        
+           MOVE WRK-FECHAMENTO         TO WRK-OPERACAO.       
+                     
+           PERFORM 3144-TESTAR-FILE-STATUS.                             
+                                                                        
+      *----------------------------------------------------------------*
+       4100-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       4200-FECHAR-CSR-AGCOB014        SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           EXEC  SQL                                                     
+                 CLOSE  CSR01-AGCOB014                                     
+           END-EXEC.                                                    
+                                                                        
+           IF ( SQLCODE                NOT EQUAL ZEROS )   OR                 
+              ( SQLWARN0               EQUAL     'W'   )                      
+                MOVE 'DB2'             TO ERR-TIPO-ACESSO   
+                MOVE 'PARM_PRODT_AGNDA '      
+                                       TO ERR-DBD-TAB       
+                MOVE 'CLOSE   '        TO ERR-FUN-COMANDO   
+                MOVE SQLCODE           TO ERR-SQL-CODE      
+                MOVE '0070'            TO ERR-LOCAL         
+                MOVE SPACES            TO ERR-SEGM          
+                PERFORM  9999-ROTINA-ERRO                           
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       4200-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       4300-EMITE-ESTATISTICA          SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           DISPLAY '-------------------- AGCO4530 --------------------' 
+           DISPLAY '                                                  ' 
+                                                                        
+           MOVE      ACU-AGCOB014-LIDOS     TO              WRK-EDICAO  
+           DISPLAY ' TOTAL DE REG. LIDOS    EM AGCOB014 = ' WRK-EDICAO  
+                                                                        
+           DISPLAY '                                                  ' 
+                                                                        
+           MOVE      ACU-AGCOB016-LIDOS     TO              WRK-EDICAO  
+           DISPLAY ' TOTAL DE REG. LIDOS    EM AGCOB016 = ' WRK-EDICAO  
+                                                                        
+           DISPLAY '                                                  ' 
+                                                                        
+           MOVE      ACU-SAIFITA4-GRAVADOS  TO              WRK-EDICAO  
+           DISPLAY ' TOTAL DE REG. GRAVADOS EM SAIFITA4 = ' WRK-EDICAO  
+                                                                        
+           DISPLAY '                                                  ' 
+           DISPLAY '-------------------- AGCO4530 --------------------'.
+                                                                        
+      *----------------------------------------------------------------*
+       4300-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       4400-TRATA-RETURN-CODE          SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           IF ACU-SAIFITA4-GRAVADOS    GREATER ZEROS                  
+              MOVE ZEROS               TO RETURN-CODE                   
+           ELSE                                                         
+              MOVE 04                  TO RETURN-CODE                   
+           END-IF.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       4400-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*
+                                                                        
+      *----------------------------------------------------------------*
+       9999-ROTINA-ERRO                SECTION.                         
+      *----------------------------------------------------------------*
+                                                                        
+           MOVE  'AGCO4530'            TO ERR-PGM.                     
+                                                                        
+           CALL  'BRAD7100'            USING WRK-BATCH  
+                                             ERRO-AREA  
+                                             SQLCA.     
+                                                                        
+           GOBACK.                                                      
+                                                                        
+      *----------------------------------------------------------------*
+       9999-99-FIM.                    EXIT.                            
+      *----------------------------------------------------------------*

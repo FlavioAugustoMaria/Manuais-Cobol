@@ -1,0 +1,10 @@
+Obter TERMINAL e DEPARTAMENTO no FRAMEWORK
+
+Obter dados da sessão no Framework - programa cordenador
+
+Obter Código Terminal CD-TERMINAL:
+ MOVE FRWKWAAA-CSESS-FRWK(1:8)          TO FEMPWSOC-E-CD-TERMINAL        
+
+
+Obter código Departamento DEPTO:
+ MOVE FRWKWAAA-CODIGO-DEPENDENCIA       TO FEMPWSOC-E-DEPTO      

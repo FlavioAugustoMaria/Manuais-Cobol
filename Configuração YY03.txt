@@ -1,0 +1,47 @@
+                     TraceMaster/CICS - Update User Profile                     
+
+Command ===>                                                                   
+
+                                                                                
+
+Enter fully qualified dataset names, without quotes                            
+
+                                                                                
+
+   Macro Library . . . SA.RDG2.TM.AL2C.XTMACLIB                                 
+
+   Symbol Library. . . AV.CHGM.DMASTER.BSL.TMST.ONL                             
+
+   AA Server Name. . .              (Enter a / for a server list)               
+
+   Scheme Name . . . .              (Enter a / for a scheme list)               
+
+   Scheme Description.                                                          
+
+                                                                                
+
+Display format requested on file and TSQ utilities                             
+
+   Display Format. . . C    (D or Blank=Dump; C=Character)                      
+
+                                                                                
+
+Session Options                                                                
+
+   Screen Size . . . . 2    (2=24x80; 3=32x80; 4=43x80; 5=27x132)               
+
+   Use M4Explorer. . . N    (Y or N)                                            
+
+   Symbols search. . .      (L-Library, S-Scheme or blank)                      
+
+   Sessions to Save. . 03   (Save programs and symbols for 0 to 15 sessions)    
+
+                                                                                
+
+Permitted Remote System Ids                                                    
+
+   Enter 5 Ids and/or patterns. .                                               
+
+                                                                               
+
+PF1=Help PF3=Exit PF8=Keys  

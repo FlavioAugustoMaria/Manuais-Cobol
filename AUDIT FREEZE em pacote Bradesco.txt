@@ -1,0 +1,85 @@
+AUDIT / FREEZE EM PACOTE BRADESCO
+
+-------------------------
+AUDIT EM PACOTE BRADESCO
+-------------------------
+
+no TS04, entrar no pacote em digitar AP (Audit the change package)
+na frente do pacote.
+
+Quando houver erro no AUDIT, para ver o problema:
+entrar no EVT04, opção Z (SYSOUT'S / DUMP'S), .3,
+em 'RAIZ' informar a chave do CHGM com a qual foi feito o AUDIT,
+entrar na ultima opção exibida, 
+procurar por 'DRESS', onde vai mostrar o dresscode dos pacotes
+que estão no mesmo complexo do que foi feito o AUDIT.
+estando tudo ok com os dresscode do hexa, ir ate o final do relatorio
+e ver se tem algum SYNCH maior que zero (SYNCH1, SYNCH2...)
+com valor maior que zero após a seta (===> 0).
+tem que estar todos com zero, com exceção do SYNCH0.
+
+Em caso de erro no AUDIT:
+- Ir no EVT04
+- Opção: Z - > SYSOUT'S / DUMP'S
+- .3
+- RAIZ ==> informar a chave que fez o Audit
+- Selecionar com 'S' a úlitma opção ou a opção com erro
+- Procurar por 'HEXAVISION' e encontrar alguma opção que esteja como 'RECUSADO'
+- Se não tiver nenhum item como 'RECUSADO', no fim do arquivo no EVT04, procurar pelo texto 'SYNCH'. 
+  Se tiver algum apontamento para 'SYNCH' maior que zero e 1 (ex: SYNCH2, SYNCH3), deve ser corrigido.
+- Para saber o que é o apontamento para o SYNCH que foi apontado: 
+  TS04/TS48 > 41-CHGMAN > TSO AUDIT (digitar na lina de comando)
+
+Dica:
+Quando der a seguinte mensagem no audit:
+*** RECUSADO ==> PROGRAMA XXXXXXXX NAO PROMOVIDO PARA AMBIENTE ANTERIOR (TC) ***
+Precisa promover para o ambiente TIMZ. Não temos acesso a essa opção, então precisa pedir para alguém do Bradesco fazer isso.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+-------------------------
+FREEZE EM PACOTE BRADESCO
+-------------------------
+
+no TS04, entrar no pacote em digitar F1 (Freeze the change package online).
+ou entrar no pacote participativo e digitar F1 no pacote que deseja fazer FREEZE.
+na frente do pacote
+
+Caso apresentar a mensagem abaixo ao tentar fazer FREEZE:
+"Freeze nao  permitido"
+É porque não foi informado o número da RDM no pacote. 
+Para informar o número da RDM, entrar no pacote com 'U1', informar a RDM nos campos 'Package title' e 'Work request', conforme abaixo.
+
+*---------------------------------------------------------------------------------*
+                    UPDATE: Control Information SYS(C)              BROWSE ONLY 
+ Command ===>                                                                   
+                                                                                
+       Package: PSCT000511         Status: FRZ      Install date: 20210916      
+ Complex/Super: N/A                Status:               Release:               
+                                                                                
+ Package title                                                                  
+ RDM656027 - CONSULTAR LISTA DE CLIENTES DA CARTEIRA DE UM GERENTE              
+                                                                                
+ Requestor name . . . . . . . . VINICIUS G. N. HOFFMANN                         
+ Requestor phone  . . . . . . . 2357-8204                                       
+ Work request . . . . . . . . . RDM656027                                       
+ Department . . . . . . . . . . PSC                                             
+ Package level  . . . . . . . . 1                (1. Simple, 2. Complex,        
+                                                  3. Super,  4. Participating)  
+ Package type . . . . . . . . . PLANNED                                         
+ Package time span  . . . . . . PERM                                            
+ Unplanned reason code  . . . .                  (* for list)                   
+ Temporary change duration  . .                  (In days)                      
+*---------------------------------------------------------------------------------*                                                                                
+                                                                                
+                                                                                
+                                                                                
+
+--------------
+TIRAR FREEZE DE PACOTE
+
+NA FRENTE DO PACOTE DIGITAR 'RV' - Revert the change package back to DEVelopment status
+
+vai abrir uma area de texto, informar o motivo de o programa estar sendo retirado de FREEZE.
+
+ENTER.

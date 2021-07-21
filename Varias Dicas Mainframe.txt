@@ -1,0 +1,1223 @@
+            GRAVA        ROLLBACK    ROLLBACK           
+             CDES          MQ           DB2          ABENDA?
+
+BRAD7100     SIM           NÃO         SIM            SIM		       
+
+BRAD7105     SIM           SIM         SIM            SIM
+
+BRAD7106     SIM           SIM         SIM            NÃO
+
+
+
+
+*= 00 =================================================================*        
+*                             I N D I C E                              *        
+*======================================================================*        
+                                                                                
+   .--------------------------------+--------------------------------.          
+   | 01. Bibliotecas                | 09. Informaçoes Cobol          |          
+   | 02. Changeman                  | 10. Transferência de arquivos  |          
+   | 03. Comandos Roscoe            | 11. Acentos xerox              |          
+   | 04. Testando no IMS04          | 12. Funçoes DB2                |          
+   | 05. Dicas para montar JCLs     | 13. Dicas DB2                  |          
+   | 06. Sort externo               | 14. Telefones                  |          
+   | 07. Evt                        | 15. Informaçoes extras         |          
+   | 08. ABENDS                     | 16. JOBS                       |          
+   '--------------------------------+--------------------------------'          
+                                                                                
+  Para ir direto para alguma seção, use o comando N /= Numero-da-seção/         
+                                                                                
+*= 01 =================================================================*        
+*                        B I B L I O T E C A S                         *        
+*======================================================================*        
+                                                                                
+ Bibliotecas do JOBLIB:                                                         
+  AV.BIBGERTT                  - Programas em desenvolvimento                   
+  AV.BIBGERAL                  - Programas em produção                          
+  IMSVS.TST.TPGMLIB            - IMS e módulos objetos - desenevolimento        
+  IMSVS.TST.PGMLIB.VLF         - IMS e módulos objetos - produção               
+  DB2A2.R2.DSNLOAD             - DB2 de desenvolvimento                         
+  SYS1.CEE.SCEERUN             - Run-time para programas Cobol MVS              
+                                                                                
+ Bibliotecas de desenvolvimento do Changeman:                                   
+  AD.CHGM.STAGE.CCCC.#999999.SRC(XXXXXXXX)                                      
+    Sendo que CCCC é o centro de custo, 999999 é o numero do pacote, SRC        
+    é o tipo do componente e XXXXXXXX é o nome do componente.                   
+                                                                                
+ Outras bibliotecas:                                                            
+  AD.DB2.DCLGEN                - Tabelas DB2                                    
+  AD.G07.DBAS.DB2FONTE         - Vê chave primária de tabela                    
+  AD.G07.DBAS.ABEND            - Explicaçoes sobre abends e sqlcodes            
+  AD.MANUAIS.UPDT.SF.ORIGINAL  - Particionado do SF manuais                     
+  AD.AC.JCLFILE.AL01           - Jobs Alphaville                                
+  AD.MX.JCLFILE.MZ01           - Jobs Matriz                                    
+  CD.TELON.IMSLIB              - Copybooks Telon                                
+  CHGMAN.XXXXXXX.CMNVIEW       - Ultimo fonte visto no CMNVIEW (trocar o        
+                                 XXXXXXX pela sua chave de TSO)                 
+                                                                                
+*= 02 =================================================================*        
+*                           C H A N G E M A N                          *        
+*======================================================================*        
+                                                                                
+ Travar um componente: digite LC na frente dele.                                
+ Destravar: digite UC (o programa tem que estar na sua chave).                  
+ Alterar a data de instalação de um pacote: U7 na frente do pacote              
+ Habilitar letras minusculas no editor: CAPS OFF                                
+ Repetir comandos no editor: SHIFT+F12                                          
+ Acompanhar job de freeze: DIS CMN+ no Roscoe.                                  
+ Acompanhar job de approve: DIS XXX#+ onde XXX são as 3 primeiras letras        
+ do centro de custo. Para ver em quais máquinas o pacote foi instalado,         
+ dar QP na frente dele e ir na opção SITE ACTIVITIES DATA AND TIME.             
+                                                                                
+ - Compilação:                                                                  
+                                                                                
+   Ao usar a opção S1, é possível jogar o componente no pacote com outro        
+   nome, para isso, bastar informar o nome no campo 'STAGE NAME'.               
+                                                                                
+   Para compilar programas Telon, sempre ir pela opção S1. Informar em          
+   LIBRARY TYPE 'TDF', TELON NAME o nome no telon (EX.: VU0200SD) e em          
+   STAGE NAME o nome real do programa (EX.: CAPP0200).                          
+                                                                                
+   Módulos que são chamados por programas online devem ter 'Y' na opção         
+   BIBMODOB (Biblioteca de módulos objetos).                                    
+                                                                                
+ - Tipos de bind:                                                               
+   L/A - Transação ou programa batch que chama módulos com DB2                  
+   K   - Módulo que usa DB2                                                     
+   X/A - Transação ou programa que possui DB2 nem chama ninguém com DB2         
+   N   - Não usa DB2, nem chama módulo que o utilize                            
+   TRN - Programa que não usa DB2, mas chama módulo que o utiliza               
+                                                                                
+   Quando um programa chama módulos DB2, é preciso criar no mesmo pacote        
+   um componente com o mesmo nome do programa, mas do tipo CAL, contendo        
+   a lista dos módulos chamados. Se o CAL do programa já existe em pro-         
+   dução, não é preciso colocá-lo no pacote.                                    
+                                                                                
+ - Utilitários do Changeman:                                                    
+                                                                                
+   Para pesquisar as bibliotecas de produçãom vá na opção 1 (Build) -           
+   S (Scan). Informe a rotina, a faixa de programas que serão vascu-            
+   lhados (ex.: BEGIN: LSNG0000 END: LSNG9999) e os textos que serão            
+   procurados. Na tela seguinte, geralmente é só dar Enter direto.              
+                                                                                
+   Para comparar programas ou arquivos, digite no menu principal a              
+   opção C, depois M. Entre na opção 1 e informe os arquivos a serem            
+   comparados. Dê PF3 e escolha a opção 2 para efetuar a comparação.            
+                                                                                
+   Para ver fontes em produção, digitar TSO CMNVIEW na linha de comandos        
+   do Changeman. O ultimo fonte visto fica armazenado no arquivo                
+   CHGMAN.SUA-CHAVE.CMNVIEW, que pode ser aberto no Roscoe com IMP DSN.         
+                                                                                
+ - Pacotes UNPLANNED e COMPLEX                                                  
+                                                                                
+   Quando os árduos caminhos que trilhamos na vida lhe obrigarem a fazer        
+   checkout de um programa que já esteja em outro pacote... nada tema...        
+   Crie um pacote UNPLANNED e serás capaz de realizar tamanha proeza...         
+                                                                                
+   Se porventura tiveres que alterar uma include e/ou módulo de outro           
+   centro de custo (chamado estaticamente)... terás que criar um pacote         
+   no outro centro de custo, e então criar um pacote do tipo 'COMPLEX'          
+   para 'juntar' os pacotes dos dois centros de custos... para informar         
+   quais pacotes serão unidos por um pacote complexo, coloque U6 na             
+   frente do mesmo. Os pacotes contendo programas ou incs devem ser do          
+   tipo 'participativo'. Pacotes unplanned não podem ser participativos.        
+                                                                                
+*= 03 =================================================================*        
+*                   C O M A N D O S   R O S C O E                      *        
+*======================================================================*        
+                                                                                
+ Manipulação de membros da lib                                                  
+ ATTACH (A)     - Exibe a AWS                                                   
+ FETCH (F)      - Abre um arquivo na AWS                                        
+ SAVE (S)       - Salva o conteudo da AWS em um arquivo novo                    
+ UPDATE (U)     - Salva o conteudo DA AWS em um arquivo ja existente            
+ UPDATE *       - Atualiza o arquivo sendo editado atualmente                   
+                                                                                
+ Exibição                                                                       
+ A A/D/J/L *    - Exibe o conteudo da AWS/DSN/JOB/LIB atual                     
+ A J nomejob    - Exibe a saída de um, e somente um, job                        
+ A J * CC       - Considera o carro ao exibir um relatório                      
+ A L +          - Abre a LIB                                                    
+ A numero       - Exibe a linha especificada                                    
+ D D/J/L        - Fecha a tela de DSN/JOB/LIB                                   
+ DIS nomejob    - Exibe status do(s) job(s)                                     
+ REFRESH (REF)  - Atualiza a exibição do DSN ou LIB atual                       
+ ROS            - Mostra quem está logado no Roscoe                             
+ SCR 2 / SCR 5  - Modo de vídeo 80 / 132 Colunas                                
+ SET HEX ON/OFF - Exibe ou não os valores hexadecimais dos caracteres           
+ STA            - Exibe as margens (AWS) ou arquivos gerados (JOB)              
+ STA C          - Exibe os ultimos comandos digitados                           
+ TIME           - Horário atual e a quanto tempo está logado                    
+ TLIST          - Exibe o texto em tela cheia                                   
+                                                                                
+ Comandos de edição                                                             
+ C D/J/L T          - Adiciona o conteudo do DSN/JOB/LIB atual à AWS            
+ C D/J/L R          - Substitui o conteudo da AWS pelo DSN/JOB/LIB atual        
+ COPY membro linha  - Copia o membro da LIB para após a linha da AWS            
+ DEL AWS L1 L2      - Deleta da linha L1 até a linha L2                         
+ EDIT 'text1'text2' - Troca TEXT1 por TEXT2                                     
+ EXCL 'texto'       - Exibe todas as linhas que não contenham o texto           
+ FILL C1 C2 'texto' - Preenche da coluna C1 à coluna C2 com o texto             
+ INCL 'texto'       - Exibe todas as ocorrências do texto                       
+ M                  - Vai para o início (PF7) ou final (PF8) do texto           
+ NEXT 'texto'       - Procura por um texto                                      
+ NEXT X'0000'       - Procura por valor hexadecimal                             
+ POINT L numero     - Posiciona o cursor na linha especificada                  
+ RENUMBER X, Y      - Renumera linhas, começa do X e incrementa em Y            
+ SEA 'texto'        - Semelhante ao INCL, mas em textos protegidos              
+ SET MODE B/X       - X permite letras minusculas, B força maiusculas           
+                                                                                
+ Etc.                                                                           
+ ?                  - Calcula expressoes matemáticas                            
+ ? GETPFX('chave')  - Mostra o prefixo da LIB da chave especificada             
+ &                  - Junta vários comandos em uma unica linha                  
+ AWS                - Exibe informaçoes sobre a AWS                             
+ COB                - Checa sintaxe COBOL                                       
+ DSN                - Exibe tela de DSN                                         
+ EXP DSN =          - Salva o conte do da AWS em arq. sequencial ou pds         
+ HELP               - Ajuda                                                     
+ IMP DSN =          - Traz conteudo de arq. sequencial ou pds para a AWS        
+ JCL                - Checa sintaxe JCL                                         
+ LIB                - Exibe tela de LIB                                         
+ PURGE job numero   - Cancela um job. PUR-K mantém os arquivos de saida.        
+ SEND               - Envia mensagem. Sintaxe: SEND chave 'mensagem'            
+ SUB                - Submete o job que está na AWS                             
+                                                                                
+ Nos numeros de linhas:                                                         
+ C  = Copiar - CC para copiar blocos                                            
+ M  = Mover - MM para mover blocos                                              
+ A  = Colar depois                                                              
+ B  = Colar antes                                                               
+ O  = Overlay (Colar por cima, mesclando os conteudos das linhas)               
+ )  = Deslocar para direita, também serve o >. Usar )) OU >> P/ BLOCOS          
+ (  = Deslocar para esquerda, também serve o <. Usar (( OU << P/ BLOCOS         
+ D  = Deletar - DD para deletar blocos                                          
+ R  = Repetir - RR para repetir blocos                                          
+ TJ = Junta a linha com a linha seguinte                                        
+ TS = Quebra a linha em 2 (posicione o cursor no local da quebra)               
+ LC = Converte a linha para minusculo (LCC para blocos)                         
+ UC = Converte a linha para maiusculo (UCC para blocos)                         
+                                                                                
+ PF'S:                                                                          
+ F6        = Volta 1 comando   F8        = Avança 1 página                      
+ F7        = Volta 1 página    F9        = Repete o ultimo comando              
+ SHIFT+F1  = ATTACH DSN        SHIFT+F6  = RENUMBER 1,1                         
+ SHIFT+F2  = ATTACH JOB        SHIFT+F9  = GO                                   
+ SHIFT+F3  = ATTACH LIB        SHIFT+F10 = Desloca uma tela p/ esquerda         
+ SHIFT+F4  = Início do texto   SHIFT+F11 = Desloca uma tela p/ direita          
+ SHIFT+F5  = Final do texto                                                     
+                                                                                
+ Tipos de Scroll (SCRL):                                                        
+ F  (FULL) = desloca 1 tela menos 1 linha por PF7/PF8                           
+ PA (PAGE) = desloca 1 tela por PF7/PF8                                         
+ C  (CSR)  = PF7/PF8 vão para a posição do cursor                               
+ numero    = PF7/PF8 movimentam o numero especificado de linhas                 
+                                                                                
+ Na LIB, colocando-se I na frente de um arquivo, é possível alterar             
+ sua descrição e permissão de acesso (SHR para compartilhado e RES              
+ para reservado).                                                               
+                                                                                
+ Utilitários do ROSCOE:                                                         
+ CCUSTO           - Exibe informaçoes sobre centros de custos                   
+ CD ATRIBUTO      - Monta o layout de atributos IMS-DC                          
+ CD COMPAWS       - Compacta AWS (ocupa menos linhas na lib)                    
+ POOL ABEND       - Informaçoes sobre abends                                    
+ POOL LIMPA       - Limpa as colunas 1 a 8 (exceto -inc) e 72 a 80              
+ POOL SQL         - Monta comandos sql                                          
+ R2D.R2D2         - Executa comandos sql                                        
+ RPF DELSAV       - Apaga todos os arquivos SAVAWS                              
+ RPF MASC0660     - Gera dados para a POOL0660                                  
+ RPF POLRPF04     - Chama um super-fantástico menu de utilitários               
+ RPF REASY        - Calcula o tamanho dos campos no layout da AWS               
+ SF BIBXEROX      - Verifica qual a biblioteca XEROX de um programa             
+ SF MANUAIS       - Acessa manuais de pools, padroes, etc.                      
+ SF SCREEN        - Gerador de telas MFS (Screen Plus)                          
+ SF TELON         - Menu de utilitários para telon                              
+ ZZ9.H DESC       - Descompacta AWS compactada com CD COMPAWS                   
+                                                                                
+ Na RPF MASC0660, se houver 'DO' alinhá-lo na col. 10 e o numero na 16.         
+                                                                                
+ Para montar PROTEST, deixar o layout do arquivo aberto na AWS sem              
+ REDEFINES, OCCURS E COMP, dar o comando RPF POLRPF04 e ir na opção 1.          
+                                                                                
+ Para executar comandos SQL no Roscoe, digitar o comando na AWS ou              
+ salvar numa LIB e dar o comando R2D.R2D2 1                                     
+ No primeiro campo, colocar AWS ou o membro da LIB com o comando                
+ No segundo campo, colocar AD.R2D2 ou o nome de um arquivo seqüencial           
+ (o arquivo pode ser criado usando-se o AD.R2D2 como base)                      
+                                                                                
+ Para procurar uma determinada literal em membros de um PDS:                    
+ Criar uma lista com os membros onde você quer procurar. Um modo de             
+ gerar a lista é usar os seguintes comandos:                                    
+ IMP DSN=AD.DB2.DCLGEN(*),RANGE='LSNG' & FILL 10 80 ' '                         
+ Então usar o comando para procura: RPF PROCURA pds membro texto                
+ pds    - PDS a ser pesquisado                                                  
+ membro - AWS ou membro da LIB que contém a lista de membros                    
+ texto  - Texto a ser procurado, não colocar entre aspas                        
+                                                                                
+*= 04 =================================================================*        
+*                  T E S T A N D O   N O   I M S   0 4                 *        
+*======================================================================*        
+                                                                                
+ Entrar no IMS04, apagar a tela com CLEAR (tecla PAUSE/BREAK)                   
+ - Se não precisar imprimir relatório: /TEST MFS <ENTER>                        
+ - Se precisar imprimir relatório: TESTEMFS USER nome-impressora <ENTER>        
+   Esperar uma mensagem e pressionar PA1 (tecla PAGE UP)                        
+ SENHAS <ENTER>                                                                 
+ CODIGO = 1, SENHA = TESTEDDS, a rotina e a opção variam                        
+                                                                                
+ Para startar/stopar transaçoes:                                                
+                                                                                
+    A despeito do lamentável neologismo, o ato de startar transaçoes é          
+    particularmente util quando um programa IMS abenda, pois isso stopa         
+    (argh >_<) a transação e o programa.                                        
+                                                                                
+    Para tanto, entrar no IMS04, apagar a tela e digitar o seguinte:            
+    /TEST MFS <ENTER>                                                           
+    SIGNON <ENTER>                                                              
+    USUARIO: DSVANL, SENHA: ANALISEX <ENTER> (libidinosa essa senha...)         
+    STIAOI     <ENTER>                                                          
+    Use então um ou mais dos seguintes comandos:                                
+                                                                                
+    Exibir status:       DIS  PGM  XXXXNNNN                                     
+                         DIS  TRAN XXXXNNNN                                     
+    Startar transaçoes:  STA  PGM  XXXXNNNN                                     
+                         STA  TRAN XXXXNNNN                                     
+    Stopar transaçoes:   STOP PGM  XXXXNNNN                                     
+                         STOP TRAN XXXXNNNN                                     
+    Mudar classe:        ASSIGN TRAN XXXXNNNN CLASS7                            
+                                                                                
+  Para liberar impressora (quando dá RC=04 ao tentar imprimir pelo IMS):        
+    SIGNON                                                                      
+    END USER NOME-IMPRESSORA                                                    
+    STA USER NOME-IMPRESSORA                                                    
+                                                                                
+    Importante: setar a impressora para modo teste (sei lá eu o que isso        
+    significa... tava no texto original eu achei melhor manter :P)              
+                                                                                
+*= 05 =================================================================*        
+*            D I C A S   P A R A   M O N T A R   J C L ' S             *        
+*======================================================================*        
+                                                                                
+ - O DD SYSOUT deve ser definido sempre que o programa tiver display.           
+   O DD SYSUDUMP é usado para gerar dump caso o programa abende.                
+                                                                                
+ - Se o job aparecer com "CANCEL CI" no EVT, é algum DD errado ou linha         
+   com sintaxe inválida.                                                        
+                                                                                
+ - Para programas com pools de mestre de agência deve-se definir o DD:          
+   //MESTAG DD DSN=AV.MESU.MESTAGEN.NOVO,DISP=SHR                               
+                                                                                
+ - Para programas com sort interno, é preciso definir DDs SORTWK:               
+   //SORTWK01 DD UNIT=DISCO,SPACE=(CYL,(00008))                                 
+   Se o arquivo a ser classificado é grande, pode ser necessário definir        
+   MAIS DDS DE SORTWK, AUMENTANDO-SE A NUMERAÇAO (SORTWK02, ETC.)               
+                                                                                
+ - É possível concatenar arquivos para serem lidos como se fossem um só:        
+   //CADENTRA DD DSN=AD.DF97.TEMP.READ.PARTE1,DISP=SHR                          
+   //         DD DSN=AD.DF97.TEMP.READ.PARTE2,DISP=SHR                          
+                                                                                
+ - Se um job abendar por falta de memória (por exemplo, ao carregar mui-        
+   tas ocorrências na POOL0480), adicionar o REGION na primeira linha:          
+   //DPCTXXXX JOB 'PBEN,4600,BN,PBEN1750',MSGCLASS=Z,CLASS=A,REGION=4M          
+   O numero depois do REGION é a memória reservada para o job.                  
+                                                                                
+ - Se o job tiver programas COBOL MVS, adicionar na JOBLIB a biblioteca         
+   SYS1.CEE.SCEERUN, senão dá abend S0C4.                                       
+                                                                                
+ - Se for usar a saída de um step anterior, use *.step.arquivo, ex.:    ----    
+   //ARQENTRA DD DSN=*.STEP1.CADSAIDA,DISP=(,PASS)                              
+                                                                                
+   Para arquivos gerados em utilitários de vários steps:                        
+   COBUCLG: //ARQENTRA DD DSN=*.STEP1.GO.CADSAIDA,DISP=(,PASS)                  
+   SORTD:   //ARQENTRA DD DSN=*.STEP1.SRT.SORTOUT,DISP=(,PASS)                  
+                                                                                
+ - DSNs iniciados com & são arquivos temporários, por exemplo:                  
+   //ARQSAIDA DD DSN=&RESULT,DISP=(,PASS),UNIT=DISCO,(...)                      
+   Para um outro programa no mesmo job ler esse arquivo:                        
+   //ARQENTRA DD DSN=&RESULT,DISP=(,PASS)                                       
+                                                                                
+ - Para testar return code:                                             ----    
+   //STEP2    EXEC PGM=CLIE1112,                                                
+   //         COND=(00,NE,STEP1)                                                
+   Coloca-se o return code a ser testado, o operador (NE para not equal,        
+   EQ para equal, GT para greater, etc.) e o nome do step. Se a condição        
+   especificada for verdadeira, o step NAO vai ser executado.                   
+                                       ¯¯¯                                      
+   Para incluir mais de uma condição:                                           
+   //         COND=((08,EQ,STEP2),(08,EQ,STEP4))                                
+                                                                                
+*= 06 =================================================================*        
+*                        S O R T   E X T E R N O                       *        
+*======================================================================*        
+                                                                                
+ ==> SORT FIELDS=(9,4,A,4,5,A,30,9,A),FORMAT=BI                                 
+                                                                                
+ Deve estar sempre presente, exceto quando o MERGE FIELDS for usado.            
+ Define os campos que serão usados para a classificação. Especifica-se          
+ a posição inicial do campo, tamanho do mesmo, e ordem (A para ascen-           
+ dente, D para descendente). Podem ser colocados vários campos, como            
+ no exemplo acima. Para arquivos variáveis, somar 4 nas posiçoes.               
+                                                                                
+ Se colocar SORT FIELDS=COPY os registros continuarão na mesma ordem,           
+ sem serem classificados. É util quando se quer usar os outros recur-           
+ sos do sort, mas sem mudar a ordem dos registros.                              
+                                                                                
+ O parâmetro SKIPREC pode ser usado para pular registros, exemplo:              
+ SORT FIELDS=COPY,SKIPREC=50000                                                 
+ Despreza os primeiros 50000 registros do arquivo.                              
+                                                                                
+ ==> END                                                                        
+                                                                                
+ Esse comando indica que acabaram os comandos do sort (dãã).                    
+                                                                                
+ ==> OMIT COND=(140,1,BI,EQ,X'0F',OR,140,1,BI,EQ,X'1F')                         
+ Despreza registros que atendam alguma condição. O formato das condiçoes        
+ é: posição inicial do campo, tamanho, formato, operador e valor. É pos-        
+ sível usar os operadores AND e OR, assim como parênteses.                      
+                                                                                
+ Formatos de campo: BI (binário, serve para qualquer campo), CH (carac-         
+ tere), PD (compactado), o resto eu não sei :P                                  
+ Operadores: EQ (igual), LT (menor), GT (maior)                                 
+ No valor, pode-se usar o formato C'1234' para textos e numeros zonados,        
+ ou X'1A2B' para definir os valores hexadecimais dos bytes.                     
+                                                                                
+ ==> INCLUDE COND=(1,6,CH,EQ,C'123456')                                         
+ É o contrário do OMIT COND, ou seja, seleciona apenas registros que            
+ atendam as condiçoes especificadas. A sintaxe é semelhante.                    
+                                                                                
+ ==> SUM FIELDS=(1,5,PD)                                                        
+ Junta os registros com chave repetida em um unico registro (usa a chave        
+ definida no SORT FIELDS), somando os valores dos campos especificados.         
+ SUM FIELDS=NONE apenas elimina registros com chave duplicada.                  
+                                                                                
+ ==> INREC FIELDS=(1,40,75,5,X'00000C',100,3)                                   
+ Pega apenas alguns campos do arquivo, ao invés de registros inteiros.          
+ Basta especificar as posiçoes e tamanhos dos campos de origem, na ordem        
+ que devem aparecer. É possivel especificar valores fixos, como no exem-        
+ plo acima, todos os registros terao o valor hexa 00000C na posição 46.         
+                                                                                
+ ==> OUTREC FIELDS=(X'032C',3,240)                                              
+ Altera o layout da saida do sort. O INREC altera antes de processar os         
+ registros, já OUTREC atua sobre os registros depois de processados.            
+                                                                                
+ ==> MERGE FIELDS=(31,9,A,41,2,A)                                               
+ Faz merge (balance-line) entre 2 ou mais arquivos. Note que os campos          
+ da chave devem estar na mesma posição em ambos os arquivos. Quando o           
+ merge for utilizado, não colocar o comando SORT FIELDS.                        
+                                                                                
+ No JCL, ao invés do DD SORTIN, é usado SORTIN01, SORTIN02, etc., ex.:          
+ //SORTIN01 DD DSN=MW.SCDC.ARQANTIG.BKP0(0),DISP=SHR                            
+ //SORTIN02 DD DSN=MW.SCDC.SCB086.ARQTIG(0),DISP=SHR                            
+                                                                                
+ => OUTFIL INCLUDE=(37,2,PD,EQ,19),FNAMES=SORTOUT1                              
+ Gera vários arquivos de saida. Cada DD de saida deve ter um OUTFIL             
+ correspondente, com um include ou omit para que o sort saiba onde              
+ gravar cada registro.                                                          
+                                                                                
+ Opcionalmente, pode ser usado o OUTREC para especificar layouts de             
+ saída diferentes. Por exemplo:                                                 
+ //SYSIN    DD *                                                                
+ OUTFIL INCLUDE=(37,2,PD,EQ,19),FNAMES=SORTOUT1, OUTREC=(1,36)                  
+ OUTFIL INCLUDE=(37,2,PD,EQ,23),FNAMES=SORTOUT2, OUTREC=(1,7,28,8)              
+ SORT FIELDS=(1,3,A,4,4,A),FORMAT=BI                                            
+ END                                                                            
+                                                                                
+*= 07 =================================================================*        
+*                                E V T                                 *        
+*======================================================================*        
+                                                                                
+ EVT04 (EVT de desenvolvimento)                                                 
+  Programador CPM: usuário CPM-PROG senha CPM-PROG                              
+  Analista    CPM: usuário CPM-AN   senha CPM-AN                                
+  Analista    G&P: usuário GP-AN    senha GP-AN                                 
+  Funcionário DDS: usuário 4253-243 senha 4253-243                              
+                                                                                
+ EVTS05/EVTS12 (EVT de produção, 05=Alphaville, 12=Matriz)                      
+  Usuário 4253-243 senha 4253-243 ou usuário 4253-251 senha GPFB                
+                                                                                
+ Para imprimir um job, digite E na frente do job. Acerte o endereço da          
+ impressora com Y na impressora local. Após Enter, confirmar com Y.             
+                                                                                
+ Para pesquisar jobs, digite .3 na linha de comando da tela de listagem.        
+                                                                                
+ DISP CC visualiza carros de relatorios. DISP NOCC volta ao normal.             
+ HEX mostra os códigos hexadecimais dos caracteres. HEX H os mostra na          
+ horizontal e HEX OFF volta à visualização normal.                              
+                                                                                
+*= 08 =================================================================*        
+*                           A B E N D S                                *        
+*======================================================================*        
+                                                                                
+  Os abends mais comuns são o S0C7, que é caractere inválido (letras ou         
+  zeros binários em campo numérico) e S0C4, que é invasão de área (esto-        
+  uro de tabela, usar áreas de arquivos que não estejam abertos, etc.)          
+  Geralmente são gerados 2 jobs: um com o job, displays do programa e           
+  da POOL7100, e outro com o dump.                                              
+                                                                                
+  Para saber qual foi a instrução que abendou, procurar nas primeiras           
+  seçoes do dump o valor da Next Sequential Instruction (NSI), depois           
+  procurar na compilação do programa por HEXLOC e encontrar a instrução         
+  que vem antes da NSI (funciona apenas para programas COBOL 2).                
+                                                                                
+  Para saber o campo que causou o abend, ir no diagnóstico, uma das pri-        
+  meiras seçoes do dump, e anotar o endereço do campo especificado (algo        
+  como BLW ou BLF cell - BLW indica um campo de working, e BLF, campo de        
+  arquivo). Essa seção também mostra o conteudo do campo no momento do          
+  abend. Ir na compilação do programa e procurar por SOURCE (COBOL 1) ou        
+  HIERARCHY (COBOL 2), e por fim procurar pelo endereço do campo.               
+                                                                                
+  Se o abend for de sql, procure no dump pela parte 'SQL RETURN'. Essa          
+  parte contém a instrução que causou o abend, e mostra o conteudo dos          
+  campos usados nela, assim como uma explicação sobre o sqlcode.                
+                                                                                
+ -----------------------------------------------------------------------        
+                                                                                
+  "s0c4   -> pedir ajuda para especialista, eh foda."                           
+                                 -Excerto de um manual encontrado por aí        
+                                                                                
+  Problemas comuns que causam S0C4:                                             
+                                                                                
+  -O programa é COBOL MVS E a JOBLIB não contém a biblioteca de run-time        
+   do MVS (SYS1.CEE.SCEERUN).                                                   
+  -Programa ou módulo batch DB2 não chama a POOL1050                            
+  -Programa ou módulo batch sem DB2 chama a POOL1050                            
+  -DDNAME escrito errado no job (pessoas confundindo O e 0 são algo mais        
+   comum do que parece...)                                                      
+  -Programa usa PARM, mas não tem o 'USING' na PROCEDURE DIVISION               
+  -Tentativa de usar arquivo que não está aberto                                
+  -Estouro de tabela interna, ex.: a tabela tem 20 ocorrencias e o pgm          
+   tenta acessar a ocorrencia 21 (lembrando que é possivel haver estouro        
+   sem ocorrer abend S0C4, se a região de memória acessada ainda estiver        
+   dentro da working do programa).                                              
+                                                                                
+  -Se não houver próxima instrução (vai estar "COULD NOT DETERMINE NSI"         
+   no dump), o abend foi antes mesmo do programa começar a rodar. Quando        
+   isso ocorre em uma chamada de módulo, é provável que o problema seja         
+   o modo de endereçamento (AMODE). Se o sistema mistura programas tanto        
+   COBOL 1 quanto COBOL 2, certifique-se de que os programas COBOL 2 te-        
+   nham sido compilados com uma PROC com A no final (Ex.: CO2BDB2A).            
+                                                                                
+*= 09 =================================================================*        
+*                  I N F O R M A C O E S   C O B O L                   *        
+*======================================================================*        
+                                                                                
+ File status mais comuns:                                                       
+  00 - Hugbees \O/                                                              
+  04 - Tamanho de registro de arquivo variável. Sempre ignorar esse file        
+       status em arquivos variáveis *                                           
+  10 - Fim de arquivo                                                           
+  35 - Arquivo não encontrado. Verificar se o DD no job está correto.           
+  39 - Tamanho do arquivo errado (na saída do job aparecem os tamanhos)         
+  46 - Tentativa de ler após o fim do arquivo                                   
+  90 - Está faltando DD no jcl                                                  
+                                                                                
+  * No job, o LRECL do arquivo variável deve ter 4 bytes a mais que o           
+    maior tamanho de registro do arquivo.                                       
+                                                                                
+ Carros de relatórios:                                                          
+  '1' = Pula uma página                '0' = Imprime 1 linha em branco          
+  '+' = Imprime de novo na mesma linha '-' = Imprime 2 linhas em branco         
+  ' ' = Imprime normalmente                                                     
+                                                                                
+  INSPECT NOME-CAMPO REPLACING ALL '.' BY '/'                                   
+    Substitui todos os . por / no campo indicado. Para substituir apenas        
+    no começo do campo, adicione a palavra LEADING após o ALL.                  
+                                                                                
+  STRING CAMPO-A CAMPO-B CAMPO-C DELIMITED BY SIZE INTO CAMPO-D.                
+    Junta vários campos em um só. Não completa com brancos à direita,           
+    portanto, limpe o campo receptor antes de usar o comando. É possível        
+    especificar um caractere delimitador ao invés do SIZE.                      
+                                                                                
+ Para rodar programas no modo debug (aparece na sysout as sections pelas        
+ quais o programa passou):                                                      
+                                                                                
+ - Colocar na CONFIGURATION SECTION:                                            
+       SOURCE-COMPUTER.                                                         
+           IBM-370 WITH DEBUGGING MODE.                                         
+                                                                                
+ - Colocar no início da PROCEDURE DIVISION:                                     
+       DECLARATIVES.                                                            
+       COBOL-DEBUG SECTION.                                                     
+           USE FOR DEBUGGING ON ALL PROCEDURES.                                 
+       COBOL-DEBUG-PARAGRAPH.                                                   
+           DISPLAY DEBUG-NAME.                                                  
+       END DECLARATIVES.                                                        
+                                                                                
+ Para usar o debug apenas em alguns pontos do programa, basta criar uma         
+ flag e perguntar por ela no COBOL-DEBUG-PARAGRAPH, por exemplo:                
+                                                                                
+ - Na WORKING-STORAGE SECTION:                                                  
+       01  TRACE-SWITCH        PIC X(01) VALUE 'N'.                             
+                                                                                
+ - No COBOL-DEBUG-PARAGRAPH:                                                    
+           IF TRACE-SWITCH EQUAL 'S' DISPLAY DEBUG-NAME.                        
+                                                                                
+ Então, basta mover 'S' p/ TRACE-SWITCH quando quiser habilitar o debug.        
+                                                                                
+*= 10 =================================================================*        
+*          T R A N S F E R E N C I A   D E   A R Q U I V O S           *        
+*======================================================================*        
+                                                                                
+ Entrar no Roscoe com a chave DI00B01, SENHA CPM01, e ir no menu Ferra-         
+ mentas - Transferir arquivo. Deixar o tipo de host como "TSO". Se for          
+ necessário criar um novo esquema, clique no botão de editar esquema e          
+ e use as seguintes configuraçoes:                                              
+                                                                                
+ Tab Geral:    Tamanho de campo estruturado: 2KB                                
+               Texto e retorno de carro: para arquivos texto, ligue-os,         
+               para arquivos binários desligue.                                 
+                                                                                
+ Tab TSO:      Formato do registro: indefinido                                  
+               Comprimento do registro, tamanho do bloco e quantidade de        
+               espaço alocado: deixe todos com 0.                               
+               Parâmetros de envio e recepção: deixar em branco.                
+                                                                                
+ Tab avançado: Nome do programa de transferência: IND$FILE                      
+               Tempo de espera: 120                                             
+               Primeira tecla: Autodeterminar                                   
+               Página de código do PC: Ansi (WinLatin1) (1252)                  
+               Página de código do host: Brasileiro novo (037)                  
+                                                                                
+ Salve essa configuração com o nome que achar mais bonitinho, e seleci-         
+ one-a no campo esquema. Parabéns! Agora você tem acesso ao maravilhoso         
+ mundo da troca de arquivos entre recursos \o/                                  
+                                                                                
+*= 11 =================================================================*        
+*                       A C E N T O S   X E R O X                      *        
+*======================================================================*        
+                                                                                
+   A COM ACENTO AGUDO = !A0      a com acento agudo = !C0                       
+   A COM TIL          = !A1      a com til          = !C1                       
+   A COM CRASE        = !A2      a com crase        = !C2                       
+   A COM CIRCUNFLEXO  = !A3      a com circunflexo  = !C3                       
+   E COM ACENTO AGUDO = !A8      e com acento agudo = !C8                       
+   E COM CIRCUNFLEXO  = !AA      e com circunflexo  = !CA                       
+   I COM ACENTO AGUDO = !AC      i com acento agudo = !CC                       
+   O COM ACENTO AGUDO = !B3      o com acento agudo = !D3                       
+   O COM TIL          = !B4      o com til          = !D4                       
+   O COM CIRCUNFLEXO  = !B6      o com circunflexo  = !D6                       
+   U COM ACENTO AGUDO = !BB      u com acento agudo = !DB                       
+   CE COM CEDILHA     = !A7      c com cedilha      = !C7                       
+   º                  = !F7      ª                  = !F6                       
+                                                                                
+*= 12 =================================================================*        
+*                      F U N C O E S   D O   D B 2                     *        
+*======================================================================*        
+                                                                                
+ -Parametros entre colchetes [] são opcionais                                   
+ -A barra na vertical | significa "ou"                                          
+                                                                                
+ Funçoes de coluna                                                              
+*----------------------------------------------------------------------*        
+ AVG([ALL|DISTINCT] valores)       Média dos valores do conjunto                
+ COUNT([ALL|DISTINCT] valores | *) Numero de elementos, retorna INTEGER         
+ COUNT_BIG([ALL|DISTINCT] valores  Igual o COUNT, mas retorna um DECIMAL        
+   | *)                            de até 31 posiçoes                           
+ MAX(conjunto_de_valores)          Maior valor do conjunto                      
+ MIN(conjunto_de_valores)          Menor valor do conjunto                      
+ STDDEV([ALL|DISTINCT] valores)    Desvio padrão (retorna um DOUBLE)            
+ SUM([ALL|DISTINCT] valores)       Soma os valores do conjunto                  
+ VARIANCE([ALL|DISTINCT] valores)  Variância (pode-se abreviar para VAR)        
+                                                                                
+ Funçoes de cast                                                                
+*----------------------------------------------------------------------*        
+ BLOB(string[, tamanho])           Converte qualquer string para BLOB           
+ CHAR(valor[, parametro])          Converte diversos formatos para CHAR.        
+                                   O parâmetro é opcional e pode ser:           
+                                   Data e hora: formato (EUA, ISO, etc.)        
+                                   Decimais: caractere separador                
+                                   Strings: tamanho máximo da string            
+ CLOB(valor[, tamanho])            Converte CHAR/VARCHAR/CLOB para CLOB         
+ DATE(valor)                       Converte timestamp ou string p/ data         
+ DBCLOB(graphic[, tamanho])        Converte GRAPHIC/VARGRAPHIC p/ DBCLOB        
+ DECIMAL(valor[, precisao          Converte string ou numero p/ DECIMAL.        
+  [, escala[, separador]]])        Precisão é o tamanho do campo, escala        
+                                   é a quantidade de casas decimais.            
+                                   Separador é o caractere separador de         
+                                   decimais (apenas para strings).              
+ DOUBLE(valor)                     Converte numero ou string para DOUBLE        
+ FLOAT(valor)                      O mesmo que DOUBLE                           
+ GRAPHIC(graphic[, tamanho])       Converte VARGRAPHIC/DBCLOB p/ GRAPHIC        
+ INTEGER(valor) ou INT(valor)      Converte string ou numero p/ INTEGER         
+ REAL(numero)                      Converte um numero para REAL                 
+ SMALLINT(valor)                   Converte string ou numero p/ SMALLINT        
+ TIME(valor)                       Converte string ou TIMESTAMP p/ TIME         
+ TIMESTAMP(string)                 Converte string em formato timestamp         
+                                   ou aaaammddhhmmss para TIMESTAMP             
+ TIMESTAMP(data, hora)             Monta um TIMESTAMP com a data e hora         
+ VARCHAR(string[, tamanho])        Converte strings para VARCHAR                
+ VARGRAPHIC(valor[, tamanho])      Converte strings para VARGRAPHIC             
+                                                                                
+ Funçoes de data e hora                                                         
+*----------------------------------------------------------------------*        
+ DAY(valor)                        Retorna a parte do dia de uma data           
+ DAYOFWEEK(valor)                  Dia da semana, 1 é domingo                   
+ DAYOFWEEK_ISO(valor)              Dia semana, 1 é segunda-feira                
+ DAYOFYEAR(valor)                  Numero do dia no ano, de 1 a 366             
+ DAYS(valor)                       Qtde. de dias a partir de 01/01/0001         
+ HOUR(valor)                       Retorna a parte da hora de um horário        
+ JULIAN_DAY(valor)                 Quantidade de dias desde 01/01/4712          
+ MICROSECOND(valor)                Retorna a parte dos microssegundos           
+ MIDNIGHT_SECONDS(valor)           Qtde. de segundos desde meia-noite           
+ MINUTE(valor)                     Retorna a parte dos minutos                  
+ MONTH(valor)                      Retorna a parte do mês de uma data           
+ QUARTER(valor)                    Trimestre do ano (de 1 a 4)                  
+ SECOND(valor)                     Retorna os segundos de um horário            
+ WEEK(valor)                       Semana do ano (semana começa domingo)        
+ WEEK_ISO(valor)                   Semana do ano (semana começa segunda)        
+ YEAR(valor)                       Retorna a parte do ano de uma data           
+                                                                                
+ Funçoes numéricas                                                              
+*----------------------------------------------------------------------*        
+ ABS(numero)                       Numero sem sinal                             
+ ACOS(numero)                      Arcocosseno do numero                        
+ ASIN(numero)                      Arcosseno do numero                          
+ ATAN(numero) ou ATAN2(x, y)       Arcotangente do numero ou vetor              
+ ATANH(numero)                     Arcotangente hiperbolico                     
+ CEILING(numero) ou CEIL(numero)   Arredonda o numero para cima                 
+ COS(ângulo_em_radianos)           Cosseno do ângulo                            
+ COSH(ângulo_em_radianos)          Cosseno hiperbólico do ângulo                
+ DEGREE(ângulo_em_radianos)        Converte o ângulo para graus                 
+ DIGITS(numero)                    Converte o numero para uma string            
+ EXP(numero)                       Retorna e elevado ao numero                  
+ FLOOR(numero)                     Arredonda o numero para baixo                
+ LN(numero)                        Logaritmo natural do numero                  
+ LOG10(numero)                     Logaritmo de base 10 do numero               
+ MOD(n1, n2)                       Resto da divisao de n1 por n2                
+ POWER(n1, n2)                     Retorna n1 elevado a n2                      
+ RADIANS(ângulo_em_graus)          Converte o ângulo para radianos              
+ RAND([semente])                   Retorna numero aleatório entre 0 e 1         
+ ROUND(n1, n2)                     Desloca a vírgula n2 posiçoes em n1          
+ SIGN(numero)                      Indica o sinal do numero (-1, 0, +1)         
+ SIN(ângulo_em_radianos)           Seno do ângulo                               
+ SINH(ângulo_em_radianos)          Seno hiperbólico do ângulo                   
+ SQRT(numero)                      Raiz quadrada                                
+ TAN(ângulo_em_radianos)           Tangente do ângulo                           
+ TANH(ângulo_em_radianos)          Tangente hiperbólica do ângulo               
+ TRUNCATE(n1, n2) ou TRUNC(n1, n2) Trunca n1 deslocando a casa decimal          
+                                   n2 posiçoes                                  
+ Funçoes de string                                                              
+*----------------------------------------------------------------------*        
+ CONCAT(string1, string2)          Concatena as strings                         
+ LCASE(string) ou LOWER(string)    Converte para letras minusculas              
+ LEFT(string, n)                   Retorna os n primeiros caracteres            
+ LOCATE(string1, string2           Devolve a posição da 1ª ocorrência da        
+   [, posição inicial])            string1 dentro da string2                    
+ LTRIM(string)                     Remove espaços à esquerda da string          
+ POSSTR(string1, string2)          Semelhante a LOCATE                          
+ RTRIM(string)                     Remove espaços à direita da string           
+ SPACE(n)                          Gera string com n espaços em branco          
+ SUBSTR(string, p[, n])            Retorna n caracteres (ou toda a str-         
+                                   ing) a partir da posição p                   
+ TRANSLATE(string[, para[,         Troca caracteres no texto, conforme          
+   de[, complemento]]])            as strings "de" e "para" *                   
+ UCASE(string) ou UPPER(string)    Converte para letras maiusculas              
+                                                                                
+ * Ex.: TRANSLATE('CANETA','JL','CT') -> JANELA. Se a string "para" for         
+   menor que a string "de", será complementada com o caractere especifi-        
+   cado no "complemento" (que deve ter tamanho de apenas 1 caractere).          
+                                                                                
+ Outras funçoes                                                                 
+*----------------------------------------------------------------------*        
+ COALESCE(valores)                 Retorna o primeiro valor não-nulo do         
+                                   conjunto ou nulo se forem todos nulos        
+ HEX(valor)                        Representação hexadecimal do valor           
+ IDENTITY_VAL_LOCAL()              Ultimo valor atribuido à coluna de           
+                                   identificação (se a tabela possuir)          
+ LENGTH(valor)                     Quantidade de bytes usados para ar-          
+                                   mazenar o valor                              
+ NULLIF(valores)                   Se todos os valores forem iguais, re-        
+                                   torna nulo; senão, retorna o 1º valor        
+ VALUE(valores)                    O mesmo que COALESCE                         
+                                                                                
+*= 13 =================================================================*        
+*                           D I C A S   D B 2                          *        
+*======================================================================*        
+                                                                                
+ - Operador de concatenação de strings: ||                                      
+ - Converter de um tipo de dado para outro: CAST(valor AS tipo-de-dado)         
+ - O comando SET atribui valores a variáveis. Por exemplo, é possível           
+   obter a data e a hora atuais sem ter que chamar a POOL7600:                  
+   EXEC SQL  SET :WRK-TIMESTAMP = CURRENT TIMESTAMP  END-EXEC.                  
+ - Os registradores CURRENT DATE, CURRENT TIME e CURRENT TIMESTAMP              
+   retornam a data, hora e timestamp atuais, respectivamente.                   
+ - Para saber quantas linhas um DELETE ou UPDATE afetou, veja o valor           
+   de SqlErrD(3) logo após a operação.                                          
+                                                                                
+ - Predicados:                                                                  
+   Testar se valor está num intervalo: exp1 [NOT] BETWEEN exp2 AND exp3         
+   Testar se valor pertence a um conjunto: exp1 [NOT] IN (conjunto)             
+   Testar se a condição de um subselect existe: EXISTS (subselect)              
+   Testar se um campo é ou não nulo: nome-de-coluna IS [NOT] NULL               
+   Comparar valor com sub-select: exp1 operador SOME/ANY/ALL (subselect)        
+   (não há diferença entre SOME e ANY)                                          
+   Buscar padroes em strings: exp1 [NOT] LIKE padrão [ESCAPE char-esc]          
+                                                                                
+ - Padroes do LIKE:                                                             
+   O símbolo % indica qualquer seqüência de zero ou mais caracteres. O          
+   símbolo _ indica 1 caractere qualquer. Por exemplo:                          
+   SELECT PROJNAME FROM PROJECT WHERE PROJNAME LIKE '%SYSTEMS%'                 
+   Procura pelos projetos com SYSTEMS no nome. Quando for usada uma             
+   variável host para o padrão, sempre completá-la com seqüências de %          
+   à direita. Por exemplo: 'ZE%     ' procura por uma string iniciada           
+   em ZE e terminada com 5 brancos; o correto seria 'ZE%%%%%%'.                 
+                                                                                
+   Se for preciso procurar por % ou _ dentro das strings, é preciso de-         
+   finir um caractere de escape, que indica quando o % e o _ não devem          
+   ser considerados símbolos especiais. Por exemplo, se você definir +          
+   como caractere de escape, +% busca pelo sinal %, +_ busca por _, e           
+   ++ busca por +. Nesse caso, todo + deve fazer par com outro + ou ser         
+   seguido por % ou _, senão o DB2 considerará a expressão inválida.            
+                                                                                
+ - Exemplos de expressoes CASE:                                                 
+   SELECT EMPNO,LASTNAME,                                                       
+          CASE SUBSTR (WORKDEPT,1,1)                                            
+            WHEN 'A' THEN 'Administration'                                      
+            WHEN 'B' THEN 'Human Resources'                                     
+          END                                                                   
+     FROM EMPLOYEE                                                              
+                                                                                
+   SELECT EMPNO,WORKDEPT,SALARY+COMM FROM EMPLOYEE                              
+    WHERE (CASE WHEN SALARY=0 THEN NULL ELSE COMM/SALARY END) > 0.25            
+                                                                                
+ - Cálculos com datas: SELECT DATA_INICIAL + 3 MONTHS INTO (...)                
+   Os rótulos de tempo são: DAY, MONTH, YEAR, HOUR, MINUTE, SECOND e            
+   MICROSECOND. Podem ser usados tanto no singular como no plural.              
+   Se o campo for PIC X(10), é preciso convertê-lo com a função DATE:           
+   SET :WRK-DATA-FINAL = DATE(:WRK-DATA-INICIAL) + 1 YEAR                       
+                                                                                
+ - Formatos de data e hora:                                                     
+   ISO - yyyy-mm-dd  hh.mm.ss       EUR - dd.mm.yyyy  hh.mm.ss                  
+   USA - mm/dd/yyyy  hh:mm AM/PM    JIS - yyyy-mm-dd  hh:mm:ss                  
+                                                                                
+   TIMESTAMP: yyyy-mm-dd-hh.mm.ss.nnnnnn - podem ser omitidos os zeros          
+   à esquerda do mês, dia e hora, e à direita dos microssegundos.               
+                                                                                
+ - Exemplo de sql dinâmico - programa PANN1100                                  
+       01  AREA1.                                                               
+           49  AREA-TAM      PIC S9(04)  COMP VALUE 9291.                       
+           49  AREA-SEL      PIC X(9291).                                       
+       (...)                                                                    
+       EXEC SQL DECLARE CURSOR-PANN CURSOR FOR TABELA END-EXEC.                 
+                                                                                
+    Durante o programa, a query é montada em AREA-SEL, e depois é cha-          
+    mada a instrução sql PREPARE para o DB2 preparar o cursor:                  
+       EXEC SQL PREPARE TABELA FROM :AREA1 END-EXEC.                            
+    Depois disso, é possível fazer OPEN, FETCH e CLOSE em CURSOR-PANN,          
+    como seria feito com um cursor normal.                                      
+                                                                                
+ - Tipo de dados e limites                                                      
+   Formato    Tipo de Dados                Limites                              
+   DATE       Data                         01.01.0001 a 31.12.9999              
+   TIME       Hora                         00.00.00 a 24.00.00                  
+   TIMESTAMP  Data, hora e microssegundos  9999-12-31-40.00.000000              
+   CHAR       String single-byte tam. fixo 255 caracteres                       
+   VARCHAR    String single-byte tam. var. 32.672 caracteres                    
+   CLOB       Texto em formato single-byte 2.147.483.647 caracteres             
+   GRAPHIC    String double-byte tam. fixo 127 caracteres                       
+   VARGRAPHIC String double-byte tam. var. 16.336 caracteres                    
+   DBCLOB     Texto em formato double-byte 1.073.741.823 caracteres             
+   BLOB       Dados binários               2.147.483.647 bytes                  
+   SMALLINT   Numero inteiro de 16 bits    -32.767 a +32.768                    
+   INTEGER    Numero inteiro de 32 bits    -2147.483.648 a +2147.483.647        
+   DECIMAL    Decimal compactado           Até 31 algarismos                    
+   NUMERIC    Decimal zonado               Até 31 algarismos                    
+   REAL       Ponto flutuante simples      -7,2x10^75 a +7,2x10^75              
+   DOUBLE     Ponto flutuante duplo        -7,2x10^75 a +7,2x10^75              
+                                                                                
+   No DB2 para mainframe, não há diferença entre REAL e DOUBLE.                 
+   Campos com tamanho superior a 255 não podem ser usados em comparaçoes        
+   nem em cláusulas como ORDER BY e GROUP BY e predicados, exceto LIKE e        
+   EXISTS (e também NULL no caso dos LOBs). Além disso, queries onde ta-        
+   is campos apareçam não podem conter a cláusula DISTINCT.                     
+                                                                                
+ - SqlWarnings                                                                  
+   SqlWarn0 Contém 'W' se qualquer outro SqlWarn for 'W';                       
+   SqlWarn1 Uma string foi truncada ao ser atribuida a uma variável host        
+   SqlWarn2 Valores nulos foram ignorados na determinação de uma função         
+            coluna;                                                             
+   SqlWarn3 Comando SQL tem mais colunas que variáveis host;                    
+   SqlWarn4 UPDATE ou DELETE sem WHERE;                                         
+   SqlWarn5 Comando inválido para o DB2;                                        
+   SqlWarn6 Um cálculo de data resultou em data inválida, por exemplo,          
+            30 de fevereiro. O DB2 ajusta essa data para uma data válida        
+            próxima (por exemplo, 1º de março).                                 
+   SqlWarn8 Um caractere não pôde ser convertido e foi trocado por um           
+            caractere de substituição.                                          
+                                                                                
+ - SqlCodes                                                                     
+   A lista a seguir apresenta os sqlcodes mais comuns. Para mais códi-          
+   gos, consulte http://intrads/manuais/Abends/DB2SQLCodes.htm ou vá no         
+   IMS04, limpe a tela e digite STDMENU. Entre na opção MSG.                    
+                                                                                
+   +100 Registro não encontrado (SELECT) ou fim do cursor (FETCH)               
+                                                                                
+   -305 Algum campo retornou valor nulo, mas não possui uma variável de         
+        nulidade correspondente. Obs.: em caso de select min, max, sum,         
+        etc., se o DB2 não encontrar nenhum registro ele retorna nulo.          
+                                                                                
+   -310 Uma variável host está com conteudo inválido. Geralmente ocorre         
+        quando se esquece de valorizar uma das variáveis usadas em uma          
+        cláusula WHERE.                                                         
+                                                                                
+   -803 Tentou inserir ou atualizar registro com chave duplicada                
+                                                                                
+   -805 Problemas com bind. Possíveis causas são:                               
+        - Algum módulo DB2 não está na lista de DBRM (CAL) do programa          
+        - O programa foi compilado sem a opção 'Lista de DBRM'                  
+        - O módulo não foi compilado com bind 'K' e sofreu alteração            
+        - O programa foi compilado com bind 'X' e um módulo foi alterado        
+        - Tentativa de rodar um programa em desenvolvimento ou teste com        
+          bind de produção, ou vice-versa                                       
+        - Não foi feito promote do programa ou de algum módulo                  
+                                                                                
+   -811 Um select simples retornou mais de um registro. As variáveis            
+        host estarão valorizadas com o primeiro registro encontrado.            
+                                                                                
+   -904 Recurso indisponível (DB2 fora do ar, tabela presa, etc.)               
+                                                                                
+                    
+*= 14 =================================================================*        
+*                  I N F O R M A Ç O E S   E X T R A S                 *        
+*======================================================================*        
+                                                                              
+ Para liberar programas Telon (quando aparece a mensagem que o programa         
+ nao esta cadastrado): logar no CICS04TL com chave de analista, sair e          
+ digitar VU17 <Enter> na tela vazia.                                            
+                                                                                
+ Dados para criar PDS:                                                          
+ Volumes=SA2D32; Unit names=3390; Units=TRK; Primary=14; Secondary=12;          
+ Directory=500; DSOrg=PO; RecFM=FB; LRecL=80; BlkSize=6160; Catalog=Yes.        
+                                                                                
+ Dados para criar arquivo para R2D2:                                            
+ Volumes=SA2D35; Unit names=3390; Units=TRK; Primary=2; Secondary=20;           
+ DSOrg=PS; RecFM=FB; LRecL=5000; BlkSize=25000; Catalog=Yes.                    
+                                                                                
+ Nota: os parametros não listados aqui devem ser deixados em branco.            
+                                                                                
+*= 15 ================================================================*         
+*                   E X E M P L O S   D E   J O B S                   *         
+*=====================================================================*         
+                                                                                
+   .--------------------------------+--------------------------------.          
+   | 01. EXEMPLO DE JOB P/ TESTE    | 08. MANDAR COISAS PARA O EVT   |          
+   | 02. COMPILAR E RODAR PROGRAMAS | 09. GRAVAR ARQUIVO COMPRIMIDO  |          
+   | 03. SORT EXTERNO               | 10. IDCAMS (DELETA ARQUIVO)    |          
+   | 04. OBTER PLA DE ARQUIVO       | 11. TIRAR COPY PENDING DB2     |          
+   | 05. PROTEST                    | 12. COMPARAÇAO DE ARQUIVOS     |          
+   | 06. BTS PARA IMS ON-LINE       | 13. PLAN1010 (COPIA ARQUIVO)   |          
+   | 07. BTS PARA SBAT              |                                |          
+   '--------------------------------+--------------------------------'          
+                                                                                
+*=====================================================================*         
+ 01. EXEMPLO DE JOB P/ TESTE DE PROGRAMAS                                       
+*=====================================================================*         
+                                                                                
+//DPCTFAB1 JOB 'PBEN,4600,BN,PBEN1750',MSGCLASS=Z,CLASS=A                       
+//JOBLIB   DD DSN=IMSVS.TST.TPGMLIB,DISP=SHR                                    
+//         DD DSN=IMSVS.TST.PGMLIB.VLF,DISP=SHR                                 
+//         DD DSN=DB2A2.R2.DSNLOAD,DISP=SHR                                     
+//         DD DSN=AV.BIBGERTT,DISP=SHR                                          
+//         DD DSN=AV.BIBGERAL,DISP=SHR                                          
+//         DD DSN=SYS1.CEE.SCEERUN,DISP=SHR                                     
+//*                                                                             
+//STEP1    EXEC PGM=AAAA9999                                                    
+//MESTAG   DD DSN=AV.MESU.MESTAGEN.NOVO,DISP=SHR                                
+//CADENTRA DD DSN=AD.DF97.TEMP.READ.CADENTRA,DISP=SHR                           
+//ARQDATA  DD DUMMY,DISP=(OLD,KEEP,KEEP)                                        
+//CADSAIDA DD DSN=AD.DF97.TEMP.UPDT.CADSAIDA,                                   
+//            DISP=(NEW,CATLG,DELETE),UNIT=DISCO,                               
+//            SPACE=(TRK,(010,010),RLSE),                                       
+//            DCB=(LRECL=0113,RECFM=FB)                                         
+//RELATO   DD SYSOUT=(W,,CP16),                                                 
+//            DCB=(LRECL=133,RECFM=FBA)                                         
+//SORTWK01 DD UNIT=DISCO,SPACE=(CYL,(00008))                                    
+//SORTWK02 DD UNIT=DISCO,SPACE=(CYL,(00008))                                    
+//SYSOUT   DD SYSOUT=*                                                          
+//SYSUDUMP DD SYSOUT=Y                                                          
+//*                                                                             
+                                                                                
+*======================================================================*        
+ 02. JOB PARA COMPILAR E RODAR PROGRAMAS                                        
+*======================================================================*        
+                                                                                
+//DPCTFAB1 JOB 'RURA,4250,BN,RURA0500',MSGCLASS=Z,CLASS=A,                      
+//  TIME=3                                                                      
+//JOBLIB  DD DSN=AV.BIBGERAL,DISP=SHR                                           
+//        DD DSN=AV.BIBGERTT,DISP=SHR                                           
+//*                                                                             
+//STEP1    EXEC COB2UCLG,PARM.GO='PARM-DO-PROGRAMA'                             
+//SYSIN DD *                                                                    
+       IDENTIFICATION DIVISION.                                                 
+       PROGRAM-ID. AAAA9999.                                                    
+                                                                                
+       ENVIRONMENT DIVISION.                                                    
+       CONFIGURATION SECTION.                                                   
+       SPECIAL-NAMES.                                                           
+           DECIMAL-POINT IS COMMA.                                              
+       INPUT-OUTPUT SECTION.                                                    
+       FILE-CONTROL.                                                            
+           SELECT CADSAI ASSIGN TO UT-S-CADSAI FILE STATUS IS WRK-FS.           
+                                                                                
+       DATA DIVISION.                                                           
+       FILE SECTION.                                                            
+       FD  CADSAI                                                               
+           RECORDING MODE IS F                                                  
+           LABEL RECORD IS STANDARD                                             
+           BLOCK CONTAINS 0 RECORDS.                                            
+       01  REG-SAI PIC X(080).                                                  
+       WORKING-STORAGE SECTION.                                                 
+       77  WRK-FS PIC X(02) VALUE SPACES.                                       
+                                                                                
+       PROCEDURE DIVISION.                                                      
+           OPEN OUTPUT CADSAI                                                   
+           CLOSE CADSAI                                                         
+           STOP RUN.                                                            
+                                                                                
+//GO.SYSOUT DD SYSOUT=*                                                         
+//SYSUDUMP  DD SYSOUT=T                                                         
+//SYSOUT    DD SYSOUT=T                                                         
+//CADSAI    DD DSN=AD.DF97.TEMP.UPDT.TESTE,                                     
+//          DISP=(,CATLG,DELETE),UNIT=DISCO,                                    
+//          SPACE=(TRK,(10,10),RLSE),                                           
+//          DCB=(LRECL=080,RECFM=FB)                                            
+//*                                                                             
+                                                                                
+*======================================================================*        
+ 03. SORT EXTERNO                                                               
+*======================================================================*        
+                                                                                
+//STEP1    EXEC SORTD                                                           
+//SORTIN   DD DSN=AD.DL07.IPMG.UPDT.CADACICS,DISP=SHR                           
+//SORTOUT  DD DSN=AD.DF97.TEMP.UPDT.CADASORT,                                   
+//            DISP=(NEW,CATLG,DELETE),UNIT=DISCO,                               
+//            SPACE=(TRK,(010,010),RLSE),                                       
+//            DCB=(LRECL=097,RECFM=FB)                                          
+//SYSIN    DD *                                                                 
+ SORT FIELDS=(9,4,A,4,5,A),FORMAT=BI                                            
+ END                                                                            
+//*                                                                             
+                                                                                
+*======================================================================*        
+ 04. OBTER PLA DE UM ARQUIVO                                                    
+*======================================================================*        
+                                                                                
+//STEP1    EXEC EASYPLUS                                                        
+//SYSPRINT DD SYSOUT=*                                                          
+//FILEA  DD DSN=AD.DL07.IPMG.UPDT.CADACICS,DISP=SHR                             
+//SYSIN DD *                                                                    
+FILE  FILEA                                                                     
+*                                                                               
+JOB INPUT FILEA                                                                 
+    DISPLAY HEX FILEA                                                           
+//*                                                                             
+                                                                                
+*=====================================================================*         
+ 05. PROTEST                                                                    
+*=====================================================================*         
+                                                                                
+//STEP1    EXEC  PROTEST                                                        
+//OUTPUT   DD DSN=AD.TEMP.RHDP.CADCHEQU,                                        
+//         DISP=(,CATLG,DELETE),UNIT=DISCO,                                     
+//         SPACE=(TRK,(1,1),RLSE),DCB=(LRECL=064,RECFM=FB)                      
+//READER  DD *                                                                  
+FIL PRINT=RECORDS,FORMAT=BOTHV                                                  
+GEN  003ENT                                                                     
+REC ENT                                                                         
+FLD        1   5CONP 011578498,087532547,390430297                              
+FLD        6   8CONP 0                                                          
+FLD        9  10CONN 57,59,34                                                   
+FLD       11  11CONN 1                                                          
+FLD       12  61CONX 'JOSECLEISSON ANTENUNES DA COSTA',                         
+FLD-                 'JOSENUNES ANTECLEISSON DA COSTA',                         
+FLD-                 'JOSECOSTA ANTECLEISSON DE NUNES'                          
+FLD       62  64CONN 237,239                                                    
+                                                                                
+*=====================================================================*         
+ 06. BTS PARA PROGRAMAS IMS ON-LINE                                             
+*=====================================================================*         
+                                                                                
+//DPCTBTS   JOB  'DPDB,4100,BN,DPDB0180',MSGCLASS=Z,CLASS=A                     
+//STEP1    EXEC  BTSIIC,IOSEG=3072,SOUT=T,REGION=8M,ALTSEG=2048                 
+//G.BTSOUT   DD  SYSOUT=T                                                       
+//G.BTSIN    DD  *                                                              
+./P MBR=BTSCOM00   PA=000C14    PC=DB2                                          
+./T TC=SENH0010 MBR=SENH0010 PSB=SENH0010 LANG=CBL PLC=10                       
+./T TC=SENH0011 MBR=SENH0011 PSB=SENH0011 LANG=CBL PLC=10                       
+./T TC=SENH0020 MBR=SENH0020 PSB=SENH0020 LANG=CBL PLC=10                       
+./T TC=SENHT010 MBR=SENHT010 PSB=SENHT010 LANG=CBL PLC=10                       
+./T TC=SENH0005 MBR=SENH0005 PSB=SENH0005 LANG=CBL PLC=10                       
+./T TC=CDES0110 MBR=CDES0110 PSB=CDES0110 LANG=CBL PLC=10                       
+./T TC=SIMS0100 MBR=SIMS0100 PSB=SIMS0100 LANG=CBL PLC=10                       
+./T TC=SENH0400 MBR=SENH0400 PSB=SENH0400 LANG=CBL PLC=10                       
+./T TC=SENH7000 MBR=SENH7000 PSB=SENH7000 LANG=CBL PLC=10                       
+./T TC=SENH7010 MBR=SENH7010 PSB=SENH7010 LANG=CBL PLC=10                       
+./T TC=SENH7020 MBR=SENH7020 PSB=SENH7020 LANG=CBL PLC=10                       
+./T TC=SENH7900 MBR=SENH7900 PSB=SENH7900 LANG=CBL PLC=10                       
+./T TC=SENH7910 MBR=SENH7910 PSB=SENH7910 LANG=CBL PLC=10                       
+./T TC=EMPF0002 MBR=EMPF0002 PSB=EMPF0002 LANG=CBL PLC=10                       
+./T TC=EMPF1470 MBR=EMPF1470 PSB=EMPF1470 LANG=CBL PLC=10                       
+./T TC=EMPF1480 MBR=EMPF1480 PSB=EMPF1480 LANG=CBL PLC=10                       
+./T TC=EMPF1481 MBR=EMPF1481 PSB=EMPF1481 LANG=CBL PLC=10                       
+./T TC=XPRINTL1 PLC=0 MDL=P2                                                    
+./D FORMBUF=8000 EOS=? EOM=$ DDOF=327021 TPBUF=2408                             
+./D LTERM=VPRINTL1 EOM=$                                                        
+./D DDOF=327021                                                                 
+./O ATR=NO                                                                      
+./* DADOS PARA TELA SENHT000                                                    
+/FOR SENHT700                                                                   
+L15C46 '1' L16C46 'TESTE' L18C46 'EMPF' L19C46 '2' $                            
+L18C31 '7' $                                                                    
+L11C32 '1' $                                                                    
+L12C55 '1' L15C55 '1' $                                                         
+L04C23 'PRISCILA' L04C68 '31' L04C71 '01' L04C74 '2002' L6C23 '2'      X        
+L10C23 '10' L10C63 '15' L14C23 '1' L16C23 '5' L16C64 '8'                        
+$                                                                               
+PFK6  $                                                                         
+//SYSUDUMP DD SYSOUT=T                                                          
+//SYSOUT   DD SYSOUT=T                                                          
+//SYSPRINT DD SYSOUT=T                                                          
+//DSNTRACE  DD SYSOUT=T                                                         
+//DFSVSAMP DD *                                                                 
+2048,10                                                                         
+4096,10                                                                         
+8192,10                                                                         
+16384,10                                                                        
+32768,10                                                                        
+                                                                                
+*=====================================================================*         
+ 07. BTS PARA PROGRAMAS SBAT                                                    
+*=====================================================================*         
+                                                                                
+//DPCTFAB2 JOB 'WBPE,4253,BN,WBPE1000',MSGCLASS=Z,CLASS=A                       
+//JOBLIB  DD  DSN=IMSVS.TST.TPGMLIB,DISP=SHR                                    
+//          DD  DSN=AV.BIBGERTT,DISP=SHR                                        
+//          DD  DSN=AV.BIBGERAL,DISP=SHR                                        
+//*                                                                             
+//STEP1     EXEC   BTSII,IOSEG=3072,SOUT=T,REGION=2048K                         
+//G.IMS     DD  DSN=AV.PROD.TPSBLIB,DISP=SHR                                    
+//          DD  DSN=IMSVS.TST.TPGMLIB,DISP=SHR                                  
+//          DD  DSN=AV.PROD.PSBLIB,DISP=SHR                                     
+//          DD  DSN=AV.PROD.TDBDLIB,DISP=SHR                                    
+//          DD  DSN=AV.PROD.DBDLIB,DISP=SHR                                     
+//          DD  DSN=AV.BIBGERTT,DISP=SHR                                        
+//          DD  DSN=AV.BIBGERAL,DISP=SHR                                        
+//G.BTSOUT    DD   SYSOUT=(W,,CP18)                                             
+//G.SYSOUT    DD   SYSOUT=(W,,CP18)                                             
+//G.BTSIN   DD *                                                                
+./T TC=SBAT0590 MBR=SBAT0590 PSB=GENERICA LANG=CBL PLC=10                       
+./T TC=CDES0110 MBR=CDES0110 PSB=GENERICA LANG=CBL PLC=10                       
+./T TC=WBPE1000 MBR=WBPE1000 PSB=GENERICA LANG=CBL PLC=10                       
+./T TC=RDA0567E PLC=0                                                           
+./P MBR=BTSCOM00   PA=000C14    PC=DB2                                          
+./D LTERM=RDA0567A FORMBUF=8000 EOS=? EOM=$ DDOF=327021 TPBUF=2408              
+./O ATR=NO                                                                      
+WBPE1000 À000FF22222000010000FF00111100100000########-------00630427304X        
+253?                                                                            
+//SYSOUT    DD  SYSOUT=(W,,CP18)                                                
+//SYSUDUMP  DD  SYSOUT=*                                                        
+//*                                                                             
+                                                                                
+*=====================================================================*         
+ 08. JOB QUE MANDA COISAS P/ O EVT!!!                                           
+*=====================================================================*         
+                                                                                
+//DPCTEVT4 JOB 'RHAD,0000,BN,RHAD0000',MSGCLASS=Z,CLASS=A                       
+//EXEC     PGM=IEBGENER                                                         
+//SYSUT2   DD  SYSOUT=(W,,CP10)                                                 
+//SYSPRINT DD  SYSOUT=*                                                         
+//SYSIN    DD  DUMMY                                                            
+//SYSUT1   DD  *                                                                
+//* COLOQUE AQUI O QUE VOCE QUER MANDAR PRO EVT!!!                              
+                                                                                
+*=====================================================================*         
+ 09. GRAVAR ARQUIVO COMPRIMIDO                                                  
+*=====================================================================*         
+                                                                                
+//DPCTCOMP JOB 'AAAA,9999,BN,AAAA9999',MSGCLASS=Z,CLASS=A                       
+//JOBLIB   DD DSN=AV.BIBGERAL,DISP=SHR                                          
+//STEP1    EXEC PGM=POOL0002                                                    
+//SYSOUT   DD SYSOUT=*                                                          
+//SYSUDUMP DD SYSOUT=*                                                          
+//ENTRA    DD DSN=AD.TEMP.UPDT.SLSNGYN1,DISP=SHR                                
+//SAI      DD DSN=AD.TEMP.UPDT.SLSNGYN3,                                        
+//         DISP=(NEW,CATLG,CATLG),UNIT=DISCO,                                   
+//         SPACE=(TRK,(0010,010),RLSE),DCB=(LRECL=089,RECFM=FB)                 
+                                                                                
+ PARA DESCOMPRIMIR ARQUIVOS, TROCAR A POOL0002 PELA POOL0003                    
+                                                                                
+*=====================================================================*         
+ 10. IDCAMS (DELETA ARQUIVO)                                                    
+*=====================================================================*         
+                                                                                
+//STEP1    EXEC PGM=IDCAMS                                                      
+//SYSPRINT DD   SYSOUT=*                                                        
+//SYSIN    DD   *                                                               
+ DELETE AD.DL03.LSNG.UPDT.LSNGRP01.DC82H36 PURGE                                
+ SET MAXCC=00                                                                   
+                                                                                
+*=====================================================================*         
+ 11. JOB QUE TIRA COPY PENDING DE TABELA ¬ ¬                                    
+*=====================================================================*         
+                                                                                
+//DPCTFAB1 JOB 'LSNG,4135,BN,LSNG5071',MSGCLASS=Z,CLASS=A                       
+//JOBLIB   DD DSN=AV.BIBGERAL,DISP=SHR                                          
+//         DD DSN=DB2A2.R2.DSNLOAD,DISP=SHR                                     
+//STEP1    EXEC DB2UPROC,UID='DC72C029',SOUT=T                                  
+//*                                                                             
+//SYSCOPY  DD DSN=AD.TEMP.LSNG.UPDT.LSNGS029.COP,                               
+//   SPACE=(TRK,(1000,100),RLSE),                                               
+// UNIT=DISCO,DISP=(,CATLG,DELETE)                                              
+//SYSIN    DD *                                                                 
+COPY TABLESPACE LSNGD000.LSNGS029                                               
+//STEP2    EXEC DB2TUTIL,COND=ONLY,SOUT=T                                       
+//*                                                                             
+//* ***    TERM UTILITY DE COPY                                                 
+//*                                                                             
+//SYSTSIN  DD *                                                                 
+DSN SYSTEM(DB2) R(1) T(1)                                                       
+-TERM UTIL (DC72C029)                                                           
+END                                                                             
+//*                                                                             
+                                                                                
+ PARA RODAR O JOB, TROQUE O AD.TEMP.LSNG.UPDT.LSNGS029.COP POR QUALQUER         
+ ARQUIVO QUE AINDA NAO EXISTA E ACERTE O NOME DO TABLESPACE.                    
+                                                                                
+*=====================================================================*         
+ 12. COMPARAÇAO DE ARQUIVOS                                                     
+*=====================================================================*         
+                                                                                
+//DPCTCOMP JOB 'RURA,4250,BN,RURA0500',MSGCLASS=Z,CLASS=A,REGION=2M             
+//JOBLIB  DD DSN=AV.BIBGERTT,DISP=SHR                                           
+//        DD DSN=AV.BIBGERAL,DISP=SHR                                           
+//*                                                                             
+//STEP1    EXEC PGM=LSNG995A,PARM='CONDENSAR=S, COBOLCOLS=S, SYNC=5'            
+//SYSOUT      DD SYSOUT=T                                                       
+//ANTES       DD DSN=AD.DF97.PGMS.UPDT.DARF(ANTES),DISP=SHR                     
+//DEPOIS      DD DSN=AD.DF97.PGMS.UPDT.DARF(DEPOIS),DISP=SHR                    
+//SAIDA       DD SYSOUT=(W,,CP12),DCB=(LRECL=096,RECFM=FBA)                     
+//SYSUDUMP    DD SYSOUT=*                                                       
+//*                                                                             
+//* OS ARQUIVOS 'ANTES' E 'DEPOIS' DEVEM TER TAMANHO DE REGISTRO 80 E           
+//* MENOS DE 10.000 LINHAS CADA. OPCOES DO PARM:                                
+//*                                                                             
+//* CONDENSAR - SE 'S', IGNORA ALTERAÇOES DE ALINHAMENTO NA COMPARAÇAO.         
+//* COBOLCOLS - SE 'S', IGNORA AS COLUNAS ANTES DA 7 E APOS A 72.               
+//* SYNC      - QUANTIDADE DE LINHAS IGUAIS CONSECUTIVAS QUE DEVEM SER          
+//*             ENCONTRADAS APOS UMA DIFERENÇA PARA RE-SINCRONIZAR OS           
+//*             ARQUIVOS. ESSE VALOR DEVE SER NUMERICO DE 1 A 20.               
+//*                                                                             
+//* AVISO: COLOCAR SYNC=1 PODE FAZER COM QUE O PROGRAMA SE PERCA FACIL-         
+//* MENTE NA COMPARACAO. OS VALORES RECOMENDADOS SAO DE 3 A 7.                  
+                                                                                
+*=====================================================================*         
+ 13. PLAN1010 (COPIA DE ARQUIVO)                                                
+*=====================================================================*         
+                                                                                
+//STEP1    EXEC  PGM=PLAN1010                                                   
+//SYSUT1   DD DSN=AD.TEMP.CLIE.RELATO.S01,DISP=SHR                              
+//SYSUT2   DD SYSOUT=(W,,CP60),DCB=(LRECL=081,RECFM=FBA)                        
+//SYSOUT   DD SYSOUT=*                                                          
+//PRINTER  DD SYSOUT=*                                                          
+                                                                                

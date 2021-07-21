@@ -1,0 +1,9 @@
+TESTE TI (Teste Integrado) CICS no bradesco.
+
+logar com um usuário disponivel em:
+
+ACCTER --> AOR00M50 (opção 4 do ACCTER)
+
+OU
+
+ACCTER --> AOR01M50 (opção 8 do ACCTER)

@@ -1,0 +1,4 @@
+derrubar sessão presa no CICS.
+
+CECI REL PROG(PFCP3A1L)
+ENTER

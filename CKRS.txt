@@ -1,0 +1,19 @@
+CKRS
+
+*** Apenas para programas BATCH ***
+
+
+CKRS1000 - deve ser usado em todo programa que possuir DB2 - define qual o tipo de conexao.
+Não faz conexao com DB2!!!!!!!!
+ 
+CKRS1050 - faz conexão com DB2. (deve ser usado no primeiro programa apenas)
+
+CKRS0100 - Tratamento de Restart. (Faz conexão com DB2 internamente)
+CKRS0105 - Faz COMMIT
+
+
+Se o programa é modulo e no chamador já possuir chamada ao CKRS1050, fazer chamada apenas ao CKRS1000. 
+A chamada ao CKRS1050 só deve ser feita no primeiro programa da fila.
+Se o programa faz chamada ao CKRS0100 ou CKRS0105, não precisa chamar CKRS1050, pois ja faz intenamente nesses módulos.
+
+Se no programa pedir algo diferente disso, favor conversar com o ACQ.
