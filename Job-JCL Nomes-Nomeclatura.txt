@@ -1,0 +1,10 @@
+Job-JCL Nomes-Nomeclatura
+
+X = À Pedido 
+A = diaria diario
+I = Semanal 
+N = Mensal 
+H = Backup diario
+K = Backup Semanal 
+Y = Utilitarios DB2 
+W = Utilitarios DB2

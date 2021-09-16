@@ -32,7 +32,8 @@ usuário: I901134
 senha: test2104
 (mais usuários PFIN no endereço: https://confluence.bradesco.com.br:8443/pages/viewpage.action?pageId=63253021&requestEditAccess=true)
 
-digitar na linha de comando: DTCN > Enter
+digitar na linha de comando: 
+DTCN
 
 TU:
 PF9 > Preference File ==> AD.D493.READ.FERR.DTZ.PREF.ONL
@@ -86,7 +87,7 @@ PF  7:UP    8:DOWN – avançar ou voltar no código;
 10:ZOOM – Expande a janela onde o cursor está posicionado.
 
 Linha de comando:
-MONITOR LIST ('NOME-VARIAVEL') - Alterar valor de variável (a janela com o programa não pode estar expandida (PF10))
+MONITOR LIST 'NOME-VARIAVEL' - Alterar valor de variável (a janela com o programa não pode estar expandida (PF10))
 
 *=======================================================================================================================================*
 

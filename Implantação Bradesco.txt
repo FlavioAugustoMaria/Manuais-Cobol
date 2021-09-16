@@ -1,0 +1,13 @@
+IMPLANTAÇÃO
+
+CONFERIR BIND DE PROGRAMAS
+EVT / Z / .3 Digita os três primeiros bytes da rotina + # + 21 + 2 últimos bytes do pacote
+
+Exemplo:
+pacote: PSCT*511
+Digitar no EVT: PSC#2111 ou PSC#
+
+
+
+CONFERIR TABELAS
+EVT / Z / .3 Digita DBAS
